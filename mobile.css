@@ -1,0 +1,189 @@
+/* ============================================================
+   mobile.css — Shared responsive overrides for all 6 decks
+   Loaded AFTER each deck's own <style> so these rules win.
+   Strategy: stack grids, tame oversized type, shrink huge
+   vw-based padding, prevent horizontal scroll.
+   ============================================================ */
+
+/* ─── Universal foundation (all viewports) ─── */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+img, svg, video, canvas { max-width: 100%; height: auto; }
+
+/* ─── TABLET & PHONE (≤ 900px) ─── */
+@media (max-width: 900px) {
+
+  /* Stack any 2/3/4/5-column grid by class-name convention */
+  [class*="grid"][class*="-"],
+  .grid,
+  .two-col, .three-col, .four-col, .five-col,
+  .cols-2, .cols-3, .cols-4,
+  .two-grid, .three-grid, .four-grid,
+  .pillars-grid, .editorial, .logo-grid, .color-grid,
+  .type-grid, .label-display, .dual-label,
+  .market-grid, .themes-grid, .sus-grid, .voice-grid,
+  .range-grid, .det-grid, .journey-row,
+  .mark-meaning, .products-grid, .pack-principles,
+  .sachet-hero, .word-bank, .trust-grid, .phase,
+  .sub-brand-grid, .tier-grid, .scent-row,
+  .color-palette, .manifesto-grid, .disruption-grid,
+  .campaign-strip, .type-system,
+  .section-head, .campaign, .pillar-intro,
+  .palette, .soap-collection, .strata,
+  .ingredient-row, .process-step,
+  .philosophy-pair, .color-note {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* Reduce huge vw-based section padding */
+  .page, .slide, section, .hero, .cover, .wrap, .wrap-tight {
+    padding-left: 6vw !important;
+    padding-right: 6vw !important;
+  }
+  .page  { padding-top: 80px !important;  padding-bottom: 80px !important; }
+  section { padding-top: 80px !important; padding-bottom: 80px !important; }
+
+  /* Heroes can stay tall but not gigantic */
+  .hero, .cover { min-height: auto; }
+
+  /* Tame the biggest type tokens — keep brand expression */
+  .display-xl,
+  .hero-title .name,
+  .type-sample,
+  .cover-mark,
+  .cover-wordmark,
+  .wordmark,
+  .big-number,
+  .arch-headline,
+  .loader-mark,
+  .essence-text,
+  .two-label,
+  .logo-main-mark,
+  .type-specimen-serif,
+  .type-specimen-sans,
+  .coda-mark,
+  .word-headword .h,
+  .identity-mark-display,
+  .pillars-banner .ampersand,
+  .pillars-banner .pillar-name,
+  .section-num,
+  .shelf-num,
+  .manifesto .display-xl {
+    font-size: clamp(40px, 12vw, 88px) !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    word-break: break-word;
+  }
+
+  /* Body type that's still too big */
+  .display-l { font-size: clamp(32px, 9vw, 64px) !important; line-height: 1.05 !important; }
+  .display-m { font-size: clamp(26px, 7vw, 48px) !important; line-height: 1.1 !important; }
+
+  /* Fixed-width grid templates that won't fit a phone */
+  .ingredient-row { grid-template-columns: 1fr !important; }
+  .process-step   { grid-template-columns: 1fr !important; }
+  .journey-row    { grid-template-columns: 32px 1fr !important; gap: 16px !important; }
+  .sachet-point, .phase, .color-note {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ─── PHONE only (≤ 600px) ─── */
+@media (max-width: 600px) {
+
+  /* Tighter padding on small phones */
+  .page, .slide, section, .hero, .cover, .wrap, .wrap-tight {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  .page  { padding-top: 60px !important;  padding-bottom: 60px !important; }
+  section { padding-top: 60px !important; padding-bottom: 60px !important; }
+
+  /* Drop content even smaller on small phones */
+  .display-xl,
+  .hero-title .name,
+  .type-sample,
+  .cover-mark,
+  .cover-wordmark,
+  .wordmark,
+  .big-number,
+  .arch-headline,
+  .essence-text,
+  .two-label,
+  .logo-main-mark,
+  .type-specimen-serif,
+  .type-specimen-sans,
+  .coda-mark,
+  .word-headword .h {
+    font-size: clamp(36px, 14vw, 64px) !important;
+  }
+
+  /* 2-column color/range grids stay 2-up so palettes still read */
+  .range-grid, .det-grid, .color-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Hide chrome that gets in the way of tiny screens */
+  .chrome-help { display: none !important; }
+}
+
+/* ─── RB PURE deck-specific (it's a slide deck, not scroll) ─── */
+@media (max-width: 900px) {
+
+  /* Slides need to scroll vertically if content overflows on phone */
+  .slide {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tap zones can stay but shrink so they don't eat full screen */
+  .nav-zone {
+    width: 20% !important;
+  }
+
+  /* Force editorial side-by-sides into stacked blocks */
+  .editorial, .logo-grid, .type-grid,
+  .label-display, .dual-label, .voice-grid,
+  .themes-grid, .market-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    height: auto !important;
+  }
+
+  /* Color palette stays a tight 4-wide on phone, not 8 */
+  .color-grid { grid-template-columns: repeat(4, 1fr) !important; height: auto !important; gap: 6px !important; }
+
+  /* 4-up product/detergent grids → 2-up on phone */
+  .range-grid, .det-grid, .sus-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  /* Labels lose their fixed aspect on phone */
+  .label-render, .dual-render {
+    max-height: none !important;
+    aspect-ratio: auto !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ─── Unboxed-specific tweaks (very heavy type) ─── */
+@media (max-width: 900px) {
+  .arch-headline,
+  .wordmark,
+  .big-number {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .arch-sub { margin-bottom: 40px !important; }
+}
+
+/* ─── Sibol — preserve a few precise pieces ─── */
+@media (max-width: 900px) {
+  .manifesto .display-xl { max-width: 100% !important; margin: 24px auto !important; }
+}
