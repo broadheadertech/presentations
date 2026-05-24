@@ -396,7 +396,8 @@
     text-transform: lowercase;
     line-height: 0.9;
   }
-  .mark-sibol svg { width: 36px; height: 44px; margin-bottom: 6px; }
+  .mark-sibol svg,
+  .mark-sibol img { width: 44px; height: auto; margin-bottom: 6px; display: block; }
 
   .mark-unboxed {
     font-family: 'Archivo Black', sans-serif;
@@ -847,12 +848,7 @@
       cover: 'cover-sibol',
       logo: `
         <div class="mark-sibol">
-          <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 110 Q50 70 50 50" stroke="#3F5837" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M50 60 Q25 50 18 28 Q40 30 50 55" fill="#5C7A4F"/>
-            <path d="M50 50 Q75 42 84 18 Q60 22 50 48" fill="#8FA882"/>
-            <circle cx="50" cy="50" r="3" fill="#C56B47"/>
-          </svg>
+          <img src="sibol-mark.png" alt="Sibol sprout" />
           sibol
         </div>`
     },
