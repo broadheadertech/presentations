@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HABI — Handcrafted Soap & Detergent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,200..700,0..100&family=Geist:wght@200..600&family=Geist+Mono:wght@300..500&display=swap" rel="stylesheet">
+<style>
+/* ====== TOKENS ====== */
+:root {
+  --paper:        #F2ECDC;
+  --paper-light:  #F8F2E2;
+  --paper-dark:   #E8DFCA;
+  --ink:          #221F1A;
+  --ink-soft:     #54504A;
+  --ink-mute:     #8C8675;
+  --forest:       #243528;
+  --cacao:        #523524;
+  --olive:        #6B6C4D;
+  --clay:         #A8896B;
+  --weave:        #C7B391;
+  --hair:         rgba(34, 31, 26, 0.12);
+  --hair-strong:  rgba(34, 31, 26, 0.22);
+
+  --display-xl: clamp(96px, 22vw, 340px);
+  --display-l:  clamp(56px, 10vw, 160px);
+  --display-m:  clamp(38px, 5.5vw, 92px);
+  --display-s:  clamp(26px, 3.4vw, 52px);
+  --body-l:     clamp(17px, 1.3vw, 21px);
+  --body:       clamp(14px, 1vw, 16px);
+  --label:      clamp(10px, 0.78vw, 12px);
+  --micro:      clamp(9px, 0.68vw, 11px);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Geist', sans-serif;
+  font-weight: 300;
+  font-size: var(--body);
+  letter-spacing: 0.005em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+body { overflow-y: auto; }
+
+/* Paper grain overlay */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Soft vignette */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(34, 31, 26, 0.08) 100%);
+}
+
+/* ====== TYPE ====== */
+.display {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: "SOFT" 70, "opsz" 144;
+  letter-spacing: -0.025em;
+  line-height: 0.92;
+  color: var(--ink);
+}
+.display.thin { font-weight: 250; }
+.display.med  { font-weight: 400; }
+
+.serif {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: "SOFT" 80, "opsz" 24;
+  letter-spacing: -0.005em;
+}
+
+.label {
+  font-family: 'Geist', sans-serif;
+  font-size: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.micro {
+  font-family: 'Geist Mono', monospace;
+  font-size: var(--micro);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 400;
+}
+
+/* ====== LOADING SCREEN ====== */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--paper);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 28px;
+  transition: opacity 1.4s var(--ease);
+}
+.loader.gone { opacity: 0; pointer-events: none; }
+
+.loader-mark {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(48px, 7vw, 120px);
+  letter-spacing: 0.18em;
+  display: flex;
+  gap: 0.12em;
+}
+.loader-mark span {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: letterIn 1.2s var(--ease) forwards;
+}
+.loader-mark span:nth-child(1) { animation-delay: 0.2s; }
+.loader-mark span:nth-child(2) { animation-delay: 0.45s; }
+.loader-mark span:nth-child(3) { animation-delay: 0.7s; }
+.loader-mark span:nth-child(4) { animation-delay: 0.95s; }
+
+.loader-thread {
+  width: 0;
+  height: 1px;
+  background: var(--ink);
+  animation: threadDraw 1.4s var(--ease) 1.6s forwards;
+}
+
+.loader-tag {
+  opacity: 0;
+  animation: fadeIn 1s var(--ease) 2.4s forwards;
+}
+
+@keyframes letterIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes threadDraw {
+  to { width: 200px; }
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ====== CHROME — Chapter + Loom ====== */
+.chapter {
+  position: fixed;
+  top: 28px;
+  left: 36px;
+  z-index: 50;
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  opacity: 0;
+  animation: fadeIn 1.2s var(--ease) 3s forwards;
+}
+.chapter-mark {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+
+.brand-corner {
+  position: fixed;
+  top: 28px;
+  right: 36px;
+  z-index: 50;
+  opacity: 0;
+  animation: fadeIn 1.2s var(--ease) 3s forwards;
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  letter-spacing: 0.35em;
+  font-weight: 300;
+  font-variation-settings: "SOFT" 100;
+}
+
+.foot {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  opacity: 0;
+  animation: fadeIn 1.2s var(--ease) 3.4s forwards;
+}
+
+.loom {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+  animation: fadeIn 1.2s var(--ease) 3s forwards;
+}
+.loom-thread {
+  width: 22px;
+  height: 1px;
+  background: var(--hair-strong);
+  cursor: pointer;
+  transition: all 0.6s var(--ease);
+  position: relative;
+}
+.loom-thread::after {
+  content: attr(data-name);
+  position: absolute;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Geist', sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+  pointer-events: none;
+}
+.loom-thread:hover::after { opacity: 1; }
+.loom-thread.active {
+  width: 44px;
+  background: var(--ink);
+}
+
+/* ====== SLIDE BASE ====== */
+.slide {
+  height: 100vh;
+  width: 100vw;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  padding: 90px 8vw 80px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.slide-no {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Fraunces', serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+
+/* Reveal-on-view */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 1.4s var(--ease), transform 1.4s var(--ease);
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal.d1 { transition-delay: 0.1s; }
+.reveal.d2 { transition-delay: 0.25s; }
+.reveal.d3 { transition-delay: 0.4s; }
+.reveal.d4 { transition-delay: 0.55s; }
+.reveal.d5 { transition-delay: 0.7s; }
+.reveal.d6 { transition-delay: 0.85s; }
+.reveal.d7 { transition-delay: 1.0s; }
+.reveal.d8 { transition-delay: 1.15s; }
+
+.thread-line {
+  height: 1px;
+  background: var(--ink);
+  width: 0;
+  transition: width 1.6s var(--ease);
+  transition-delay: 0.5s;
+}
+.reveal.in .thread-line { width: var(--w, 120px); }
+
+/* ====== SLIDE 1 — COVER ====== */
+.cover {
+  background: var(--paper);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.cover-mark {
+  font-family: 'Fraunces', serif;
+  font-weight: 250;
+  font-variation-settings: "SOFT" 90, "opsz" 144;
+  font-size: var(--display-xl);
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+.cover-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.cover-thread { --w: 180px; }
+.cover-tag {
+  font-family: 'Geist', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* ====== SLIDE 2 — ESSENCE ====== */
+.essence {
+  background: var(--paper);
+  justify-content: flex-end;
+}
+.essence-text {
+  font-family: 'Fraunces', serif;
+  font-weight: 250;
+  font-variation-settings: "SOFT" 80, "opsz" 144;
+  font-size: var(--display-l);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  max-width: 75%;
+}
+.essence-text em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--cacao);
+}
+.essence-bottom {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 60px;
+  border-top: 1px solid var(--hair);
+}
+.pillars {
+  display: flex;
+  gap: 56px;
+}
+.pillar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pillar-num {
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  color: var(--clay);
+  letter-spacing: 0.15em;
+}
+.pillar-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 22px;
+  font-variation-settings: "SOFT" 80;
+}
+.pillar-note {
+  font-size: 12px;
+  color: var(--ink-soft);
+  max-width: 180px;
+  line-height: 1.5;
+}
+
+/* ====== SLIDE 3 — THE WORD ====== */
+.word {
+  background: var(--paper-light);
+  justify-content: center;
+}
+.word-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.word-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.word-headword {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.word-headword .h {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(60px, 9vw, 140px);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variation-settings: "SOFT" 80;
+}
+.word-pron {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink-soft);
+  font-weight: 300;
+}
+.word-pos {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.word-def {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 480px;
+  font-variation-settings: "SOFT" 80;
+}
+.word-def em { font-style: italic; color: var(--cacao); }
+.word-note {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 440px;
+  margin-top: 12px;
+}
+
+.weave-art {
+  width: 100%;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ====== SLIDE 4 — IDENTITY ====== */
+.identity {
+  background: var(--paper);
+}
+.identity-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 80px;
+}
+.identity-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 60px;
+  flex: 1;
+  align-items: center;
+  border-top: 1px solid var(--hair);
+  padding-top: 80px;
+}
+.identity-block {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  height: 100%;
+}
+.identity-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  border: 1px solid var(--hair);
+  background: var(--paper-light);
+  padding: 40px;
+}
+.identity-mark-display {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(50px, 6vw, 90px);
+  letter-spacing: 0.22em;
+  font-variation-settings: "SOFT" 90;
+}
+.identity-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ====== SLIDE 5 — THE EIGHT ====== */
+.eight {
+  background: var(--paper);
+}
+.eight-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 50px;
+}
+.eight-head h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: var(--display-s);
+  letter-spacing: -0.02em;
+  font-variation-settings: "SOFT" 80;
+}
+.eight-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 36px;
+  flex: 1;
+}
+.bar-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+.bar-img {
+  width: 100%;
+  aspect-ratio: 5/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bar-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 17px;
+  letter-spacing: -0.005em;
+  font-variation-settings: "SOFT" 80;
+}
+.bar-quality {
+  font-family: 'Geist', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.bar-num {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9.5px;
+  color: var(--clay);
+  letter-spacing: 0.2em;
+}
+
+/* ====== SLIDE 6 — PACKAGING ====== */
+.pack {
+  background: var(--paper-light);
+}
+.pack-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 80px;
+  flex: 1;
+  align-items: center;
+}
+.pack-art {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.pack-head {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: var(--display-s);
+  letter-spacing: -0.02em;
+  max-width: 480px;
+  line-height: 1.05;
+  font-variation-settings: "SOFT" 80;
+}
+.pack-item {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--hair);
+}
+.pack-item:last-child { border: none; }
+.pack-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  color: var(--clay);
+}
+.pack-text h4 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 6px;
+  font-variation-settings: "SOFT" 70;
+}
+.pack-text p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 380px;
+}
+
+/* ====== SLIDE 7 — SOURCED ====== */
+.sourced {
+  background: var(--paper);
+}
+.sourced-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 100px;
+  flex: 1;
+  align-items: center;
+}
+.sourced-text h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: var(--display-m);
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+  margin-bottom: 32px;
+  font-variation-settings: "SOFT" 80;
+}
+.sourced-text h2 em {
+  font-style: italic;
+  color: var(--cacao);
+  font-weight: 300;
+}
+.sourced-text p {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 440px;
+  font-variation-settings: "SOFT" 80;
+}
+.sourced-list {
+  border-top: 1px solid var(--hair);
+}
+.source-row {
+  display: grid;
+  grid-template-columns: 24px 1.2fr 1fr 0.7fr;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--hair);
+  gap: 20px;
+}
+.source-num {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: var(--clay);
+  letter-spacing: 0.15em;
+}
+.source-ingredient {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 18px;
+  font-variation-settings: "SOFT" 80;
+}
+.source-region {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+.source-region em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+}
+.source-meta {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  letter-spacing: 0.18em;
+  text-align: right;
+}
+
+/* ====== SLIDE 8 — SHELF PSYCHOLOGY ====== */
+.shelf {
+  background: var(--paper-light);
+}
+.shelf-head {
+  margin-bottom: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.shelf-head h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: var(--display-m);
+  letter-spacing: -0.025em;
+  max-width: 700px;
+  line-height: 0.98;
+  font-variation-settings: "SOFT" 80;
+}
+.shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  flex: 1;
+  border-top: 1px solid var(--ink);
+  padding-top: 56px;
+}
+.shelf-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.shelf-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(48px, 6vw, 86px);
+  color: var(--clay);
+  line-height: 0.9;
+}
+.shelf-col h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.015em;
+  font-variation-settings: "SOFT" 80;
+}
+.shelf-col p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 340px;
+}
+
+/* ====== SLIDE 9 — VOICE ====== */
+.voice {
+  background: var(--paper);
+}
+.voice-head {
+  text-align: center;
+  margin-bottom: 70px;
+}
+.voice-head h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: var(--display-m);
+  letter-spacing: -0.025em;
+  font-variation-settings: "SOFT" 80;
+}
+.voice-head h2 em {
+  font-style: italic;
+  color: var(--cacao);
+}
+.voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 60px;
+  flex: 1;
+}
+.voice-divider {
+  background: var(--hair);
+  height: 100%;
+}
+.voice-col {
+  display: flex;
+  flex-direction: column;
+}
+.voice-col h3 {
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hair);
+}
+.voice-words {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.voice-word {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 26px;
+  letter-spacing: -0.005em;
+  font-variation-settings: "SOFT" 80;
+}
+.voice-word.strike {
+  color: var(--ink-mute);
+  position: relative;
+  font-style: italic;
+}
+.voice-word.strike::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--ink-mute);
+  opacity: 0.6;
+}
+
+/* ====== SLIDE 10 — WHERE HABI LIVES ====== */
+.lives {
+  background: var(--paper-light);
+}
+.lives-head {
+  margin-bottom: 50px;
+}
+.lives-head .label { margin-bottom: 20px; }
+.lives-head h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: var(--display-m);
+  letter-spacing: -0.025em;
+  max-width: 800px;
+  line-height: 0.98;
+  font-variation-settings: "SOFT" 80;
+}
+.lives-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  flex: 1;
+  border-top: 1px solid var(--ink);
+  padding-top: 40px;
+}
+.lives-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.lives-cat {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--clay);
+}
+.lives-col h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  font-variation-settings: "SOFT" 80;
+}
+.lives-col p {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.lives-tags {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  padding-top: 24px;
+  border-top: 1px solid var(--hair);
+}
+
+/* ====== SLIDE 11 — THE STORY ====== */
+.story {
+  background: var(--forest);
+  color: var(--paper);
+  justify-content: center;
+}
+.story .micro,
+.story .label { color: rgba(242, 236, 220, 0.55); }
+.story-body {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.story-eyebrow {
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: rgba(242, 236, 220, 0.55);
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+}
+.story-body p {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(18px, 1.4vw, 22px);
+  line-height: 1.55;
+  color: rgba(242, 236, 220, 0.92);
+  font-variation-settings: "SOFT" 80;
+  letter-spacing: 0.002em;
+}
+.story-body p em {
+  font-style: italic;
+  color: var(--clay);
+}
+.story-body p.lead {
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 1.4;
+  color: var(--paper);
+  margin-bottom: 8px;
+}
+.story-sign {
+  text-align: center;
+  margin-top: 36px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--clay);
+  font-variation-settings: "SOFT" 100;
+}
+
+/* ====== SLIDE 12 — SIGN-OFF ====== */
+.signoff {
+  background: var(--paper);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.signoff-emblem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 48px;
+}
+.signoff-tag {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(28px, 3vw, 44px);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin-bottom: 36px;
+  font-variation-settings: "SOFT" 100;
+}
+.signoff-mark {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 5vw, 72px);
+  letter-spacing: 0.22em;
+  margin-bottom: 24px;
+  font-variation-settings: "SOFT" 80;
+}
+.signoff-thread { --w: 140px; margin: 0 auto; }
+.signoff-bottom {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ====== HINT ====== */
+.scroll-hint {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  font-family: 'Geist', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  opacity: 0;
+  animation: hintIn 1.2s var(--ease) 3.6s forwards, hintBob 2.6s ease-in-out 5s infinite;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+@keyframes hintIn { to { opacity: 0.7; } }
+@keyframes hintBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+.scroll-hint.hide { opacity: 0 !important; animation: none; }
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 900px) {
+  .slide { padding: 80px 6vw 60px; }
+  .word-grid, .pack-grid, .sourced-grid { grid-template-columns: 1fr; gap: 40px; }
+  .identity-grid { grid-template-columns: 1fr; gap: 40px; }
+  .shelf-grid { grid-template-columns: 1fr; gap: 40px; }
+  .voice-grid { grid-template-columns: 1fr; gap: 32px; }
+  .voice-divider { display: none; }
+  .lives-grid { grid-template-columns: repeat(2, 1fr); }
+  .eight-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); }
+  .pillars { flex-wrap: wrap; gap: 24px; }
+  .loom { display: none; }
+  .essence-text { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Grain + Vignette -->
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<!-- Loading Screen -->
+<div class="loader" id="loader">
+  <div class="loader-mark">
+    <span>H</span><span>A</span><span>B</span><span>I</span>
+  </div>
+  <div class="loader-thread"></div>
+  <div class="loader-tag micro">Handcrafted Soap & Detergent</div>
+</div>
+
+<!-- Chrome -->
+<div class="chapter">
+  <span class="chapter-mark" id="chap-num">I</span>
+  <span class="micro" id="chap-name">Cover</span>
+</div>
+<div class="brand-corner">HABI</div>
+
+<!-- Loom Navigation -->
+<nav class="loom" id="loom"></nav>
+
+<!-- Scroll Hint -->
+<div class="scroll-hint" id="hint">
+  <span>Scroll</span>
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M8 3 V13 M4 9 L8 13 L12 9" stroke="currentColor" stroke-width="0.8" fill="none"/>
+  </svg>
+</div>
+
+<main>
+
+<!-- ====== SLIDE 1 — COVER ====== -->
+<section class="slide cover" id="s1" data-name="Cover" data-num="I">
+  <div class="cover-stack">
+    <div class="micro reveal d1">A Brand Identity Presentation</div>
+    <h1 class="cover-mark reveal d2">HABI</h1>
+    <div class="thread-line cover-thread reveal d4"></div>
+    <div class="cover-tag reveal d5">Handcrafted Soap & Detergent</div>
+  </div>
+  <div class="foot micro">Manila &nbsp;·&nbsp; Est. 2026 &nbsp;·&nbsp; A Brand Within The Redbox Ecosystem</div>
+</section>
+
+<!-- ====== SLIDE 2 — ESSENCE ====== -->
+<section class="slide essence" id="s2" data-name="Essence" data-num="II">
+  <div class="label reveal d1" style="margin-bottom: 60px;">— Brand Essence</div>
+  <h2 class="essence-text">
+    <span class="reveal d2">For the</span> <span class="reveal d2"><em>body</em>.</span><br>
+    <span class="reveal d3">For the</span> <span class="reveal d3"><em>cloth</em>.</span><br>
+    <span class="reveal d4">Woven by hand.</span>
+  </h2>
+  <div class="essence-bottom reveal d6">
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar-num">I.</span>
+        <span class="pillar-name">Hand</span>
+        <span class="pillar-note">Small-batch, cold-processed, hand-cut.</span>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">II.</span>
+        <span class="pillar-name">Habi</span>
+        <span class="pillar-note">For the body. For the cloth. Both woven by hand.</span>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">III.</span>
+        <span class="pillar-name">Honest</span>
+        <span class="pillar-note">Named sources. No fillers. Real cure.</span>
+      </div>
+    </div>
+    <div class="micro">Three Pillars</div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 3 — THE WORD ====== -->
+<section class="slide word" id="s3" data-name="The Word" data-num="III">
+  <div class="word-grid">
+    <div class="word-entry">
+      <div class="label reveal d1">The Word</div>
+      <div class="word-headword reveal d2">
+        <span class="h">Habi.</span>
+        <span class="word-pron">/ˈhɑː.bi/</span>
+        <span class="word-pos">Tagalog, n., v.</span>
+      </div>
+      <p class="word-def reveal d3">
+        To weave; the act of weaving; <em>that which is made by weaving</em>.
+      </p>
+      <p class="word-note reveal d4">
+        In the Philippines, weaving is an ancestral craft &mdash; abaca in the south, inabel in the north, t'nalak among the T'boli. Habi names not only the cloth but the patience, the breath, the hand at the loom. We took the word because we make the same way — slowly, in small numbers, by hand. <em>Two lines: one for the body, one for the cloth that wraps it.</em>
+      </p>
+    </div>
+    <div class="weave-art reveal d5">
+      <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="max-width:340px;">
+        <defs>
+          <pattern id="weave" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+            <rect width="24" height="24" fill="none"/>
+            <rect x="0" y="0" width="10" height="10" fill="none" stroke="#8C8675" stroke-width="0.5"/>
+            <rect x="12" y="12" width="10" height="10" fill="none" stroke="#8C8675" stroke-width="0.5"/>
+            <rect x="12" y="0" width="10" height="10" fill="#A8896B" opacity="0.18"/>
+            <rect x="0" y="12" width="10" height="10" fill="#523524" opacity="0.12"/>
+          </pattern>
+        </defs>
+        <!-- Vertical threads -->
+        <g stroke="#54504A" stroke-width="0.6" opacity="0.5">
+          <line x1="40"  y1="20" x2="40"  y2="260"/>
+          <line x1="70"  y1="20" x2="70"  y2="260"/>
+          <line x1="100" y1="20" x2="100" y2="260"/>
+          <line x1="130" y1="20" x2="130" y2="260"/>
+          <line x1="160" y1="20" x2="160" y2="260"/>
+          <line x1="190" y1="20" x2="190" y2="260"/>
+          <line x1="220" y1="20" x2="220" y2="260"/>
+          <line x1="250" y1="20" x2="250" y2="260"/>
+          <line x1="280" y1="20" x2="280" y2="260"/>
+        </g>
+        <!-- Horizontal woven through -->
+        <g stroke="#523524" stroke-width="1.3" fill="none" opacity="0.75">
+          <path d="M30 60 Q40 56, 55 60 Q70 64, 85 60 Q100 56, 115 60 Q130 64, 145 60 Q160 56, 175 60 Q190 64, 205 60 Q220 56, 235 60 Q250 64, 265 60 Q280 56, 290 60"/>
+          <path d="M30 100 Q40 96, 55 100 Q70 104, 85 100 Q100 96, 115 100 Q130 104, 145 100 Q160 96, 175 100 Q190 104, 205 100 Q220 96, 235 100 Q250 104, 265 100 Q280 96, 290 100"/>
+          <path d="M30 140 Q40 136, 55 140 Q70 144, 85 140 Q100 136, 115 140 Q130 144, 145 140 Q160 136, 175 140 Q190 144, 205 140 Q220 136, 235 140 Q250 144, 265 140 Q280 136, 290 140"/>
+          <path d="M30 180 Q40 176, 55 180 Q70 184, 85 180 Q100 176, 115 180 Q130 184, 145 180 Q160 176, 175 180 Q190 184, 205 180 Q220 176, 235 180 Q250 184, 265 180 Q280 176, 290 180"/>
+          <path d="M30 220 Q40 216, 55 220 Q70 224, 85 220 Q100 216, 115 220 Q130 224, 145 220 Q160 216, 175 220 Q190 224, 205 220 Q220 216, 235 220 Q250 224, 265 220 Q280 216, 290 220"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 4 — IDENTITY ====== -->
+<section class="slide identity" id="s4" data-name="Identity" data-num="IV">
+  <div class="identity-title">
+    <div class="reveal d1">
+      <div class="label" style="margin-bottom: 12px;">— Identity System</div>
+      <h2 style="font-family: 'Fraunces', serif; font-weight: 300; font-size: var(--display-s); letter-spacing: -0.025em; font-variation-settings: 'SOFT' 80;">The Marks.</h2>
+    </div>
+    <div class="micro reveal d2">Three Elements · One Voice</div>
+  </div>
+  <div class="identity-grid">
+    <!-- Wordmark -->
+    <div class="identity-block reveal d3">
+      <div class="identity-stage">
+        <span class="identity-mark-display">HABI</span>
+      </div>
+      <div class="identity-label">
+        <span class="micro">No. 01</span>
+        <span class="serif" style="font-size: 16px;">The Wordmark</span>
+        <span style="font-size: 12px; color: var(--ink-soft); max-width: 240px; line-height: 1.6;">Editorial serif, wide-set. Confident, unhurried, classical.</span>
+      </div>
+    </div>
+    <!-- Emblem -->
+    <div class="identity-block reveal d4">
+      <div class="identity-stage">
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#221F1A" stroke-width="0.8"/>
+          <!-- Woven H -->
+          <g stroke="#221F1A" stroke-width="1.4" fill="none" stroke-linecap="round">
+            <line x1="42" y1="36" x2="42" y2="84"/>
+            <line x1="78" y1="36" x2="78" y2="84"/>
+            <line x1="36" y1="60" x2="84" y2="60"/>
+            <line x1="42" y1="48" x2="78" y2="72" stroke-width="0.7" opacity="0.5"/>
+            <line x1="78" y1="48" x2="42" y2="72" stroke-width="0.7" opacity="0.5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="identity-label">
+        <span class="micro">No. 02</span>
+        <span class="serif" style="font-size: 16px;">The Emblem</span>
+        <span style="font-size: 12px; color: var(--ink-soft); max-width: 240px; line-height: 1.6;">A woven H within a thin ring. For seals and stamps.</span>
+      </div>
+    </div>
+    <!-- Thread -->
+    <div class="identity-block reveal d5">
+      <div class="identity-stage">
+        <svg viewBox="0 0 200 40" width="180" height="40">
+          <line x1="10" y1="20" x2="80" y2="20" stroke="#221F1A" stroke-width="1"/>
+          <circle cx="90" cy="20" r="1.5" fill="#221F1A"/>
+          <line x1="100" y1="20" x2="190" y2="20" stroke="#221F1A" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="identity-label">
+        <span class="micro">No. 03</span>
+        <span class="serif" style="font-size: 16px;">The Thread</span>
+        <span style="font-size: 12px; color: var(--ink-soft); max-width: 240px; line-height: 1.6;">A signature line. The knot is a human touch.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 5 — THE EIGHT BARS ====== -->
+<section class="slide eight" id="s5" data-name="The Eight" data-num="V">
+  <div class="eight-head">
+    <div class="reveal d1">
+      <div class="label" style="margin-bottom: 12px;">— Two Collections</div>
+      <h2>For the body. For the cloth.</h2>
+    </div>
+    <div class="micro reveal d2" style="text-align: right; max-width: 280px; line-height: 1.6;">
+      Four bars for the skin.<br>Four bars for the home.
+    </div>
+  </div>
+
+  <div class="eight-grid">
+    <!-- ======== THE BODY ======== -->
+    <!-- Bar 01 -->
+    <div class="bar-cell reveal d3">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#3A3833" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(255,255,255,0.18)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.22)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Body · No. 01</div>
+      <div class="bar-name">Bamboo Charcoal</div>
+      <div class="bar-quality">Detox</div>
+    </div>
+    <!-- Bar 02 -->
+    <div class="bar-cell reveal d3">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#8B6B4F" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(255,255,255,0.22)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.28)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Body · No. 02</div>
+      <div class="bar-name">Cacao Butter</div>
+      <div class="bar-quality">Restore</div>
+    </div>
+    <!-- Bar 03 -->
+    <div class="bar-cell reveal d4">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#EDE2C8" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.06)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.18)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.22)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Body · No. 03</div>
+      <div class="bar-name">Coconut Milk</div>
+      <div class="bar-quality">Ritual</div>
+    </div>
+    <!-- Bar 04 -->
+    <div class="bar-cell reveal d4">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#C8A570" stroke="rgba(0,0,0,0.16)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.2)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.26)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Body · No. 04</div>
+      <div class="bar-name">Honey Oat</div>
+      <div class="bar-quality">Comfort</div>
+    </div>
+
+    <!-- ======== THE HOME ======== -->
+    <!-- Bar 05 -->
+    <div class="bar-cell reveal d5">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#D4C56A" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.06)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.22)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.28)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Home · No. 05</div>
+      <div class="bar-name">Calamansi</div>
+      <div class="bar-quality">Brighten</div>
+    </div>
+    <!-- Bar 06 -->
+    <div class="bar-cell reveal d5">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#EFEAD7" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.05)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.18)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.24)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Home · No. 06</div>
+      <div class="bar-name">Rice Water</div>
+      <div class="bar-quality">Soften</div>
+    </div>
+    <!-- Bar 07 -->
+    <div class="bar-cell reveal d6">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#97A972" stroke="rgba(0,0,0,0.16)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.22)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.28)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Home · No. 07</div>
+      <div class="bar-name">Lemongrass</div>
+      <div class="bar-quality">Fresh</div>
+    </div>
+    <!-- Bar 08 -->
+    <div class="bar-cell reveal d6">
+      <div class="bar-img">
+        <svg viewBox="0 0 200 130" width="100%" height="100%">
+          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
+          <rect x="22" y="22" width="156" height="92" rx="6" fill="#E8C8B5" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
+          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.06)" stroke-width="0.4"/>
+          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.2)" stroke-width="0.6" fill="none"/>
+          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.26)">HABI</text>
+        </svg>
+      </div>
+      <div class="bar-num">Home · No. 08</div>
+      <div class="bar-name">Pomelo & Salt</div>
+      <div class="bar-quality">Linen</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 6 — PACKAGING ====== -->
+<section class="slide pack" id="s6" data-name="Packaging" data-num="VI">
+  <div class="pack-grid">
+    <div class="pack-art reveal d2">
+      <svg viewBox="0 0 360 360" width="100%" height="100%" style="max-width:420px;">
+        <defs>
+          <pattern id="cloth" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect width="6" height="6" fill="#E5DAC0"/>
+            <line x1="0" y1="3" x2="6" y2="3" stroke="#C7B391" stroke-width="0.3"/>
+            <line x1="3" y1="0" x2="3" y2="6" stroke="#C7B391" stroke-width="0.3"/>
+          </pattern>
+        </defs>
+
+        <!-- Drop shadow -->
+        <ellipse cx="180" cy="320" rx="130" ry="6" fill="#000" opacity="0.08"/>
+
+        <!-- The bar (back) -->
+        <rect x="80" y="120" width="200" height="150" rx="8" fill="#A8896B" opacity="0.95"/>
+
+        <!-- Cloth wrap (muslin) -->
+        <rect x="70" y="130" width="220" height="130" fill="url(#cloth)" stroke="#C7B391" stroke-width="0.5"/>
+        <rect x="70" y="130" width="220" height="130" fill="#E5DAC0" opacity="0.3"/>
+
+        <!-- Outer paper band -->
+        <rect x="60" y="170" width="240" height="60" fill="#F2ECDC" stroke="#221F1A" stroke-width="0.5"/>
+        <text x="180" y="195" text-anchor="middle" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="6" fill="#221F1A">HABI</text>
+        <line x1="100" y1="205" x2="260" y2="205" stroke="#221F1A" stroke-width="0.4"/>
+        <text x="180" y="219" text-anchor="middle" font-family="Fraunces" font-size="8" font-style="italic" fill="#54504A">Forest Tea &mdash; Calm</text>
+
+        <!-- Wax seal -->
+        <circle cx="180" cy="245" r="10" fill="#523524"/>
+        <text x="180" y="248" text-anchor="middle" font-family="Fraunces" font-size="7" fill="#F2ECDC" letter-spacing="1">H</text>
+
+        <!-- Annotation lines -->
+        <g stroke="#54504A" stroke-width="0.4" fill="none" opacity="0.6">
+          <line x1="60" y1="200" x2="20" y2="200"/>
+          <line x1="70" y1="135" x2="20" y2="115"/>
+          <line x1="290" y1="200" x2="340" y2="200"/>
+        </g>
+        <g font-family="Geist Mono, monospace" font-size="7" fill="#54504A" letter-spacing="1.5">
+          <text x="14" y="203" text-anchor="end" text-transform="uppercase">01</text>
+          <text x="14" y="118" text-anchor="end" text-transform="uppercase">02</text>
+          <text x="346" y="203" text-transform="uppercase">03</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="pack-list">
+      <div class="reveal d1">
+        <div class="label" style="margin-bottom: 16px;">— Packaging</div>
+        <h2 class="pack-head">A wrap, a cloth, a bar.</h2>
+      </div>
+
+      <div class="pack-item reveal d3">
+        <span class="pack-num">i.</span>
+        <div class="pack-text">
+          <h4>The Outer Band</h4>
+          <p>Matte uncoated stock, blind-embossed weave pattern. One column of editorial typography. Sealed with cacao wax.</p>
+        </div>
+      </div>
+      <div class="pack-item reveal d4">
+        <span class="pack-num">ii.</span>
+        <div class="pack-text">
+          <h4>The Cloth</h4>
+          <p>Unbleached abaca or muslin, hand-folded around the bar, woven by named cooperatives in Ilocos and Abra.</p>
+        </div>
+      </div>
+      <div class="pack-item reveal d5">
+        <span class="pack-num">iii.</span>
+        <div class="pack-text">
+          <h4>The Bar</h4>
+          <p>Cold-processed, cured four to six weeks, hand-cut. The HABI emblem stamped before cure. Edges are honest.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 7 — SOURCED BY HAND ====== -->
+<section class="slide sourced" id="s7" data-name="Sourced" data-num="VII">
+  <div class="sourced-grid">
+    <div class="sourced-text">
+      <div class="label reveal d1" style="margin-bottom: 24px;">— Ingredient Authorship</div>
+      <h2 class="reveal d2">Sourced by <em>hand</em>.<br>Named on the wrap.</h2>
+      <p class="reveal d3">
+        Every ingredient is traceable to a specific cooperative, farm, or community. We name them on the band, the way wine credits a vineyard. Specificity is the luxury.
+      </p>
+    </div>
+
+    <div class="sourced-list">
+      <div class="source-row reveal d2">
+        <span class="source-num">01.</span>
+        <span class="source-ingredient">Coconut Oil</span>
+        <span class="source-region">From <em>Tiaong, Quezon</em></span>
+        <span class="source-meta">Body & Home</span>
+      </div>
+      <div class="source-row reveal d3">
+        <span class="source-num">02.</span>
+        <span class="source-ingredient">Cacao Butter</span>
+        <span class="source-region">From <em>Davao del Sur</em></span>
+        <span class="source-meta">Body</span>
+      </div>
+      <div class="source-row reveal d3">
+        <span class="source-num">03.</span>
+        <span class="source-ingredient">Bamboo Charcoal</span>
+        <span class="source-region">From <em>Bohol</em></span>
+        <span class="source-meta">Body</span>
+      </div>
+      <div class="source-row reveal d4">
+        <span class="source-num">04.</span>
+        <span class="source-ingredient">Wild Honey</span>
+        <span class="source-region">From <em>Coron, Palawan</em></span>
+        <span class="source-meta">Body</span>
+      </div>
+      <div class="source-row reveal d4">
+        <span class="source-num">05.</span>
+        <span class="source-ingredient">Calamansi</span>
+        <span class="source-region">From <em>Batangas</em></span>
+        <span class="source-meta">Home</span>
+      </div>
+      <div class="source-row reveal d5">
+        <span class="source-num">06.</span>
+        <span class="source-ingredient">Rice Water</span>
+        <span class="source-region">From <em>Nueva Ecija</em></span>
+        <span class="source-meta">Home</span>
+      </div>
+      <div class="source-row reveal d5">
+        <span class="source-num">07.</span>
+        <span class="source-ingredient">Lemongrass</span>
+        <span class="source-region">From <em>Pampanga</em></span>
+        <span class="source-meta">Body & Home</span>
+      </div>
+      <div class="source-row reveal d6">
+        <span class="source-num">08.</span>
+        <span class="source-ingredient">Abaca Cloth</span>
+        <span class="source-region">From <em>Abra & Ilocos Sur</em></span>
+        <span class="source-meta">Inabel Weave</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 8 — SHELF PSYCHOLOGY ====== -->
+<section class="slide shelf" id="s8" data-name="Shelf" data-num="VIII">
+  <div class="shelf-head">
+    <div class="reveal d1">
+      <div class="label" style="margin-bottom: 16px;">— Shelf Psychology</div>
+      <h2>HABI wins by silence.</h2>
+    </div>
+    <div class="micro reveal d2" style="max-width: 280px; text-align: right; line-height: 1.6;">In a category of color and claim,<br>restraint becomes the loudest signal.</div>
+  </div>
+
+  <div class="shelf-grid">
+    <div class="shelf-col reveal d3">
+      <span class="shelf-num">i.</span>
+      <h3>Negative Space</h3>
+      <p>Sixty to seventy percent of every face is empty. Surrounded by clutter, the empty band reads as confidence — the same way a fine fragrance does on a department-store counter.</p>
+    </div>
+    <div class="shelf-col reveal d4">
+      <span class="shelf-num">ii.</span>
+      <h3>Editorial Type</h3>
+      <p>The serif wordmark, set wide and quiet, signals fashion-adjacent luxury — the visual register of fine fragrance, not mass beauty. Type is the price tag before the price tag.</p>
+    </div>
+    <div class="shelf-col reveal d5">
+      <span class="shelf-num">iii.</span>
+      <h3>Tactile Invitation</h3>
+      <p>Matte uncoated paper, embossed weave, cloth peeking from the band. People pick HABI up. The pickup is the conversion event in artisan retail — and the most reliable one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 9 — VOICE ====== -->
+<section class="slide voice" id="s9" data-name="Voice" data-num="IX">
+  <div class="voice-head">
+    <div class="label reveal d1" style="margin-bottom: 16px;">— Brand Voice</div>
+    <h2 class="reveal d2">How HABI <em>speaks</em>.</h2>
+  </div>
+  <div class="voice-grid">
+    <div class="voice-col reveal d3">
+      <h3>Words We Use</h3>
+      <div class="voice-words">
+        <span class="voice-word">Bar.</span>
+        <span class="voice-word">Cut.</span>
+        <span class="voice-word">Cure.</span>
+        <span class="voice-word">Wrap.</span>
+        <span class="voice-word">Wash.</span>
+        <span class="voice-word">Hand.</span>
+        <span class="voice-word">Batch.</span>
+        <span class="voice-word">Source.</span>
+      </div>
+    </div>
+    <div class="voice-divider reveal d4"></div>
+    <div class="voice-col reveal d5">
+      <h3>Words We Don't</h3>
+      <div class="voice-words">
+        <span class="voice-word strike">Transform.</span>
+        <span class="voice-word strike">Boost.</span>
+        <span class="voice-word strike">Glow Up.</span>
+        <span class="voice-word strike">Journey.</span>
+        <span class="voice-word strike">Manifest.</span>
+        <span class="voice-word strike">Elevate.</span>
+        <span class="voice-word strike">Must-Have.</span>
+        <span class="voice-word strike">Game-Changer.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 10 — THE STORY ====== -->
+<section class="slide story" id="s10" data-name="The Story" data-num="X">
+  <div class="story-body">
+    <div class="story-eyebrow reveal d1">— A Closing Word —</div>
+    <p class="lead reveal d2">A bar is a small thing.</p>
+    <p class="reveal d3">
+      It sits at the edge of the basin, or beside the laundry. It is used once, twice, a hundred times, then it is gone. Most people never think about it. <em>HABI is for the people who do.</em>
+    </p>
+    <p class="reveal d4">
+      The bars are cold-processed in a small workshop in Manila &mdash; one line for the body, one for the cloth. The coconut oil comes from a family in Quezon. The honey is from beekeepers in Palawan. The calamansi from a grove in Batangas. The cloth that wraps each bar is woven by hand in a town in the north. Cut by hand. Cured for six weeks before it leaves us.
+    </p>
+    <p class="reveal d5">
+      It costs more than a supermarket soap. It costs less than a department-store soap. It is worth, we think, what it costs &mdash; because of the time, and the source, and the hands.
+    </p>
+    <div class="story-sign reveal d6">For the body. For the cloth.</div>
+  </div>
+</section>
+
+<!-- ====== SLIDE 11 — SIGN-OFF ====== -->
+<section class="slide signoff" id="s11" data-name="Signature" data-num="XI">
+  <div class="signoff-emblem reveal d1">
+    <svg viewBox="0 0 140 140" width="120" height="120">
+      <circle cx="70" cy="70" r="56" fill="none" stroke="#221F1A" stroke-width="0.8"/>
+      <g stroke="#221F1A" stroke-width="1.4" fill="none" stroke-linecap="round">
+        <line x1="50" y1="42" x2="50" y2="98"/>
+        <line x1="90" y1="42" x2="90" y2="98"/>
+        <line x1="44" y1="70" x2="96" y2="70"/>
+        <line x1="50" y1="56" x2="90" y2="84" stroke-width="0.7" opacity="0.5"/>
+        <line x1="90" y1="56" x2="50" y2="84" stroke-width="0.7" opacity="0.5"/>
+      </g>
+    </svg>
+  </div>
+  <div class="signoff-tag reveal d2">For the body. For the cloth.</div>
+  <div class="thread-line signoff-thread reveal d3"></div>
+  <div class="signoff-mark reveal d4">HABI</div>
+  <div class="signoff-bottom reveal d5">
+    <span class="micro">Handcrafted Soap & Detergent &nbsp;·&nbsp; Manila</span>
+    <span class="micro" style="color: var(--ink-mute);">A Brand Within The Redbox Ecosystem</span>
+  </div>
+</section>
+
+</main>
+
+<script>
+// Loading screen dismissal
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('gone');
+  }, 3400);
+});
+
+// Build loom navigation
+const slides = document.querySelectorAll('.slide');
+const loom = document.getElementById('loom');
+slides.forEach((s, i) => {
+  const t = document.createElement('div');
+  t.className = 'loom-thread';
+  t.dataset.target = s.id;
+  t.dataset.name = s.dataset.name;
+  if (i === 0) t.classList.add('active');
+  t.addEventListener('click', () => {
+    document.getElementById(s.id).scrollIntoView({ behavior: 'smooth' });
+  });
+  loom.appendChild(t);
+});
+
+// Roman numerals lookup
+const romans = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+
+// Intersection Observer — animate in + update chrome
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+    } else {
+      // Allow re-trigger on scroll back
+      e.target.classList.remove('in');
+    }
+  });
+}, { threshold: 0.15 });
+reveals.forEach(r => revealObs.observe(r));
+
+// Active slide tracking
+const chapNum = document.getElementById('chap-num');
+const chapName = document.getElementById('chap-name');
+const hint = document.getElementById('hint');
+const threads = document.querySelectorAll('.loom-thread');
+
+const slideObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && e.intersectionRatio > 0.5) {
+      const id = e.target.id;
+      const idx = parseInt(id.replace('s', '')) - 1;
+      chapNum.textContent = romans[idx];
+      chapName.textContent = e.target.dataset.name;
+      threads.forEach((t, i) => {
+        t.classList.toggle('active', i === idx);
+      });
+      // Hide hint after first scroll past slide 1
+      if (idx > 0) hint.classList.add('hide');
+    }
+  });
+}, { threshold: [0.5, 0.7] });
+slides.forEach(s => slideObs.observe(s));
+
+// Keyboard navigation
+let currentSlide = 0;
+document.addEventListener('keydown', (e) => {
+  // find current
+  let active = 0;
+  threads.forEach((t, i) => { if (t.classList.contains('active')) active = i; });
+
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault();
+    const next = Math.min(active + 1, slides.length - 1);
+    slides[next].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault();
+    const prev = Math.max(active - 1, 0);
+    slides[prev].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (e.key === 'Home') {
+    e.preventDefault();
+    slides[0].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (e.key === 'End') {
+    e.preventDefault();
+    slides[slides.length - 1].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// Click on loader skips intro
+document.getElementById('loader').addEventListener('click', () => {
+  document.getElementById('loader').classList.add('gone');
+});
+</script>
+
+</body>
+</html>

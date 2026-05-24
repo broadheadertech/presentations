@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DALISAY — A Filipino Soap &amp; Detergent House</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Italiana&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #F4EDE0;
+    --pearl: #EFE6D5;
+    --paper: #FBF6EC;
+    --gold: #A8895C;
+    --gold-deep: #8C6F45;
+    --sage: #8A9684;
+    --sage-deep: #6A7766;
+    --stone: #C8B89E;
+    --sand: #D9C9AE;
+    --charcoal: #2A2622;
+    --ash: #5C544A;
+    --whisper: #8E8377;
+    --line: #C9B998;
+    --soap-rose: #E8C9B4;
+    --soap-cream: #F0E2C8;
+    --soap-charcoal: #4A4641;
+    --soap-sage: #B8B89C;
+    --soap-cacao: #8B6A4F;
+    --linen-blue: #B8C2C0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ivory);
+    color: var(--charcoal);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .display { font-family: 'Italiana', serif; font-weight: 400; letter-spacing: 0.04em; line-height: 1; }
+  .serif { font-family: 'Cormorant Garamond', serif; }
+  .sans  {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+  .italic { font-style: italic; font-weight: 300; color: var(--ash); }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+  }
+
+  .page {
+    min-height: 100vh;
+    padding: 120px 9vw;
+    position: relative;
+    border-bottom: 1px solid rgba(168, 137, 92, 0.18);
+  }
+  .page:last-child { border-bottom: none; }
+
+  .folio {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+    padding: 0 9vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .folio .sans { color: var(--whisper); }
+  .folio .num {
+    font-family: 'Italiana', serif;
+    font-size: 13px;
+    color: var(--gold-deep);
+    letter-spacing: 0.2em;
+  }
+
+  /* COVER */
+  .cover {
+    min-height: 100vh;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 80px 9vw 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-frame {
+    position: absolute;
+    inset: 50px 9vw;
+    border: 1px solid var(--line);
+    pointer-events: none;
+  }
+  .cover-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0 0;
+    position: relative;
+    z-index: 2;
+  }
+  .cover-center { text-align: center; position: relative; z-index: 2; }
+  .cover-mark {
+    font-family: 'Italiana', serif;
+    font-size: clamp(72px, 16vw, 220px);
+    letter-spacing: 0.18em;
+    color: var(--charcoal);
+    line-height: 1;
+    margin-left: 0.18em;
+  }
+  .cover-tag {
+    margin-top: 60px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(18px, 2vw, 24px);
+    color: var(--ash);
+  }
+  .cover-tag .ampersand {
+    font-family: 'Italiana', serif;
+    font-style: normal;
+    color: var(--gold-deep);
+    font-size: 1.2em;
+  }
+  .cover-rule {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 50px auto;
+  }
+  .cover-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 2;
+  }
+
+  .emblem { width: 56px; height: 56px; display: inline-block; vertical-align: middle; }
+  .emblem-lg { width: 110px; height: 110px; }
+
+  /* TWO PILLARS BANNER */
+  .pillars-banner {
+    background: var(--ivory);
+    padding: 110px 9vw;
+    text-align: center;
+  }
+  .pillars-banner .ampersand {
+    font-family: 'Italiana', serif;
+    font-size: clamp(60px, 9vw, 130px);
+    color: var(--gold);
+    line-height: 1;
+    margin: 30px 0;
+  }
+  .pillars-banner .pillar-name {
+    font-family: 'Italiana', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    letter-spacing: 0.08em;
+    color: var(--charcoal);
+  }
+  .pillars-banner .pillar-meta {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ash);
+    font-size: clamp(16px, 1.8vw, 20px);
+    margin-top: 10px;
+  }
+
+  /* MANIFESTO */
+  .manifesto {
+    background: var(--ivory);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .manifesto-body {
+    max-width: 660px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.55;
+    color: var(--charcoal);
+    font-style: italic;
+  }
+  .manifesto-body em { font-style: normal; color: var(--gold-deep); }
+  .manifesto h2 {
+    font-family: 'Italiana', serif;
+    font-size: clamp(38px, 5vw, 60px);
+    letter-spacing: 0.08em;
+    margin-bottom: 60px;
+    color: var(--charcoal);
+  }
+
+  /* SECTIONS */
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 40px;
+    align-items: baseline;
+    margin-bottom: 70px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-num {
+    font-family: 'Italiana', serif;
+    font-size: clamp(48px, 7vw, 96px);
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .section-title {
+    font-family: 'Italiana', serif;
+    font-size: clamp(32px, 4.2vw, 56px);
+    color: var(--charcoal);
+    letter-spacing: 0.05em;
+    line-height: 1.05;
+  }
+  .section-kicker {
+    display: block;
+    margin-bottom: 14px;
+    color: var(--whisper);
+  }
+
+  .lede {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(20px, 2vw, 24px);
+    color: var(--ash);
+    max-width: 760px;
+    margin: 0 0 50px 16.6%;
+    line-height: 1.6;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 40px;
+    margin-bottom: 50px;
+    align-items: start;
+  }
+  .label {
+    font-family: 'Jost', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    padding-top: 8px;
+  }
+  .copy { max-width: 700px; }
+  .copy p + p { margin-top: 18px; }
+  .copy strong { font-weight: 500; color: var(--charcoal); }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    margin: 40px 0;
+  }
+  .three-col .item h4 {
+    font-family: 'Italiana', serif;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--charcoal);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .three-col .item p { font-size: 15.5px; line-height: 1.65; color: var(--ash); }
+
+  /* PILLAR INTRO */
+  .pillar-intro {
+    background: var(--paper);
+    padding: 70px 60px;
+    margin-bottom: 60px;
+    border-left: 3px solid var(--gold);
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .pillar-intro .pillar-tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .pillar-intro h3 {
+    font-family: 'Italiana', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    letter-spacing: 0.05em;
+    color: var(--charcoal);
+    line-height: 1.1;
+  }
+  .pillar-intro .pillar-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ash);
+    margin-top: 10px;
+  }
+
+  /* COLOR PALETTE */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    margin: 50px 0;
+  }
+  .swatch { text-align: center; }
+  .swatch-chip {
+    aspect-ratio: 3 / 4;
+    border: 1px solid rgba(0,0,0,0.06);
+    margin-bottom: 14px;
+  }
+  .swatch-name { font-family: 'Italiana', serif; font-size: 16px; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .swatch-hex { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.18em; color: var(--whisper); }
+
+  /* COLLECTION GRID */
+  .soap-collection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 60px 80px;
+    margin-top: 40px;
+  }
+  .soap-card {
+    border-top: 1px solid var(--line);
+    padding-top: 30px;
+  }
+  .soap-svg-wrap {
+    background: var(--paper);
+    padding: 40px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+  .soap-name {
+    font-family: 'Italiana', serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    color: var(--charcoal);
+    margin-bottom: 6px;
+  }
+  .soap-tagalog {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 18px;
+  }
+  .soap-copy {
+    color: var(--ash);
+    font-size: 15.5px;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .soap-spec {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px dotted var(--line);
+    padding-top: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--whisper);
+  }
+
+  /* INGREDIENT LIST */
+  .ingredients { margin-top: 30px; }
+  .ingredient-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 2.5fr 90px;
+    gap: 30px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .ingredient-row .num { font-family: 'Italiana', serif; color: var(--gold); font-size: 18px; }
+  .ingredient-row .name {
+    font-family: 'Italiana', serif;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    color: var(--charcoal);
+  }
+  .ingredient-row .name small {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--whisper);
+    margin-top: 4px;
+    letter-spacing: 0;
+  }
+  .ingredient-row .story {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--ash);
+    line-height: 1.65;
+  }
+  .ingredient-row .origin {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    text-align: right;
+  }
+
+  /* PROCESS TIMELINE */
+  .process { margin: 50px 0; position: relative; }
+  .process-step {
+    display: grid;
+    grid-template-columns: 80px 240px 1fr;
+    gap: 40px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .process-step .step-num { font-family: 'Italiana', serif; font-size: 36px; color: var(--gold); }
+  .process-step .step-name {
+    font-family: 'Italiana', serif;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--charcoal);
+  }
+  .process-step .step-tagalog {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--gold-deep);
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .process-step .step-desc { color: var(--ash); font-size: 16px; line-height: 1.65; }
+  .process-step .step-desc em { color: var(--gold-deep); font-style: italic; }
+
+  /* VOICE */
+  .voice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin: 40px 0;
+  }
+  .voice-grid h4 {
+    font-family: 'Italiana', serif;
+    font-size: 26px;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .voice-grid .yes h4 { color: var(--sage-deep); }
+  .voice-grid .no h4 { color: #9a6a5c; }
+  .voice-grid li {
+    list-style: none;
+    padding: 10px 0;
+    font-size: 16.5px;
+    color: var(--ash);
+  }
+  .voice-grid li::before { content: '—'; color: var(--gold); margin-right: 12px; }
+
+  /* PULL QUOTE */
+  .pullquote {
+    margin: 80px 0;
+    padding: 0 8%;
+    text-align: center;
+  }
+  .pullquote p {
+    font-family: 'Italiana', serif;
+    font-size: clamp(26px, 3.4vw, 42px);
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    color: var(--charcoal);
+  }
+  .pullquote .attr { margin-top: 26px; color: var(--gold-deep); }
+
+  /* STRATA */
+  .strata {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    margin: 30px 0;
+  }
+  .strata > div {
+    padding: 30px 24px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+  .strata > div:nth-child(3n) { border-right: none; }
+  .strata h5 {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 14px;
+  }
+  .strata p { font-size: 15px; color: var(--charcoal); line-height: 1.55; }
+
+  /* CAMPAIGN */
+  .campaign {
+    margin: 50px 0;
+    padding: 50px 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 50px;
+  }
+  .campaign:first-of-type { border-top: none; padding-top: 0; }
+  .campaign-meta { color: var(--whisper); }
+  .campaign-meta .title {
+    font-family: 'Italiana', serif;
+    color: var(--charcoal);
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .campaign-body p { margin-bottom: 14px; color: var(--ash); }
+  .campaign-body p:first-child {
+    color: var(--charcoal);
+    font-style: italic;
+    font-size: 18px;
+  }
+
+  /* PACKAGING STAGE */
+  .packaging-stage {
+    background: linear-gradient(180deg, var(--paper) 0%, var(--pearl) 100%);
+    padding: 80px 50px;
+    margin: 50px 0;
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+  .pkg { text-align: center; }
+  .pkg-label {
+    margin-top: 24px;
+    font-family: 'Italiana', serif;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--charcoal);
+  }
+  .pkg-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--whisper);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* NARRATIVE FINALE */
+  .narrative {
+    background: var(--charcoal);
+    color: var(--paper);
+  }
+  .narrative .folio .sans,
+  .narrative .folio .num { color: var(--stone); }
+  .narrative .section-num { color: var(--gold); }
+  .narrative .section-title { color: var(--paper); }
+  .narrative .section-head { border-bottom-color: rgba(168, 137, 92, 0.4); }
+  .narrative .lede { color: var(--stone); }
+  .narrative .copy { color: var(--pearl); max-width: 720px; }
+  .narrative .copy strong { color: var(--paper); }
+  .narrative .pullquote p { color: var(--paper); }
+  .narrative .pullquote .attr { color: var(--gold); }
+
+  .seal { text-align: center; margin-top: 100px; }
+  .seal-mark {
+    font-family: 'Italiana', serif;
+    font-size: 48px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .seal-line {
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px auto;
+  }
+  .seal-meta {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--stone);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 880px) {
+    .page { padding: 90px 7vw; }
+    .folio { padding: 0 7vw; }
+    .section-head { grid-template-columns: 1fr; gap: 20px; }
+    .two-col, .campaign, .pillar-intro { grid-template-columns: 1fr; gap: 18px; }
+    .lede { margin-left: 0; }
+    .three-col, .palette, .soap-collection { grid-template-columns: 1fr 1fr; gap: 30px; }
+    .voice-grid { grid-template-columns: 1fr; gap: 30px; }
+    .strata { grid-template-columns: 1fr; }
+    .strata > div { border-right: none; }
+    .ingredient-row, .process-step { grid-template-columns: 1fr; gap: 8px; }
+    .ingredient-row .origin { text-align: left; }
+    .packaging-stage { gap: 40px; padding: 50px 20px; }
+    .cover-frame { inset: 30px 7vw; }
+    .pillar-intro { padding: 40px 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────  COVER  ───────────────────────────── -->
+<section class="cover">
+  <div class="cover-frame"></div>
+
+  <div class="cover-top">
+    <span class="sans">House Dossier · Vol. I</span>
+    <span class="sans">MMXXVI</span>
+  </div>
+
+  <div class="cover-center">
+    <svg class="emblem emblem-lg" viewBox="0 0 100 100" style="margin: 0 auto 50px; display:block;" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#A8895C" stroke-width="0.8">
+        <circle cx="50" cy="50" r="46"/>
+        <circle cx="50" cy="50" r="38" opacity="0.5"/>
+      </g>
+      <g fill="#A8895C" opacity="0.9">
+        <ellipse cx="50" cy="32" rx="6" ry="11"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(72 50 50)"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(144 50 50)"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(216 50 50)"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(288 50 50)"/>
+      </g>
+      <circle cx="50" cy="50" r="3.5" fill="#8C6F45"/>
+    </svg>
+
+    <div class="cover-mark">DALISAY</div>
+    <div class="cover-rule"></div>
+    <div class="cover-tag">
+      A Filipino soap <span class="ampersand">&amp;</span> detergent house.<br>
+      For the body. For the home.
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div>
+      <div class="sans" style="color: var(--whisper); margin-bottom: 6px;">Two Pillars</div>
+      <div style="font-family:'Italiana',serif; font-size: 17px; letter-spacing: 0.06em;">Hugas · Laba</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="sans" style="color: var(--whisper); margin-bottom: 6px;">Under The</div>
+      <div style="font-family:'Italiana',serif; font-size: 17px; letter-spacing: 0.06em;">Redbox Ecosystem</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  TWO PILLARS BANNER  ───────────────────────────── -->
+<section class="pillars-banner">
+  <div class="sans" style="color: var(--whisper); margin-bottom: 30px;">The House Has Two Pillars</div>
+  <div class="pillar-name">HUGAS</div>
+  <div class="pillar-meta">— soap for the body —</div>
+  <div class="ampersand">&amp;</div>
+  <div class="pillar-name">LABA</div>
+  <div class="pillar-meta">— detergent for the home —</div>
+  <div style="width:60px; height:1px; background: var(--gold); margin: 60px auto 0;"></div>
+  <div class="sans" style="color: var(--gold-deep); margin-top: 30px;">Same craft. Same provenance. Same patience.</div>
+</section>
+
+<!-- ─────────────────────────────  MANIFESTO  ───────────────────────────── -->
+<section class="page manifesto">
+  <div class="folio">
+    <span class="sans">Manifesto</span>
+    <span class="num">I</span>
+  </div>
+
+  <h2>Two Honest Objects.</h2>
+
+  <p class="manifesto-body">
+    <em>Dalisay</em> is a Tagalog word.
+    It means <em>pure, distilled, refined</em> — what remains after everything unnecessary
+    has been gently set aside.
+    <br><br>
+    We make two things.
+    <em>Soap.</em> <em>Detergent.</em>
+    <br><br>
+    The bar that touches your skin in the morning.
+    The liquid that washes the linen that touches your skin at night.
+    <br><br>
+    Most of the world treats one as a luxury and the other as a chore.
+    We refuse this distinction.
+    Both are made by the same hands, from the same coconut, in the same atelier,
+    with the same patience.
+    <br><br>
+    A clean shirt deserves as much grace as a clean face.
+  </p>
+
+  <div class="seal" style="margin-top: 80px;">
+    <div class="seal-line"></div>
+    <div class="sans" style="color: var(--whisper);">Pampanga · Manila · The World</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  01 BRAND IDENTITY  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Foundation</span>
+    <span class="num">01 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">01</div>
+    <div>
+      <span class="section-kicker sans">The Position</span>
+      <h2 class="section-title">Brand Identity System</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    A house of cleansing. The bar for the body. The liquid for the home.
+    Two products, one philosophy: that everyday acts of cleaning are also acts of dignity.
+  </p>
+
+  <div class="two-col">
+    <div class="label">Category</div>
+    <div class="copy">
+      <p><strong>The Filipino luxury cleansing house.</strong> Not a skincare brand. Not a wellness brand. Not a household brand either, in the conventional sense. A house that takes both ends of cleaning seriously — the body and the home — and treats them with the same craft, the same provenance, and the same paper-and-glass restraint.</p>
+      <p>The category we are building has a French precedent (Buly 1803, Compagnie de Provence) and a Japanese one (Daylight). It has no Filipino counterpart yet.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Two Pillars</div>
+    <div class="copy">
+      <div class="three-col" style="grid-template-columns: 1fr 1fr;">
+        <div class="item">
+          <h4>HUGAS</h4>
+          <p><em>The bath.</em> Cold-process soap bars, cured six weeks on cedar. Eight bars in the collection. For face, body, and hands.</p>
+        </div>
+        <div class="item">
+          <h4>LABA</h4>
+          <p><em>The wash.</em> Plant-derived liquid detergents and surface cleaners. Four formulations. For linen, dishes, floors, and the body's quietest companions — the clothes it lives inside.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">Brand Pillars</div>
+    <div class="copy">
+      <div class="three-col">
+        <div class="item">
+          <h4>Purity</h4>
+          <p>No synthetic detergents in the bar. No phosphates, brighteners, or synthetic fragrance in the wash. Both lines pass the same ingredient standard.</p>
+        </div>
+        <div class="item">
+          <h4>Patience</h4>
+          <p>The bar cures six weeks. The detergent ferments three. Time is the active ingredient in both.</p>
+        </div>
+        <div class="item">
+          <h4>Place</h4>
+          <p>Every oil, every botanical, every hand is Filipino, named, and traceable to a province.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">Promise</div>
+    <div class="copy">
+      <p>A bar that makes the bathroom smell like a small garden for six weeks. A detergent that makes a clean shirt smell, faintly, of lemongrass and sun. <strong>Two everyday rituals — washing the body, washing the clothes — restored to the standard they had a hundred years ago, before chemistry shouted at them.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  02 LOGO + MARKS  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Identity</span>
+    <span class="num">02 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">02</div>
+    <div>
+      <span class="section-kicker sans">The Marks</span>
+      <h2 class="section-title">Logo &amp; Emblem Direction</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    One wordmark. Two pillar marks. One sampaguita.
+    Each is a different volume of the same word.
+  </p>
+
+  <div style="text-align:center; margin: 80px 0;">
+    <div style="font-family:'Italiana',serif; font-size: clamp(48px, 10vw, 120px); letter-spacing: 0.22em; color: var(--charcoal); margin-left: 0.22em;">DALISAY</div>
+    <div style="width:40px; height:1px; background: var(--gold); margin: 30px auto;"></div>
+    <div class="sans" style="color: var(--gold-deep);">— The Primary Wordmark —</div>
+  </div>
+
+  <div class="three-col" style="margin-top: 80px; grid-template-columns: repeat(4, 1fr);">
+    <div class="item" style="text-align:center;">
+      <svg class="emblem emblem-lg" viewBox="0 0 100 100" style="margin: 0 auto 24px; display:block;" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#A8895C" stroke-width="0.8"/>
+        <text x="50" y="60" font-family="Italiana" font-size="32" fill="#2A2622" text-anchor="middle" letter-spacing="0.04em">D</text>
+      </svg>
+      <h4>The Monogram</h4>
+      <p>The single <em>D</em>. Pressed into every cured bar; embossed on every bottle base.</p>
+    </div>
+
+    <div class="item" style="text-align:center;">
+      <svg class="emblem emblem-lg" viewBox="0 0 100 100" style="margin: 0 auto 24px; display:block;" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#A8895C" stroke-width="0.8"/>
+        <text x="50" y="58" font-family="Italiana" font-size="13" fill="#2A2622" text-anchor="middle" letter-spacing="0.2em">HUGAS</text>
+      </svg>
+      <h4>The Hugas Mark</h4>
+      <p>The pillar mark for the soap line. On every bar wrap and gift box.</p>
+    </div>
+
+    <div class="item" style="text-align:center;">
+      <svg class="emblem emblem-lg" viewBox="0 0 100 100" style="margin: 0 auto 24px; display:block;" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#A8895C" stroke-width="0.8"/>
+        <text x="50" y="58" font-family="Italiana" font-size="14" fill="#2A2622" text-anchor="middle" letter-spacing="0.2em">LABA</text>
+      </svg>
+      <h4>The Laba Mark</h4>
+      <p>The pillar mark for the detergent line. On every bottle label and refill cap.</p>
+    </div>
+
+    <div class="item" style="text-align:center;">
+      <svg class="emblem emblem-lg" viewBox="0 0 100 100" style="margin: 0 auto 24px; display:block;" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#A8895C" opacity="0.95">
+          <ellipse cx="50" cy="32" rx="6" ry="11"/>
+          <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(72 50 50)"/>
+          <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(144 50 50)"/>
+          <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(216 50 50)"/>
+          <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(288 50 50)"/>
+        </g>
+        <circle cx="50" cy="50" r="3.5" fill="#8C6F45"/>
+      </svg>
+      <h4>The Sampaguita</h4>
+      <p>The botanical seal. Wax-stamped on every gift and on every certificate of cure.</p>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    <p>"The same hand that washes the face washes the linen. The brand on both should match."</p>
+    <div class="sans attr">— House Principle No. 1</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  03 COLOR  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Identity</span>
+    <span class="num">03 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">03</div>
+    <div>
+      <span class="section-kicker sans">The Palette</span>
+      <h2 class="section-title">Color Psychology</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    A shared palette across both pillars. <em>Hugas</em> leans into warm ivory and cacao;
+    <em>Laba</em> leans into pearl and linen-blue. Both share the gold seal.
+  </p>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #F4EDE0;"></div>
+      <div class="swatch-name">Rice Milk Ivory</div>
+      <div class="swatch-hex">#F4EDE0</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #EFE6D5;"></div>
+      <div class="swatch-name">Pearl Cream</div>
+      <div class="swatch-hex">#EFE6D5</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #E8C9B4;"></div>
+      <div class="swatch-name">Sampaguita Blush</div>
+      <div class="swatch-hex">#E8C9B4</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #A8895C;"></div>
+      <div class="swatch-name">Muted Gold</div>
+      <div class="swatch-hex">#A8895C</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #8A9684;"></div>
+      <div class="swatch-name">Lemongrass Sage</div>
+      <div class="swatch-hex">#8A9684</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #B8C2C0;"></div>
+      <div class="swatch-name">Linen Blue</div>
+      <div class="swatch-hex">#B8C2C0</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #8B6A4F;"></div>
+      <div class="swatch-name">Cacao Heritage</div>
+      <div class="swatch-hex">#8B6A4F</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #C8B89E;"></div>
+      <div class="swatch-name">Matte Stone</div>
+      <div class="swatch-hex">#C8B89E</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #4A4641;"></div>
+      <div class="swatch-name">Charcoal Bar</div>
+      <div class="swatch-hex">#4A4641</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-chip" style="background: #2A2622;"></div>
+      <div class="swatch-name">Elegant Charcoal</div>
+      <div class="swatch-hex">#2A2622</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Pillar Distinction</div>
+    <div class="copy">
+      <p><strong>Hugas (the soap line)</strong> uses warmer accents: cacao, sampaguita blush, muted gold. The bath feels intimate, cellular, close to skin.</p>
+      <p><strong>Laba (the detergent line)</strong> uses cooler accents: linen blue, sage, and pearl. The wash feels architectural, breezy, fresh-air. The blue is borrowed from the colour of <em>indigo-rinsed linen drying in the sun</em> — the colour of the country's oldest laundry tradition.</p>
+      <p>Both lines share the gold seal, the charcoal type, and the ivory paper. A patron's shelf, when both lines are present, reads as a single quiet composition with two related but distinguishable tones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  04 TYPOGRAPHY  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Identity</span>
+    <span class="num">04 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">04</div>
+    <div>
+      <span class="section-kicker sans">The Voice On Page</span>
+      <h2 class="section-title">Typography &amp; Hierarchy</h2>
+    </div>
+  </div>
+
+  <div style="margin: 60px 0;">
+    <div style="font-family:'Italiana',serif; font-size: 96px; line-height:1; letter-spacing:0.04em; color: var(--charcoal);">Italiana</div>
+    <div style="margin-top: 20px; max-width: 600px;">
+      <span class="sans" style="color: var(--gold-deep);">Display · The House Name &amp; Pillars</span>
+      <p style="margin-top:10px; color: var(--ash); font-size: 16px;">Reserved for the wordmark, the pillar names (HUGAS, LABA), the bar names, and the largest editorial moments. Always letter-spaced. Always restrained.</p>
+    </div>
+  </div>
+
+  <div style="margin: 60px 0; border-top: 1px solid var(--line); padding-top: 60px;">
+    <div style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size: 64px; line-height:1.1; color: var(--charcoal);">Cormorant Garamond</div>
+    <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:300; font-size: 32px; color: var(--ash); margin-top: 10px;">— and its italics, for tenderness.</div>
+    <div style="margin-top: 20px; max-width: 600px;">
+      <span class="sans" style="color: var(--gold-deep);">Body · Reading Voice</span>
+      <p style="margin-top:10px; color: var(--ash); font-size: 16px;">Wrap copy, bottle stories, ingredient notes, brand narrative.</p>
+    </div>
+  </div>
+
+  <div style="margin: 60px 0; border-top: 1px solid var(--line); padding-top: 60px;">
+    <div style="font-family:'Jost',sans-serif; font-weight:400; font-size: 36px; letter-spacing: 0.15em; color: var(--charcoal); text-transform: uppercase;">JOST · SANS</div>
+    <div style="margin-top: 20px; max-width: 600px;">
+      <span class="sans" style="color: var(--gold-deep);">Functional · Specs &amp; Dosing</span>
+      <p style="margin-top:10px; color: var(--ash); font-size: 16px;">Batch numbers, cure dates, weights, volumes, ingredient declarations, and — uniquely for the Laba line — dosing instructions and dilution ratios.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  05 ICONOGRAPHY  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Identity</span>
+    <span class="num">05 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">05</div>
+    <div>
+      <span class="section-kicker sans">The Botanical Lexicon</span>
+      <h2 class="section-title">Iconography</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    A small library of hand-drawn line marks — one per ingredient, used only on the product that contains it.
+    No icon ever appears twice on the same wrap.
+  </p>
+
+  <div class="three-col" style="margin-top: 60px;">
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1">
+          <ellipse cx="40" cy="40" rx="22" ry="14"/>
+          <circle cx="32" cy="36" r="1.5" fill="#2A2622"/>
+          <circle cx="48" cy="44" r="1.5" fill="#2A2622"/>
+          <circle cx="40" cy="40" r="1.5" fill="#2A2622"/>
+        </g>
+      </svg>
+      <h4>Bigas</h4>
+      <p>Rice — the morning bar.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="#2A2622">
+          <ellipse cx="40" cy="40" rx="5" ry="9"/>
+          <ellipse cx="40" cy="40" rx="5" ry="9" transform="rotate(72 40 40)"/>
+          <ellipse cx="40" cy="40" rx="5" ry="9" transform="rotate(144 40 40)"/>
+          <ellipse cx="40" cy="40" rx="5" ry="9" transform="rotate(216 40 40)"/>
+          <ellipse cx="40" cy="40" rx="5" ry="9" transform="rotate(288 40 40)"/>
+        </g>
+      </svg>
+      <h4>Sampaguita</h4>
+      <p>The signature flower.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1" stroke-linecap="round">
+          <path d="M40 65 Q40 40 40 20"/>
+          <path d="M40 35 Q25 25 18 18"/>
+          <path d="M40 35 Q55 25 62 18"/>
+          <path d="M40 50 Q25 45 20 38"/>
+          <path d="M40 50 Q55 45 60 38"/>
+        </g>
+      </svg>
+      <h4>Tanglad</h4>
+      <p>Lemongrass — clarifying.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1">
+          <circle cx="40" cy="44" r="20"/>
+          <path d="M40 24 Q36 16 32 20"/>
+          <path d="M40 24 Q44 16 48 20"/>
+        </g>
+      </svg>
+      <h4>Dayap</h4>
+      <p>Calamansi — brightening.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1">
+          <path d="M40 16 Q28 30 28 50 Q28 64 40 64 Q52 64 52 50 Q52 30 40 16Z"/>
+          <circle cx="40" cy="44" r="3" fill="#2A2622"/>
+        </g>
+      </svg>
+      <h4>Kakaw</h4>
+      <p>Cacao — nourishing.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1">
+          <path d="M40 60 L40 30"/>
+          <path d="M40 30 L30 22"/>
+          <path d="M40 30 L50 22"/>
+          <path d="M40 38 L32 32"/>
+          <path d="M40 38 L48 32"/>
+          <path d="M40 46 L34 42"/>
+          <path d="M40 46 L46 42"/>
+        </g>
+      </svg>
+      <h4>Uling</h4>
+      <p>Bamboo charcoal — deep clean.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1">
+          <path d="M22 30 L58 30 L58 60 L22 60 Z"/>
+          <line x1="22" y1="38" x2="58" y2="38" stroke-dasharray="2,2"/>
+          <line x1="40" y1="30" x2="40" y2="60" stroke-dasharray="2,2"/>
+          <circle cx="46" cy="30" r="2" fill="#2A2622"/>
+        </g>
+      </svg>
+      <h4>Damit</h4>
+      <p>Linen — for the Laba line.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1">
+          <path d="M20 45 Q30 35 40 45 Q50 55 60 45"/>
+          <path d="M20 55 Q30 45 40 55 Q50 65 60 55"/>
+        </g>
+      </svg>
+      <h4>Tubig</h4>
+      <p>Water — for dilution &amp; rinse.</p>
+    </div>
+    <div class="item" style="text-align:center;">
+      <svg viewBox="0 0 80 80" width="80" height="80" style="margin: 0 auto 20px; display:block;">
+        <g fill="none" stroke="#2A2622" stroke-width="1">
+          <path d="M40 20 C 30 30, 30 50, 40 60 C 50 50, 50 30, 40 20 Z"/>
+          <line x1="40" y1="20" x2="40" y2="60" stroke="#2A2622" stroke-width="0.5"/>
+        </g>
+      </svg>
+      <h4>Suka</h4>
+      <p>Vinegar — for the surface wash.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════════════════════
+                              PILLAR I · HUGAS
+     ═════════════════════════════════════════════════════════════════════════ -->
+
+<!-- ─────────────────────────────  06 HUGAS COLLECTION  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Pillar I · Hugas</span>
+    <span class="num">06 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">06</div>
+    <div>
+      <span class="section-kicker sans">Pillar I · For The Body</span>
+      <h2 class="section-title">Hugas — The Soap Collection</h2>
+    </div>
+  </div>
+
+  <div class="pillar-intro">
+    <div>
+      <div class="pillar-tag">Pillar I</div>
+      <div style="font-family:'Italiana',serif; font-size: 60px; letter-spacing: 0.06em; color: var(--charcoal);">HUGAS</div>
+    </div>
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size: 22px; color: var(--ash); line-height: 1.5;">
+        From the Tagalog for <em>to wash</em>. The body's pillar. Eight cold-process bars cured six weeks on cedar in our Pampanga atelier. For face, body, and hands.
+      </div>
+    </div>
+  </div>
+
+  <p class="lede">
+    Eight bars, each named in Tagalog. Each made for a different hand, a different hour, a different kind of skin.
+  </p>
+
+  <div class="soap-collection">
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#F4EDE0" stroke="#C8B89E" stroke-width="0.5"/>
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="none" stroke="#A8895C" stroke-width="0.3" stroke-dasharray="2,3"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#A8895C" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#5C544A" text-anchor="middle">bukang-liwayway</text>
+        </svg>
+      </div>
+      <div class="soap-name">Bukang-Liwayway</div>
+      <div class="soap-tagalog">Rice &amp; Honey Morning Bar</div>
+      <p class="soap-copy">Cordillera tinawon rice milk, wild Palawan honey, and a thread of calamansi peel oil. Used on face and body. The day's first ritual.</p>
+      <div class="soap-spec"><span>120g</span><span>6-week cure</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#E8C9B4" stroke="#C8B89E" stroke-width="0.5"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#8C6F45" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#5C544A" text-anchor="middle">sampaguita</text>
+        </svg>
+      </div>
+      <div class="soap-name">Sampaguita</div>
+      <div class="soap-tagalog">The House Signature Bathing Bar</div>
+      <p class="soap-copy">The hero. Distilled sampaguita essence from Laguna petals harvested before dawn. The brand in a single object.</p>
+      <div class="soap-spec"><span>120g</span><span>6-week cure</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#B8B89C" stroke="#8A9684" stroke-width="0.5"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#FBF6EC" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#FBF6EC" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#FBF6EC" text-anchor="middle">tanglad</text>
+        </svg>
+      </div>
+      <div class="soap-name">Tanglad</div>
+      <div class="soap-tagalog">Lemongrass Clarifying Bar</div>
+      <p class="soap-copy">The smell of a Filipino kitchen at noon. Cold-pressed lemongrass oil and a sliver of pandan. Antibacterial, awake, deeply Filipino.</p>
+      <div class="soap-spec"><span>120g</span><span>6-week cure</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#F0E2C8" stroke="#A8895C" stroke-width="0.5"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#A8895C" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#5C544A" text-anchor="middle">dayap</text>
+        </svg>
+      </div>
+      <div class="soap-name">Dayap</div>
+      <div class="soap-tagalog">Calamansi Brightening Bar</div>
+      <p class="soap-copy">Cold-pressed calamansi peel from Oriental Mindoro. Sharp, sun-bright, vitamin-rich. The morning shower bar — the one that finishes the job coffee started.</p>
+      <div class="soap-spec"><span>120g</span><span>6-week cure</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#8B6A4F" stroke="#5C544A" stroke-width="0.5"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#FBF6EC" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#FBF6EC" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#FBF6EC" text-anchor="middle">kakaw</text>
+        </svg>
+      </div>
+      <div class="soap-name">Kakaw</div>
+      <div class="soap-tagalog">Cacao &amp; Coconut Nourishing Bar</div>
+      <p class="soap-copy">Slow-pressed Davao cacao butter and virgin coconut oil. Dense, dark, and emollient — the bar for parched skin and cold-weather travel.</p>
+      <div class="soap-spec"><span>120g</span><span>6-week cure</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#4A4641" stroke="#2A2622" stroke-width="0.5"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#FBF6EC" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#A8895C" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#A8895C" text-anchor="middle">uling</text>
+        </svg>
+      </div>
+      <div class="soap-name">Uling</div>
+      <div class="soap-tagalog">Bamboo Charcoal Polishing Bar</div>
+      <p class="soap-copy">Activated bamboo charcoal from Iloilo kawayan. Mineral, deep-cleansing, never harsh. The bar for after the long hot day.</p>
+      <div class="soap-spec"><span>120g</span><span>6-week cure</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#D9C9AE" stroke="#A8895C" stroke-width="0.5"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#8C6F45" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#5C544A" text-anchor="middle">pili</text>
+        </svg>
+      </div>
+      <div class="soap-name">Pili</div>
+      <div class="soap-tagalog">Pili &amp; Honey Hand Bar</div>
+      <p class="soap-copy">A smaller bar made specifically for hands. Sorsogon pili pulp oil and Palawan honey. Sits on the sink in a ceramic dish.</p>
+      <div class="soap-spec"><span>80g</span><span>6-week cure</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <rect x="10" y="20" width="140" height="60" rx="4" fill="#FBF6EC" stroke="#C8B89E" stroke-width="0.5"/>
+          <text x="80" y="44" font-family="Italiana" font-size="10" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+          <line x1="60" y1="51" x2="100" y2="51" stroke="#A8895C" stroke-width="0.4"/>
+          <text x="80" y="66" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#5C544A" text-anchor="middle">banayad</text>
+        </svg>
+      </div>
+      <div class="soap-name">Banayad</div>
+      <div class="soap-tagalog">Sensitive Skin Bar · Unscented</div>
+      <p class="soap-copy">Honey, oats, and goat milk. No essential oil. No fragrance. The bar for children, for sensitive skin, for the post-clinical face.</p>
+      <div class="soap-spec"><span>120g</span><span>6-week cure</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════════════════════
+                              PILLAR II · LABA
+     ═════════════════════════════════════════════════════════════════════════ -->
+
+<!-- ─────────────────────────────  07 LABA COLLECTION  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Pillar II · Laba</span>
+    <span class="num">07 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">07</div>
+    <div>
+      <span class="section-kicker sans">Pillar II · For The Home</span>
+      <h2 class="section-title">Laba — The Detergent Collection</h2>
+    </div>
+  </div>
+
+  <div class="pillar-intro" style="border-left-color: var(--linen-blue); background: var(--ivory);">
+    <div>
+      <div class="pillar-tag" style="color: #5A6B70;">Pillar II</div>
+      <div style="font-family:'Italiana',serif; font-size: 60px; letter-spacing: 0.06em; color: var(--charcoal);">LABA</div>
+    </div>
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size: 22px; color: var(--ash); line-height: 1.5;">
+        From the Tagalog for <em>to launder, to wash clothes</em>. The home's pillar. Four plant-derived liquid formulations, fermented three weeks, bottled in refillable apothecary glass. For linen, dishes, surfaces, and floors.
+      </div>
+    </div>
+  </div>
+
+  <p class="lede">
+    Four bottles, each named in Tagalog. Each made for a different cleaning ritual of the home.
+    None contain phosphates, optical brighteners, synthetic dyes, or synthetic fragrance.
+  </p>
+
+  <div class="soap-collection">
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap" style="background: var(--ivory);">
+        <svg width="100" height="180" viewBox="0 0 100 180">
+          <defs>
+            <linearGradient id="lababottle1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#FBF6EC" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#EFE6D5" stop-opacity="0.95"/>
+            </linearGradient>
+          </defs>
+          <rect x="20" y="30" width="60" height="135" rx="6" fill="url(#lababottle1)" stroke="#B8C2C0" stroke-width="0.6"/>
+          <rect x="35" y="14" width="30" height="22" rx="3" fill="#4A4641"/>
+          <rect x="32" y="32" width="36" height="5" fill="#A8895C"/>
+          <text x="50" y="85" font-family="Italiana" font-size="6" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · LABA</text>
+          <line x1="32" y1="91" x2="68" y2="91" stroke="#B8C2C0" stroke-width="0.4"/>
+          <text x="50" y="102" font-family="Cormorant Garamond" font-style="italic" font-size="5" fill="#5C544A" text-anchor="middle">linen wash</text>
+          <text x="50" y="140" font-family="Jost" font-size="3" fill="#8E8377" text-anchor="middle" letter-spacing="0.2em">500ML · 32 LOADS</text>
+        </svg>
+      </div>
+      <div class="soap-name">Damit</div>
+      <div class="soap-tagalog">Linen &amp; Garment Wash</div>
+      <p class="soap-copy">The heart of the Laba line. Coconut-derived surfactants, lemongrass and sampaguita oils, three-week-fermented enzymes from Bicol pineapple. Hand-wash or machine. Cold or warm. Concentrated: one capful per load. <em>Leaves the clothes smelling, faintly, of the bath.</em></p>
+      <div class="soap-spec"><span>500ml · 1L · 2L refill</span><span>~32 loads / 500ml</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap" style="background: var(--ivory);">
+        <svg width="100" height="180" viewBox="0 0 100 180">
+          <rect x="20" y="30" width="60" height="135" rx="6" fill="#B8C2C0" stroke="#8A9684" stroke-width="0.6" opacity="0.85"/>
+          <rect x="35" y="14" width="30" height="22" rx="3" fill="#4A4641"/>
+          <rect x="32" y="32" width="36" height="5" fill="#A8895C"/>
+          <text x="50" y="85" font-family="Italiana" font-size="6" fill="#FBF6EC" text-anchor="middle" letter-spacing="0.25em">DALISAY · LABA</text>
+          <line x1="32" y1="91" x2="68" y2="91" stroke="#FBF6EC" stroke-width="0.4"/>
+          <text x="50" y="102" font-family="Cormorant Garamond" font-style="italic" font-size="5" fill="#FBF6EC" text-anchor="middle">dish &amp; hand</text>
+          <text x="50" y="140" font-family="Jost" font-size="3" fill="#EFE6D5" text-anchor="middle" letter-spacing="0.2em">500ML · COUNTER BOTTLE</text>
+        </svg>
+      </div>
+      <div class="soap-name">Pinggan</div>
+      <div class="soap-tagalog">Dish &amp; Hand Wash</div>
+      <p class="soap-copy">A gentle dish soap that doubles as a hand wash at the sink. Coconut and pili-derived surfactants, calamansi peel oil, lemongrass. Cuts grease in cold water. Doesn't dry the hands. <em>Designed to live, beautifully, by the kitchen sink.</em></p>
+      <div class="soap-spec"><span>500ml · 1L refill</span><span>Kitchen counter</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap" style="background: var(--ivory);">
+        <svg width="100" height="180" viewBox="0 0 100 180">
+          <rect x="20" y="50" width="60" height="115" rx="6" fill="#FBF6EC" stroke="#C8B89E" stroke-width="0.6"/>
+          <rect x="35" y="14" width="30" height="40" rx="2" fill="#A8895C"/>
+          <rect x="38" y="18" width="24" height="30" rx="1" fill="#8C6F45"/>
+          <text x="50" y="95" font-family="Italiana" font-size="6" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · LABA</text>
+          <line x1="32" y1="101" x2="68" y2="101" stroke="#A8895C" stroke-width="0.4"/>
+          <text x="50" y="112" font-family="Cormorant Garamond" font-style="italic" font-size="5" fill="#5C544A" text-anchor="middle">surface spray</text>
+          <text x="50" y="145" font-family="Jost" font-size="3" fill="#8E8377" text-anchor="middle" letter-spacing="0.2em">350ML · TRIGGER</text>
+        </svg>
+      </div>
+      <div class="soap-name">Mesa</div>
+      <div class="soap-tagalog">Surface &amp; Counter Spray</div>
+      <p class="soap-copy">For marble, wood, glass, and the kitchen counter at the end of the night. Cane sugar alcohol, coconut vinegar (<em>sukang Iloko</em>), and a soft thread of lemongrass. Streak-free, food-safe, and faintly aromatic. <em>The cleanest surface in the house.</em></p>
+      <div class="soap-spec"><span>350ml trigger · 1L refill</span><span>For all hard surfaces</span></div>
+    </div>
+
+    <div class="soap-card">
+      <div class="soap-svg-wrap" style="background: var(--ivory);">
+        <svg width="100" height="180" viewBox="0 0 100 180">
+          <rect x="15" y="40" width="70" height="125" rx="8" fill="#EFE6D5" stroke="#A8895C" stroke-width="0.6"/>
+          <rect x="35" y="14" width="30" height="30" rx="3" fill="#4A4641"/>
+          <rect x="30" y="40" width="40" height="6" fill="#A8895C"/>
+          <text x="50" y="90" font-family="Italiana" font-size="6" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · LABA</text>
+          <line x1="32" y1="96" x2="68" y2="96" stroke="#A8895C" stroke-width="0.4"/>
+          <text x="50" y="107" font-family="Cormorant Garamond" font-style="italic" font-size="5" fill="#5C544A" text-anchor="middle">floor concentrate</text>
+          <text x="50" y="140" font-family="Jost" font-size="3" fill="#8E8377" text-anchor="middle" letter-spacing="0.2em">1L · DILUTE 1:100</text>
+        </svg>
+      </div>
+      <div class="soap-name">Sahig</div>
+      <div class="soap-tagalog">Floor &amp; Stone Concentrate</div>
+      <p class="soap-copy">Highly concentrated. One capful in a bucket of warm water. For wood, tile, marble, and the terracotta floors of old Filipino houses. Pine, lemongrass, and a thread of sampaguita. <em>Makes the house smell like the day after it has been beautifully cleaned.</em></p>
+      <div class="soap-spec"><span>1L · 1:100 dilution</span><span>~100 bucket washes</span></div>
+    </div>
+
+  </div>
+
+  <div class="two-col" style="margin-top: 80px;">
+    <div class="label">The Refill Tower</div>
+    <div class="copy">
+      <p>Each Laba bottle is sold in <strong>three formats</strong>: the <em>counter bottle</em> (500ml, the daily-use vessel — apothecary glass with a brass pump or trigger), the <em>refill</em> (1L, in pearl card-and-aluminum laminate), and the <em>tower refill</em> (2L, for the Damit linen wash only, in a returnable aluminum jug).</p>
+      <p>The counter bottle is bought once. After that, only refills. The brand's mass-market efficiency comes from this: a small luxury counter bottle, used for years, refilled monthly.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">What's Not In It</div>
+    <div class="copy">
+      <p>Across the entire Laba line: <strong>no phosphates, no optical brighteners, no synthetic dyes, no synthetic fragrance, no parabens, no SLS/SLES, no quats, no chlorine, no microplastics.</strong> Every formulation is biodegradable to OECD 301B standard. Septic-safe. Greywater-safe. Safe to use in homes with children, infants, and animals.</p>
+      <p>The full ingredient list — INCI names with Filipino translation — is printed on every bottle in 6pt Jost. The list is short enough to fit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  08 INGREDIENTS  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Provenance</span>
+    <span class="num">08 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">08</div>
+    <div>
+      <span class="section-kicker sans">From The Provinces</span>
+      <h2 class="section-title">Signature Ingredients</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    A shared ingredient library across both pillars. The same coconut that becomes a bathing bar
+    becomes a linen wash. The same lemongrass that scents the morning soap scents the kitchen counter.
+  </p>
+
+  <div class="ingredients">
+    <div class="ingredient-row">
+      <div class="num">i.</div>
+      <div class="name">Virgin Coconut Oil <small>Cocos nucifera</small></div>
+      <div class="story">The foundation of <em>both</em> pillars. The bar's primary fat. The detergent's primary surfactant precursor (saponified or converted to coco-glucoside). Cold-pressed within four hours of harvest.</div>
+      <div class="origin">Quezon Coast</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">ii.</div>
+      <div class="name">Tinawon Rice Milk <small>Oryza sativa</small></div>
+      <div class="story">From Cordillera heirloom rice. Brightener in the morning bar. Gentle starch-based fabric softener in the Damit linen wash. Two pillars, one ingredient.</div>
+      <div class="origin">Banaue · Ifugao</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">iii.</div>
+      <div class="name">Sampaguita Essence <small>Jasminum sambac</small></div>
+      <div class="story">The brand's perfume signature. Distilled before dawn in San Pedro. Used in the signature bar, the Damit linen wash, and the Sahig floor concentrate.</div>
+      <div class="origin">San Pedro · Laguna</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">iv.</div>
+      <div class="name">Lemongrass Oil <small>Cymbopogon citratus</small></div>
+      <div class="story">Tanglad, steam-distilled. Antibacterial and clarifying. Used in the Tanglad bar, the Pinggan dish wash, the Mesa surface spray, and the Sahig floor concentrate. The most-used scent in the house.</div>
+      <div class="origin">Negros Occidental</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">v.</div>
+      <div class="name">Calamansi Peel Oil <small>Citrofortunella microcarpa</small></div>
+      <div class="story">Cold-pressed from our native citrus. The vitamin C bar, and the natural degreaser in the Pinggan dish wash. Cuts grease without harshness.</div>
+      <div class="origin">Oriental Mindoro</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">vi.</div>
+      <div class="name">Coconut Vinegar <small>Sukang Iloko</small></div>
+      <div class="story">Slow-fermented in Ilocos clay pots. The natural acid in the Mesa surface spray — streak-free, food-safe, with the gentle astringency that has cleaned Filipino kitchens for centuries.</div>
+      <div class="origin">Ilocos Norte</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">vii.</div>
+      <div class="name">Cane Sugar Alcohol <small>Saccharum officinarum</small></div>
+      <div class="story">Distilled from Negros sugar cane. The carrier and gentle solvent in the Mesa and Sahig formulations. Evaporates clean. Leaves no residue.</div>
+      <div class="origin">Negros Occidental</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">viii.</div>
+      <div class="name">Pineapple Enzymes <small>Bromelain</small></div>
+      <div class="story">Three-week-fermented from Bicol pineapple. The protein-cleaving active in the Damit linen wash that lifts food stains, sweat, and the marks of daily life from cotton, linen, and silk.</div>
+      <div class="origin">Camarines Sur · Bicol</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">ix.</div>
+      <div class="name">Bamboo Charcoal <small>Bambusa blumeana</small></div>
+      <div class="story">Activated kawayan from Iloilo. Pigment and deep-cleansing agent in the Uling bar. Future use in a black soap-flake hand bar for workshop hands.</div>
+      <div class="origin">Iloilo · Panay</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">x.</div>
+      <div class="name">Cacao Butter <small>Theobroma cacao</small></div>
+      <div class="story">Davao cacao, fermented seven days, slow-pressed. The emollient of the Kakaw bar. The brand's most luxurious fat.</div>
+      <div class="origin">Davao del Sur</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">xi.</div>
+      <div class="name">Wild Forage Honey <small>Mel</small></div>
+      <div class="story">From Palawan wild apiaries. Humectant in the Banayad and Pili bars. Mild antimicrobial across the line.</div>
+      <div class="origin">Palawan</div>
+    </div>
+    <div class="ingredient-row">
+      <div class="num">xii.</div>
+      <div class="name">Pili Pulp Oil <small>Canarium ovatum</small></div>
+      <div class="story">Bicolano pili. Light, antioxidant-rich, almost weightless. The reason Pili is the lightest bar — and a future ingredient in a hand-care lotion companion to the Pinggan dish wash.</div>
+      <div class="origin">Sorsogon · Bicol</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  09 PROCESS  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Craft</span>
+    <span class="num">09 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">09</div>
+    <div>
+      <span class="section-kicker sans">The Two Processes</span>
+      <h2 class="section-title">How The House Makes Both</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    The bar takes nine weeks. The detergent takes five.
+    Most of that time, nothing happens at all. That is the point.
+  </p>
+
+  <h3 style="font-family:'Italiana',serif; font-size: 32px; letter-spacing: 0.06em; color: var(--charcoal); margin-bottom: 30px; margin-top: 40px; padding-bottom: 14px; border-bottom: 1px solid var(--gold);">— Hugas · The Bar Process —</h3>
+
+  <div class="process">
+    <div class="process-step">
+      <div class="step-num">i.</div>
+      <div>
+        <div class="step-name">The Pressing</div>
+        <div class="step-tagalog">Pagpiga</div>
+      </div>
+      <div class="step-desc">Virgin coconut oil cold-pressed within hours of harvest. Cacao butter slow-pressed in Davao. <em>No heat above body temperature. No solvents.</em></div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">ii.</div>
+      <div>
+        <div class="step-name">The Saponification</div>
+        <div class="step-tagalog">Paghahalo</div>
+      </div>
+      <div class="step-desc">Oils and lye meet at the precise temperature where they want to become one thing. The mixture is stirred by hand for forty minutes.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">iii.</div>
+      <div>
+        <div class="step-name">The Pour &amp; Cut</div>
+        <div class="step-tagalog">Pagbubuhos at Paghihiwa</div>
+      </div>
+      <div class="step-desc">Poured into linen-lined wooden moulds. After 24 hours, the loaf is cut by hand with a single steel wire into 36 bars.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">iv.</div>
+      <div>
+        <div class="step-name">The Cure</div>
+        <div class="step-tagalog">Paghihintay</div>
+      </div>
+      <div class="step-desc"><em>Six weeks on cedar shelves.</em> The bar loses water, hardens, mellows. It becomes itself. This step cannot be shortened, and we have never tried.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">v.</div>
+      <div>
+        <div class="step-name">The Stamp &amp; Wrap</div>
+        <div class="step-tagalog">Pagtatatak at Pagbabalot</div>
+      </div>
+      <div class="step-desc">Each bar pressed by hand with a brass die. Batch number stamped on the underside. Wrapped in unbleached paper, sealed with a wax band.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Italiana',serif; font-size: 32px; letter-spacing: 0.06em; color: var(--charcoal); margin-bottom: 30px; margin-top: 80px; padding-bottom: 14px; border-bottom: 1px solid var(--gold);">— Laba · The Detergent Process —</h3>
+
+  <div class="process">
+    <div class="process-step">
+      <div class="step-num">i.</div>
+      <div>
+        <div class="step-name">The Glucoside</div>
+        <div class="step-tagalog">Pagbabago</div>
+      </div>
+      <div class="step-desc">Virgin coconut oil converted to coco-glucoside — a plant-based surfactant gentle enough for hands. The whole batch made in one stainless tank in our Pampanga annex.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">ii.</div>
+      <div>
+        <div class="step-name">The Fermentation</div>
+        <div class="step-tagalog">Pagsasama</div>
+      </div>
+      <div class="step-desc"><em>Three weeks at room temperature.</em> Bicol pineapple enzymes are cultured in cane sugar alcohol. They mature, multiply, and become the stain-lifting active. <em>The detergent's equivalent of the cure.</em></div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">iii.</div>
+      <div>
+        <div class="step-name">The Blend</div>
+        <div class="step-tagalog">Paghahalo</div>
+      </div>
+      <div class="step-desc">Surfactant, enzyme, essential oil, and water are blended cold in small 200-litre batches. No heat. No preservative beyond the cane alcohol itself. Each batch is tested for pH, viscosity, and biodegradability before bottling.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">iv.</div>
+      <div>
+        <div class="step-name">The Settle</div>
+        <div class="step-tagalog">Pahinga</div>
+      </div>
+      <div class="step-desc">One week in glass carboys. The liquid clarifies. Bubbles dissipate. The blend becomes still. <em>Nothing in cleaning has to be rushed.</em></div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">v.</div>
+      <div>
+        <div class="step-name">The Bottling</div>
+        <div class="step-tagalog">Pagbobote</div>
+      </div>
+      <div class="step-desc">Hand-filled into apothecary glass. Brass pumps or triggers screwed by hand. Label glued by hand. Wax band sealed by hand. Each bottle stamped with the batch number and the maker's initials.</div>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    <p>"The same hands cure the bars and ferment the liquids. The house has one tongue and two voices."</p>
+    <div class="sans attr">— House Principle No. 2</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  10 PACKAGING  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Object</span>
+    <span class="num">10 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">10</div>
+    <div>
+      <span class="section-kicker sans">The Vessel</span>
+      <h2 class="section-title">Packaging Identity</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    The bar gets paper. The detergent gets apothecary glass.
+    Both get the wax seal. Both get the gold mark. Together, they look like a single house.
+  </p>
+
+  <div class="packaging-stage">
+
+    <div class="pkg">
+      <svg width="180" height="200" viewBox="0 0 180 200">
+        <rect x="20" y="40" width="140" height="100" rx="4" fill="#F4EDE0" stroke="#C8B89E" stroke-width="0.5"/>
+        <rect x="20" y="40" width="140" height="100" rx="4" fill="none" stroke="#A8895C" stroke-width="0.3" stroke-dasharray="2,3"/>
+        <text x="90" y="70" font-family="Italiana" font-size="10" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · HUGAS</text>
+        <line x1="60" y1="78" x2="120" y2="78" stroke="#A8895C" stroke-width="0.5"/>
+        <text x="90" y="100" font-family="Cormorant Garamond" font-style="italic" font-size="10" fill="#5C544A" text-anchor="middle">sampaguita</text>
+        <text x="90" y="115" font-family="Cormorant Garamond" font-style="italic" font-size="6" fill="#8E8377" text-anchor="middle">bathing bar · 120g</text>
+        <rect x="50" y="135" width="80" height="20" fill="#A8895C" opacity="0.85"/>
+        <text x="90" y="148" font-family="Italiana" font-size="6" fill="#FBF6EC" text-anchor="middle" letter-spacing="0.3em">DALISAY · MMXXVI</text>
+      </svg>
+      <div class="pkg-label">Hugas — Paper Wrap</div>
+      <div class="pkg-sub">Unbleached · Hand-folded · Wax band</div>
+    </div>
+
+    <div class="pkg">
+      <svg width="140" height="220" viewBox="0 0 140 220">
+        <defs>
+          <linearGradient id="pkgbottle" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FBF6EC" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#EFE6D5" stop-opacity="0.95"/>
+          </linearGradient>
+        </defs>
+        <rect x="30" y="40" width="80" height="160" rx="6" fill="url(#pkgbottle)" stroke="#B8C2C0" stroke-width="0.6"/>
+        <rect x="50" y="18" width="40" height="26" rx="3" fill="#4A4641"/>
+        <rect x="46" y="40" width="48" height="6" fill="#A8895C"/>
+        <text x="70" y="110" font-family="Italiana" font-size="8" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY · LABA</text>
+        <line x1="42" y1="118" x2="98" y2="118" stroke="#B8C2C0" stroke-width="0.4"/>
+        <text x="70" y="135" font-family="Cormorant Garamond" font-style="italic" font-size="9" fill="#5C544A" text-anchor="middle">damit</text>
+        <text x="70" y="148" font-family="Cormorant Garamond" font-style="italic" font-size="5" fill="#8E8377" text-anchor="middle">linen &amp; garment wash</text>
+        <text x="70" y="180" font-family="Jost" font-size="3.5" fill="#8E8377" text-anchor="middle" letter-spacing="0.2em">500ML · 32 LOADS</text>
+      </svg>
+      <div class="pkg-label">Laba — Apothecary Glass</div>
+      <div class="pkg-sub">Brass pump · Refillable · Lifetime</div>
+    </div>
+
+    <div class="pkg">
+      <svg width="160" height="220" viewBox="0 0 160 220">
+        <rect x="20" y="40" width="120" height="150" rx="4" fill="#D9C9AE" stroke="#A8895C" stroke-width="0.6"/>
+        <rect x="20" y="40" width="120" height="150" rx="4" fill="none" stroke="#A8895C" stroke-width="0.3" stroke-dasharray="3,4"/>
+        <text x="80" y="80" font-family="Italiana" font-size="9" fill="#2A2622" text-anchor="middle" letter-spacing="0.25em">DALISAY</text>
+        <line x1="55" y1="86" x2="105" y2="86" stroke="#A8895C" stroke-width="0.4"/>
+        <text x="80" y="105" font-family="Italiana" font-size="7" fill="#2A2622" text-anchor="middle" letter-spacing="0.2em">HUGAS &amp; LABA</text>
+        <text x="80" y="120" font-family="Cormorant Garamond" font-style="italic" font-size="7" fill="#5C544A" text-anchor="middle">the founding set</text>
+        <circle cx="80" cy="155" r="8" fill="#A8895C"/>
+        <circle cx="80" cy="155" r="8" fill="none" stroke="#8C6F45" stroke-width="0.3"/>
+        <text x="80" y="158" font-family="Italiana" font-size="6" fill="#FBF6EC" text-anchor="middle">D</text>
+      </svg>
+      <div class="pkg-label">The Founding Set</div>
+      <div class="pkg-sub">One bar + One bottle · Gift-boxed</div>
+    </div>
+
+  </div>
+
+  <div class="two-col" style="margin-top: 60px;">
+    <div class="label">Material Vocabulary</div>
+    <div class="copy">
+      <p><strong>Hugas (the bar):</strong> unbleached FSC paper from Bulacan, wax seal in muted gold, raffia ties on gift sets. <strong>Laba (the detergent):</strong> apothecary-grade tinted glass for the counter bottle, brass pump or trigger (replaceable, lifetime-warrantied), pearl-card laminate for the 1L refill, returnable aluminum jug for the 2L Damit tower refill. <strong>Shared:</strong> the same Italiana wordmark, the same gold seal, the same charcoal type.</p>
+      <p>No plastic in either line. The brass pump is the only metal component the customer ever sees; everything else is glass, paper, wax, raffia, aluminum.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Information Stamp</div>
+    <div class="copy">
+      <p>Every wrap and every label carries the same small print, in 6pt Jost caps: <em>Batch No. · Make Date · Atelier (Pampanga) · Weight or Volume · Full Ingredient List · Maker's Initials.</em> Transparency, miniaturised. The brand's signature small print.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  11 THE TWO RITUALS  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Practice</span>
+    <span class="num">11 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">11</div>
+    <div>
+      <span class="section-kicker sans">The Daily Practice</span>
+      <h2 class="section-title">The Two Cleansing Rituals</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    The body is washed two or three times a day. The home is washed once a week.
+    Dalisay is built for both rhythms.
+  </p>
+
+  <h3 style="font-family:'Italiana',serif; font-size: 28px; letter-spacing: 0.06em; color: var(--charcoal); margin-bottom: 30px; padding-bottom: 14px; border-bottom: 1px solid var(--gold);">— The Body, In a Day —</h3>
+
+  <div class="process">
+    <div class="process-step">
+      <div class="step-num">i.</div>
+      <div>
+        <div class="step-name">Paliligo sa Umaga</div>
+        <div class="step-tagalog">The Morning Bath</div>
+      </div>
+      <div class="step-desc">Bukang-Liwayway or Dayap. Cold water. Three minutes. The day begins not with coffee but with rice milk on the face.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">ii.</div>
+      <div>
+        <div class="step-name">Hugas-Kamay</div>
+        <div class="step-tagalog">The Hand-Washing</div>
+      </div>
+      <div class="step-desc">Pili bar at the bathroom sink. Pinggan at the kitchen sink. Two bars of soap for two kinds of hand-washing. The smallest Filipino ritual, made ceremonial.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">iii.</div>
+      <div>
+        <div class="step-name">Paliligo sa Hapon at Gabi</div>
+        <div class="step-tagalog">The Afternoon &amp; Night Bath</div>
+      </div>
+      <div class="step-desc">Tanglad after a hot day. Sampaguita on a slow evening. Kakaw on dry winter nights. Banayad after too much sun.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Italiana',serif; font-size: 28px; letter-spacing: 0.06em; color: var(--charcoal); margin-bottom: 30px; margin-top: 60px; padding-bottom: 14px; border-bottom: 1px solid var(--gold);">— The Home, In a Week —</h3>
+
+  <div class="process">
+    <div class="process-step">
+      <div class="step-num">i.</div>
+      <div>
+        <div class="step-name">Araw ng Paglalaba</div>
+        <div class="step-tagalog">The Laundry Day · Saturday Morning</div>
+      </div>
+      <div class="step-desc">Damit linen wash for the week's clothes, sheets, and towels. One capful per load. Cold water. <em>The clothes return to the closet smelling, faintly, of the bath.</em></div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">ii.</div>
+      <div>
+        <div class="step-name">Pagluluto at Paghuhugas</div>
+        <div class="step-tagalog">The Cooking &amp; The Dish-washing · Daily</div>
+      </div>
+      <div class="step-desc">Pinggan at the kitchen sink, by the Pili hand bar. <em>One bottle does both jobs.</em> The kitchen's quietest companion.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">iii.</div>
+      <div>
+        <div class="step-name">Pagpapahid sa Mesa</div>
+        <div class="step-tagalog">The Wiping Down · Daily</div>
+      </div>
+      <div class="step-desc">Mesa surface spray on counters, tables, and glass at the end of each evening. The smell that says: the day's work is over.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">iv.</div>
+      <div>
+        <div class="step-name">Paglilinis ng Sahig</div>
+        <div class="step-tagalog">The Floor-Cleaning · Sunday Morning</div>
+      </div>
+      <div class="step-desc">Sahig floor concentrate, one capful in a bucket of warm water. The whole house cleaned slowly, with windows open. <em>The Filipino ritual of weekly home-keeping, kept.</em></div>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    <p>"In the Philippines, the body and the home are washed by the same hands, with the same care. We make the products that match."</p>
+    <div class="sans attr">— House Principle No. 3</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  12 SUSTAINABILITY  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Long Care</span>
+    <span class="num">12 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">12</div>
+    <div>
+      <span class="section-kicker sans">The Long Practice</span>
+      <h2 class="section-title">Sustainability &amp; Stewardship</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    The category is the sustainability strategy.
+    Soap and biodegradable detergent are, by their nature, among the most stewardable cleansing categories on earth — provided the packaging does not betray them.
+  </p>
+
+  <div class="strata">
+    <div>
+      <h5>Zero Plastic Across Both Lines</h5>
+      <p>No plastic touches a Hugas bar or a Laba bottle. Counter bottles are glass; refills are pearl-card-and-aluminum laminate or returnable aluminum.</p>
+    </div>
+    <div>
+      <h5>The Refill Atelier</h5>
+      <p>In the Makati boutique: a marble counter where staff in linen aprons refill your Laba bottles from large carboys. 30% off every refill. The counter bottle is yours for life.</p>
+    </div>
+    <div>
+      <h5>The Sliver Programme</h5>
+      <p>Every boutique accepts the last sliver of any Hugas bar back. Slivers are melted into household bars and donated to partner schools.</p>
+    </div>
+    <div>
+      <h5>OECD 301B Biodegradable</h5>
+      <p>Every Laba formulation is independently tested and certified to OECD 301B "Readily Biodegradable" within 28 days. Septic-safe. Greywater-safe. Reef-safe.</p>
+    </div>
+    <div>
+      <h5>The Garden Fund</h5>
+      <p>One percent of every transaction funds botanical reforestation in our partner provinces — sampaguita in Laguna, calamansi in Mindoro, lemongrass in Negros, pineapple in Bicol.</p>
+    </div>
+    <div>
+      <h5>The Provenance Card</h5>
+      <p>A linen card in every gift set names the farms, the harvest months, the soap-maker, the fermentation lead, and the bottler. Sustainability told as a story, not a sticker.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  13 SHELF PSYCHOLOGY  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Experience</span>
+    <span class="num">13 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">13</div>
+    <div>
+      <span class="section-kicker sans">The Display</span>
+      <h2 class="section-title">Shelf Psychology</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    Two shelves in every Dalisay boutique. The bath shelf and the home shelf.
+    They face each other across the room. They share the same wood.
+  </p>
+
+  <div class="strata">
+    <div>
+      <h5>The Cedar Shelf · Hugas</h5>
+      <p>The bath wall. Bars displayed on raw cedar — the same wood used in the curing room. Smell is part of the design.</p>
+    </div>
+    <div>
+      <h5>The Marble Shelf · Laba</h5>
+      <p>The home wall. Apothecary bottles displayed on a single slab of Cebu marble. The bottle becomes a small architectural object.</p>
+    </div>
+    <div>
+      <h5>The Ingredient Bowl</h5>
+      <p>Between each product and its neighbour: a small clay bowl of its key ingredient. The shelf becomes a still life.</p>
+    </div>
+    <div>
+      <h5>The Linen Card</h5>
+      <p>In front of every product, a small linen card with one sentence in Cormorant italic. Not a price. Not a claim. A feeling.</p>
+    </div>
+    <div>
+      <h5>The Refill Counter</h5>
+      <p>Centre of the room: a marble counter with three large glass carboys of the Laba formulations. Refilling happens in public, in front of the patron. <em>Transparency, made theatrical.</em></p>
+    </div>
+    <div>
+      <h5>The Touched Object</h5>
+      <p>A tester bar always present, unwrapped, half-used. A tester Laba bottle, opened, with a small sample cap beside it. The shelf must look lived-with, not retail-cold.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  14 THE ATELIER  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Place</span>
+    <span class="num">14 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">14</div>
+    <div>
+      <span class="section-kicker sans">The Working House</span>
+      <h2 class="section-title">The Atelier &amp; Boutique</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    A small townhouse in Makati. The boutique downstairs. The working atelier behind it.
+    The brand is its workshop.
+  </p>
+
+  <div class="two-col">
+    <div class="label">The Boutique</div>
+    <div class="copy">
+      <p>A renovated 1930s mestizo-style townhouse in Poblacion, Makati. The ground floor is the boutique — lime-washed walls, Vigan terracotta floor. Two facing shelves: <strong>the cedar wall</strong> for Hugas, <strong>the marble wall</strong> for Laba. A central marble counter for refills and for wrapping gifts. That is the entire store.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Atelier</div>
+    <div class="copy">
+      <p>Through an open doorway behind the counter: the working atelier. Two soap-makers in linen aprons on the right side of the room — the wooden moulds, the cedar curing shelves, the wire cutter, the brass stamp. Two detergent-makers on the left side — the stainless tanks, the fermentation carboys, the bottling counter, the brass-pump assembly. Patrons can watch both lines being made, in the same room, on the same day. <em>The making is the marketing.</em></p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Saturday Class</div>
+    <div class="copy">
+      <p>Twelve seats per month. Three hours. Two tracks alternate: <em>The Bar</em> (cold-process soap-making) and <em>The Wash</em> (formulating a personal-recipe Damit linen wash). You leave with a bar or a bottle of your own making, embossed with the date. Booked three months in advance.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">Future Houses</div>
+    <div class="copy">
+      <p><strong>Year 1–2:</strong> Makati atelier-boutique.<br>
+         <strong>Year 3–4:</strong> Cebu satellite (boutique only). Singapore (Tanglin). Tokyo (Aoyama).<br>
+         <strong>Year 5+:</strong> Hong Kong, Bangkok, Paris (Marais), New York (NoHo).<br><br>
+         Every overseas boutique is shelves-and-refill only. <em>The atelier remains, always, in Pampanga.</em> The bars and bottles travel; the making does not.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  15 VOICE  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Voice</span>
+    <span class="num">15 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">15</div>
+    <div>
+      <span class="section-kicker sans">The Tongue</span>
+      <h2 class="section-title">Brand Voice &amp; Tone</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    Dalisay speaks the way a calm friend who reads poetry might speak about a bar of soap
+    and a bottle of detergent. Specific. Brief. Warm without flattery. A little Filipino. Never marketing.
+  </p>
+
+  <div class="voice-grid">
+    <div class="yes">
+      <h4>We Sound Like</h4>
+      <ul>
+        <li>Specific ("petals harvested before dawn in San Pedro")</li>
+        <li>Sensory ("a clean shirt smells, faintly, of the bath")</li>
+        <li>Confident without volume</li>
+        <li>Quietly Filipino, never costumed Filipino</li>
+        <li>Editorial — short sentences, then long ones</li>
+        <li>Honest about what a bar and a bottle do</li>
+        <li>Affectionate with the patron, never possessive</li>
+      </ul>
+    </div>
+    <div class="no">
+      <h4>We Never Sound Like</h4>
+      <ul>
+        <li>"Game-changing," "must-have," "obsessed"</li>
+        <li>Hype, urgency, scarcity language</li>
+        <li>"Powerful enzymatic action," "next-generation cleaning"</li>
+        <li>"Kills 99.9% of germs" — even when it does</li>
+        <li>Faux-spiritual ("connect with your goddess")</li>
+        <li>Folkloric kitsch ("ancient Filipino secret of cleaning")</li>
+        <li>Defensive, apologetic, or self-deprecating</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    <p>"Write as if the reader can already hold the bar and smell the linen. Your job is not to convince. Your job is to be remembered."</p>
+    <div class="sans attr">— Editorial Standard No. 4</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  16 PHOTOGRAPHY  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Image</span>
+    <span class="num">16 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">16</div>
+    <div>
+      <span class="section-kicker sans">The Image</span>
+      <h2 class="section-title">Editorial Photography</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    Natural light, real skin, real linen, real bars, real bottles. Photography that looks
+    accidentally found, not commercially staged.
+  </p>
+
+  <div class="two-col">
+    <div class="label">The Bar Still</div>
+    <div class="copy">
+      <p>One bar, one shadow, one piece of unbleached linen. Side-lit by a window. Sometimes half-used, the patina visible. The bar should look like a small sculpture someone forgot to put away.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Bottle Still</div>
+    <div class="copy">
+      <p>The Laba bottle on a marble counter beside a folded linen napkin and a clay water carafe. Late-afternoon sidelight. Never glossy. Never floating. The bottle photographed as if it belongs to a kitchen that has been in someone's family for thirty years.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Laundry Picture</div>
+    <div class="copy">
+      <p>The brand's secret weapon. White linen drying on a clothesline strung between two coconut trees, with afternoon light coming through it. A woman's hand reaching to take a sheet down. A wicker basket below. The image that sells the Damit linen wash without ever showing the bottle.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">The Hand &amp; The Face</div>
+    <div class="copy">
+      <p>Filipino hands and Filipino faces — all of them. Tagalog, Bisaya, Ilocano, Tboli, Ifugao. Mestizo and morena. Hands holding bars. Hands wringing linen. Faces washing in cold water. The Filipino face has not been allowed to be the global luxury face. We change that.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  17 CAMPAIGNS  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Image</span>
+    <span class="num">17 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">17</div>
+    <div>
+      <span class="section-kicker sans">The Films</span>
+      <h2 class="section-title">Cinematic Campaign Concepts</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    Three founding films. Each almost wordless. One for the bar, one for the wash, one for both.
+  </p>
+
+  <div class="campaign">
+    <div class="campaign-meta">
+      <span class="title">Anim na Linggo</span>
+      <span class="sans">Six Weeks · Pampanga · 60 sec.</span>
+    </div>
+    <div class="campaign-body">
+      <p>A time-lapse of one bar of Sampaguita through its full cure. Day one: hot, soft, just cut. Day forty-two: pale, hard, embossed, wrapped. The camera does not move. Only the light changes. Only the bar changes.</p>
+      <p>One line at the end, in Tagalog: <em>"Lahat ng mabuti ay naghihintay."</em> (Everything good waits.) Closing card: <strong>DALISAY · HUGAS · Cured by time.</strong></p>
+    </div>
+  </div>
+
+  <div class="campaign">
+    <div class="campaign-meta">
+      <span class="title">Araw ng Paglalaba</span>
+      <span class="sans">Laundry Day · Batanes · 90 sec.</span>
+    </div>
+    <div class="campaign-body">
+      <p>A Filipino grandmother on a Batanes hillside. Stone walls behind her. A clothesline strung between two posts, white sheets billowing in the wind. She walks down the line, hand-pinning each piece. The camera is far away. We only see her movement, the wind, the linen.</p>
+      <p>The last shot: she steps back, looks at her work, says nothing. One line at the end, in Tagalog: <em>"Hindi lang ang damit ang ating linilinis."</em> (We do not only clean the clothes.) Closing card: <strong>DALISAY · LABA · Damit.</strong></p>
+    </div>
+  </div>
+
+  <div class="campaign">
+    <div class="campaign-meta">
+      <span class="title">Tahanan</span>
+      <span class="sans">Home · Manila · 60 sec.</span>
+    </div>
+    <div class="campaign-body">
+      <p>A Sunday morning in a Filipino home. A father at the kitchen sink with Pinggan. A daughter at the bathroom sink with Pili. A grandmother folding linen still warm from the line, the smell of sampaguita in the room. A son mopping the terracotta floor with Sahig. The whole family washing — bodies, dishes, clothes, floors — at the same time, in the same key.</p>
+      <p>No voice-over. Last frame: the family sitting down to a slow Sunday lunch, the morning's washing visible in soft focus behind them. Closing card: <strong>DALISAY · For the body. For the home.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  18 SOCIAL  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">Image</span>
+    <span class="num">18 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">18</div>
+    <div>
+      <span class="section-kicker sans">The Feed</span>
+      <h2 class="section-title">Social Media Aesthetic</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    Two product worlds, one feed. The bath posts and the laundry posts should look like
+    they were taken on the same Sunday morning, in the same house.
+  </p>
+
+  <div class="strata">
+    <div>
+      <h5>Cadence</h5>
+      <p>Three posts a week. Never more. Posting less is the luxury. The brand should feel like it has somewhere else to be.</p>
+    </div>
+    <div>
+      <h5>Grid Logic</h5>
+      <p>A rolling rhythm: bath still · linen still · ingredient close-up · face · Italiana card · home still · repeat. The grid reads as a magazine spread.</p>
+    </div>
+    <div>
+      <h5>The Laundry-Line Series</h5>
+      <p>Once a week: white linen on a clothesline somewhere in the country. Batanes one week, Iloilo the next, Sagada the next. <em>The brand's quietest, most-shared content.</em></p>
+    </div>
+    <div>
+      <h5>The Bar Diary</h5>
+      <p>Once a week: today's bar at the atelier. The cure-end date written in chalk beside it. The most-engaged content the brand produces.</p>
+    </div>
+    <div>
+      <h5>Captions</h5>
+      <p>One sentence. Sometimes Tagalog, sometimes English. Sometimes only an em-dash and an ingredient name. Hashtags as a single comment, never in the caption.</p>
+    </div>
+    <div>
+      <h5>The Reply</h5>
+      <p>Every DM replied to within 24 hours by a real person, signing with a single initial. Our voice in private is our voice in public.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  19 COMMUNITY  ───────────────────────────── -->
+<section class="page" style="background: var(--paper);">
+  <div class="folio">
+    <span class="sans">Community</span>
+    <span class="num">19 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">19</div>
+    <div>
+      <span class="section-kicker sans">The Hands Behind</span>
+      <h2 class="section-title">Community &amp; Artisan Empowerment</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    A luxury bar of soap and a luxury bottle of detergent are only as luxurious as the lives behind them.
+    The brand is built on direct partnerships, named partners, and shared upside.
+  </p>
+
+  <div class="strata">
+    <div>
+      <h5>Direct Farm Partnerships</h5>
+      <p>Every ingredient sourced from a named partner cooperative. Three-year guaranteed-price contracts. Cooperative names appear on every wrap and every bottle.</p>
+    </div>
+    <div>
+      <h5>The Soap-Makers &amp; The Detergent-Makers</h5>
+      <p>Twenty full-time atelier workers in Pampanga — twelve on the Hugas line, eight on the Laba line. Paid above industry wage, with profit-share. Initials stamped on every product.</p>
+    </div>
+    <div>
+      <h5>The Apprenticeship</h5>
+      <p>Each year, eight apprenticeships for young Filipinos — four in soap-making, two in detergent formulation, two in retail. Full salary, housing in Manila, no bond.</p>
+    </div>
+    <div>
+      <h5>The Garden Fund</h5>
+      <p>1% of every transaction funds reforestation in partner provinces. Audited annually. Published openly.</p>
+    </div>
+    <div>
+      <h5>The Naming Principle</h5>
+      <p>Where ingredients have Filipino names, we use them. Tinawon, not "heirloom rice." Sukang Iloko, not "coconut vinegar," except in translation. Language is dignity.</p>
+    </div>
+    <div>
+      <h5>Equity for Founders</h5>
+      <p>By Year 5, partner cooperatives and atelier teams collectively hold a minority equity stake in the brand. <em>This is not philanthropy. It is structure.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  20 EXPORT  ───────────────────────────── -->
+<section class="page">
+  <div class="folio">
+    <span class="sans">World</span>
+    <span class="num">20 / XX</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">20</div>
+    <div>
+      <span class="section-kicker sans">The World</span>
+      <h2 class="section-title">Export Strategy</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    The bars travel easily. The detergent bottles, less so —
+    so the Laba line follows a different path to the world.
+  </p>
+
+  <div class="strata">
+    <div>
+      <h5>Phase I · Origin</h5>
+      <p>Years 1–2. Makati atelier-boutique. Hotel-amenity partnerships with selected Filipino resort houses for both pillars — bars in the suite bathrooms, Laba bottles in the housekeeping carts.</p>
+    </div>
+    <div>
+      <h5>Phase II · The Region · Hugas First</h5>
+      <p>Years 2–4. Hugas bars are light, paper-wrapped, and easy to export. They lead: Singapore (Tanglin), Tokyo (Aoyama), Bangkok. Stockists at Lane Crawford, Isetan, Tangs.</p>
+    </div>
+    <div>
+      <h5>Phase II.5 · Laba Follows</h5>
+      <p>Year 3+. Laba bottles travel as part of the brand's standalone boutiques only — never to third-party stockists, where shipping costs and breakage would compromise the product. Where there is a Dalisay house, there is Laba.</p>
+    </div>
+    <div>
+      <h5>Phase III · The Editors</h5>
+      <p>Years 3–5. Liberty London, Le Bon Marché Paris, Bergdorf New York carry the Hugas line. Laba launches in those cities through Dalisay's own retail.</p>
+    </div>
+    <div>
+      <h5>Phase IV · The Houses</h5>
+      <p>Year 5+. Standalone Dalisay boutiques in Paris (Marais), New York (NoHo), Seoul (Hannam-dong), Los Angeles (Larchmont). Same cedar shelves. Same marble refill counter. Same eight bars. Same four bottles.</p>
+    </div>
+    <div>
+      <h5>The Principle</h5>
+      <p>We sell where we are wanted. We do not chase. We are not on Amazon. We are not on duty-free counters. We are on the cedar shelves and marble counters of selected boutiques in selected cities — patiently, permanently.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────  NARRATIVE FINALE  ───────────────────────────── -->
+<section class="page narrative">
+  <div class="folio">
+    <span class="sans">The Narrative</span>
+    <span class="num">XXI</span>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">∞</div>
+    <div>
+      <span class="section-kicker sans">A Closing Story</span>
+      <h2 class="section-title">Two Honest Objects</h2>
+    </div>
+  </div>
+
+  <p class="lede">
+    What we are really building, when we are building Dalisay.
+  </p>
+
+  <div class="two-col">
+    <div class="label">I.</div>
+    <div class="copy">
+      <p>For most of luxury's history, soap and detergent have been considered different categories. Soap has been allowed the dignity of perfume; detergent has been pushed to the supermarket end-cap, where it has been screamed at by yellow labels and exclamation marks for the better part of a century. We have decided to refuse this distinction.</p>
+      <p><strong>The same hand that washes the face washes the linen. The brand on both should match.</strong></p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">II.</div>
+    <div class="copy">
+      <p>Dalisay is a Filipino house of two pillars: <em>Hugas</em>, the bar for the body, and <em>Laba</em>, the wash for the home. They are made in the same atelier, by the same hands, from the same coconut, with the same patience. The bar cures six weeks on cedar. The detergent ferments three weeks in glass. Both refuse the chemistry that screamed at our grandmothers from the supermarket shelf — phosphates, brighteners, synthetic everything — and return to the chemistry that worked beautifully for three hundred years before that.</p>
+      <p>The radical proposition is the link between the two pillars: that <em>everyday cleansing is a single ritual, not two</em>, and that a country that treats the body with grace should also treat the home with grace, and the same brand should be able to serve both. This is the brand's structural insight, and it is what makes Dalisay a category of one.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">III.</div>
+    <div class="copy">
+      <p>We are not building a soap company, and we are not building a detergent company. We are building a small piece of evidence — placed on cedar shelves and marble counters around the world — that Filipino craft, Filipino ingredient, and Filipino patience belong in the highest category of global luxury. That a country of seven thousand islands has been quietly perfecting, for centuries, two objects that the world has stopped taking seriously.</p>
+      <p>We are building a house that our grandchildren will inherit. A brand that pays the women in Laguna who pick sampaguita at four in the morning more than a brand has ever paid them, and the men in Camarines Sur who ferment pineapple enzyme more than a chemical company has ever paid them. A boutique in Makati where a Filipina teenager can walk in, look at the cedar wall of bars and the marble wall of bottles, and recognise that both of these objects — the one for her body, the one for her family's home — were made by people who look like her grandmother.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="label">IV.</div>
+    <div class="copy">
+      <p>The word <em>dalisay</em> means pure. Distilled. Refined. What remains after everything unnecessary has been gently set aside.</p>
+      <p>This is what we are setting aside: <strong>the line between the body and the home.</strong> The pretence that a luxury bar of soap and a supermarket bottle of detergent must come from different worlds. The hype, the urgency, the cheap luxury, the borrowed glamor, the unpaid farmer, the un-named hand, the screaming label.</p>
+      <p>What remains: <strong>eight bars, four bottles, one atelier in Pampanga, one boutique in Makati, one country's worth of ingredient partners, and a brand built quietly enough to last a hundred years.</strong></p>
+      <p>For the body. For the home. By the same hands.</p>
+      <p>That is Dalisay.</p>
+    </div>
+  </div>
+
+  <div class="seal">
+    <svg class="emblem emblem-lg" viewBox="0 0 100 100" style="margin: 0 auto 30px; display:block;" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#A8895C" stroke-width="0.8">
+        <circle cx="50" cy="50" r="46"/>
+        <circle cx="50" cy="50" r="38" opacity="0.5"/>
+      </g>
+      <g fill="#A8895C" opacity="0.9">
+        <ellipse cx="50" cy="32" rx="6" ry="11"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(72 50 50)"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(144 50 50)"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(216 50 50)"/>
+        <ellipse cx="50" cy="32" rx="6" ry="11" transform="rotate(288 50 50)"/>
+      </g>
+      <circle cx="50" cy="50" r="3.5" fill="#8C6F45"/>
+    </svg>
+    <div class="seal-mark">DALISAY</div>
+    <div class="seal-line"></div>
+    <div class="seal-meta">House Dossier · Volume I · MMXXVI</div>
+    <div class="seal-meta" style="margin-top: 8px;">HUGAS &amp; LABA · A Filipino Soap &amp; Detergent House</div>
+    <div class="seal-meta" style="margin-top: 8px;">Under The Redbox Ecosystem</div>
+  </div>
+</section>
+
+</body>
+</html>
