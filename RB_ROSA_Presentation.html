@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RB Rosa — Soap & Detergent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* Terracotta Rose palette */
+  --rosa: #C97064;          /* HERO terracotta rose */
+  --rosa-deep: #A1554B;     /* Deeper signature */
+  --rosa-soft: #E5A599;     /* Softer expression */
+  --blush: #F8ECE9;         /* Pale blush wash */
+  --cream: #FCE8E4;         /* Cream blush */
+  --paper: #FAF5EE;         /* Warm paper */
+  --ivory: #F5EDE3;         /* Warm ivory */
+  --stone: #E6D7C5;         /* Warm stone */
+  --sand: #C4AE94;          /* Warm sand */
+  --umber: #5C2E27;         /* Deep rose-brown */
+  --charcoal: #2A1F1B;      /* Warm warm-black */
+  --ink: #3A2A24;           /* Warm ink */
+  --mute: #8B6E5E;          /* Warm mute */
+  --hairline: #D9C5B0;      /* Warm hairline */
+  --serif: 'Cormorant Garamond', serif;
+  --sans: 'Jost', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--blush);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  cursor: default;
+}
+
+::selection { background: var(--rosa); color: var(--cream); }
+
+.deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 7vh 9vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--blush);
+}
+
+.slide.active { opacity: 1; pointer-events: auto; }
+
+.slide.rosa { background: var(--rosa); color: var(--cream); }
+.slide.cream { background: var(--cream); color: var(--ink); }
+.slide.dark { background: var(--charcoal); color: var(--blush); }
+.slide.ivory { background: var(--ivory); color: var(--ink); }
+.slide.paper { background: var(--paper); color: var(--ink); }
+.slide.stone { background: var(--stone); color: var(--ink); }
+
+.chrome-top {
+  position: fixed; top: 0; left: 0; right: 0; height: 1px;
+  background: rgba(0,0,0,0.06); z-index: 50;
+}
+.progress {
+  height: 100%; background: var(--rosa); width: 0%;
+  transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dark .chrome-top { background: rgba(255,255,255,0.1); }
+.rosa .chrome-top { background: rgba(255,255,255,0.2); }
+
+.chrome-mark, .chrome-counter, .chrome-section, .chrome-help {
+  position: fixed; font-family: var(--sans); z-index: 40;
+  mix-blend-mode: difference; color: var(--cream);
+}
+.chrome-mark { top: 3vh; left: 4vw; font-size: 10px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; }
+.chrome-counter { bottom: 3vh; right: 4vw; font-size: 10px; font-weight: 400; letter-spacing: 0.25em; }
+.chrome-section { bottom: 3vh; left: 4vw; font-size: 10px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; }
+.chrome-help { top: 3vh; right: 4vw; font-size: 9px; font-weight: 400; letter-spacing: 0.25em; opacity: 0.5; text-transform: uppercase; }
+
+.nav-zone {
+  position: fixed; top: 0; bottom: 0; width: 30%; z-index: 30; cursor: pointer;
+}
+.nav-zone.left { left: 0; cursor: w-resize; }
+.nav-zone.right { right: 0; cursor: e-resize; }
+
+.eyebrow {
+  font-family: var(--sans); font-size: 10px; font-weight: 500;
+  letter-spacing: 0.35em; text-transform: uppercase; color: var(--mute);
+}
+.dark .eyebrow { color: rgba(248,236,233,0.6); }
+.rosa .eyebrow { color: rgba(252,232,228,0.75); }
+.cream .eyebrow { color: var(--umber); opacity: 0.7; }
+
+.rosa-dot {
+  width: 5px; height: 5px; background: var(--rosa);
+  border-radius: 50%; display: inline-block; vertical-align: middle;
+}
+
+.slide.active .reveal { animation: reveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.slide.active .reveal-1 { animation-delay: 0.1s; }
+.slide.active .reveal-2 { animation-delay: 0.3s; }
+.slide.active .reveal-3 { animation-delay: 0.5s; }
+.slide.active .reveal-4 { animation-delay: 0.7s; }
+.slide.active .reveal-5 { animation-delay: 0.9s; }
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==== COVER ==== */
+/* ==== COVER — SPLIT FRAME ==== */
+.cover {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--blush);
+}
+.cover-left {
+  background: var(--rosa);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.cover-mark-left {
+  position: absolute;
+  bottom: 5vh;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  font-weight: 400;
+  color: rgba(252,232,228,0.7);
+  text-transform: uppercase;
+}
+.cover-mark-top-left {
+  position: absolute;
+  top: 5vh;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  font-weight: 500;
+  color: rgba(252,232,228,0.85);
+  text-transform: uppercase;
+}
+.cover-mono {
+  text-align: center;
+}
+.cover-mono-rb {
+  font-family: var(--sans);
+  font-weight: 200;
+  font-size: clamp(80px, 11vw, 160px);
+  letter-spacing: 0.16em;
+  color: var(--cream);
+  line-height: 1;
+  display: block;
+}
+.cover-mono-rb .cover-dot {
+  display: inline-block;
+  width: clamp(10px, 1.2vw, 16px);
+  height: clamp(10px, 1.2vw, 16px);
+  background: var(--cream);
+  border-radius: 50%;
+  margin: 0 0.5em;
+  vertical-align: middle;
+  transform: translateY(-0.15em);
+}
+.cover-mono-rosa {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(56px, 7.5vw, 110px);
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  line-height: 1;
+  margin-top: 0.05em;
+  display: block;
+}
+
+.cover-right {
+  background: var(--blush);
+  padding: 5vh 4vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.cover-meta-top {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--mute);
+  text-transform: uppercase;
+  line-height: 2;
+}
+.cover-meta-top span { display: block; }
+.cover-headline-wrap { padding-right: 2vw; }
+.cover-headline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(28px, 3.6vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.cover-rule {
+  width: 50px;
+  height: 1px;
+  background: var(--rosa);
+  margin: 4vh 0 3vh;
+}
+.cover-subhead {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--mute);
+  line-height: 1.5;
+  max-width: 38ch;
+}
+.cover-meta-bottom {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 400;
+  color: var(--mute);
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+.cover-meta-bottom .right { text-align: right; }
+@media (max-width: 900px) {
+  .cover { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+}
+
+/* ==== MANIFESTO ==== */
+.manifesto-slide { justify-content: center; align-items: flex-start; background: var(--rosa); color: var(--cream); }
+.manifesto-slide .eyebrow { color: rgba(252,232,228,0.7); }
+.manifesto-eyebrow { margin-bottom: 6vh; }
+.manifesto-text {
+  font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-size: clamp(28px, 4.2vw, 64px); line-height: 1.25;
+  letter-spacing: -0.005em; max-width: 24ch; color: var(--cream);
+}
+.manifesto-text em { color: var(--blush); font-style: italic; }
+.manifesto-author { margin-top: 8vh; font-family: var(--sans); font-size: 10px; font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(252,232,228,0.6); }
+
+/* ==== ESSENCE ==== */
+.essence-slide { justify-content: center; align-items: center; text-align: center; background: var(--blush); }
+.essence-eyebrow { margin-bottom: 6vh; }
+.essence-text { font-family: var(--serif); font-weight: 300; font-size: clamp(48px, 8vw, 130px); line-height: 1; letter-spacing: -0.02em; color: var(--charcoal); }
+.essence-text em { font-style: italic; color: var(--rosa); }
+.essence-tag { margin-top: 6vh; font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--mute); letter-spacing: 0.02em; }
+
+/* ==== NAME EXPLAINER ==== */
+.name-slide { background: var(--cream); color: var(--ink); justify-content: center; align-items: center; text-align: center; }
+.name-eyebrow { margin-bottom: 4vh; }
+.name-word {
+  font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-size: clamp(100px, 18vw, 280px); line-height: 1;
+  color: var(--rosa); letter-spacing: -0.02em;
+}
+.name-defs {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 2vw; margin-top: 6vh; max-width: 1000px;
+}
+.name-def { text-align: center; }
+.name-def-lang { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; color: var(--umber); text-transform: uppercase; margin-bottom: 1.5vh; }
+.name-def-mean { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--ink); }
+
+/* ==== TWO PRODUCTS HERO ==== */
+.two-slide { justify-content: center; background: var(--ivory); }
+.two-header { margin-bottom: 6vh; }
+.two-grid {
+  display: grid; grid-template-columns: 1fr 1px 1fr; gap: 0;
+  flex: 1; align-items: stretch;
+}
+.two-divider { background: var(--hairline); }
+.two-side { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 4vw; gap: 3vh; text-align: center; }
+.two-num { font-family: var(--sans); font-size: 10px; letter-spacing: 0.4em; color: var(--rosa); }
+.two-label { font-family: var(--sans); font-weight: 200; font-size: clamp(48px, 7vw, 110px); letter-spacing: 0.04em; color: var(--charcoal); }
+.two-sub { font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--mute); max-width: 28ch; line-height: 1.5; }
+
+/* ==== PILLARS ==== */
+.pillars-slide { justify-content: center; }
+.pillars-header { margin-bottom: 10vh; }
+.pillars-title { font-family: var(--serif); font-weight: 300; font-size: 56px; letter-spacing: -0.01em; margin-top: 2vh; }
+.pillars-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4vw; }
+.pillar { border-top: 1px solid var(--rosa); padding-top: 3vh; }
+.pillar-num { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; color: var(--rosa); margin-bottom: 4vh; font-weight: 500; }
+.pillar-name { font-family: var(--sans); font-weight: 300; font-size: 38px; letter-spacing: 0.05em; margin-bottom: 3vh; }
+.pillar-desc { font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--ink); opacity: 0.8; line-height: 1.5; max-width: 28ch; }
+
+/* ==== EDITORIAL ==== */
+.editorial { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 8vw; align-items: center; height: 100%; }
+.editorial-left { display: flex; flex-direction: column; gap: 4vh; }
+.editorial-title { font-family: var(--serif); font-weight: 300; font-size: clamp(40px, 5vw, 76px); line-height: 1.05; letter-spacing: -0.015em; }
+.editorial-title em { font-style: italic; color: var(--rosa); }
+.rosa .editorial-title em, .dark .editorial-title em { color: var(--cream); }
+.editorial-body { font-family: var(--serif); font-size: 19px; line-height: 1.6; font-weight: 400; color: var(--ink); opacity: 0.85; max-width: 38ch; }
+.editorial-right { display: flex; flex-direction: column; justify-content: center; gap: 3vh; }
+
+/* ==== LOGO ==== */
+.logo-slide { justify-content: center; background: var(--paper); }
+.logo-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 6vw; flex: 1; }
+.logo-main, .logo-side-box { border: 1px solid var(--hairline); display: flex; align-items: center; justify-content: center; background: var(--blush); }
+.logo-main { padding: 8vh 4vw; }
+.logo-main-mark { font-family: var(--sans); font-weight: 200; font-size: clamp(40px, 7vw, 100px); letter-spacing: 0.12em; color: var(--charcoal); }
+.logo-main-mark .rosa-mark { font-family: var(--serif); font-style: italic; font-weight: 300; color: var(--rosa); letter-spacing: 0.04em; }
+.logo-side { display: grid; grid-template-rows: 1fr 1fr; gap: 3vh; }
+.logo-side-box { padding: 4vh 2vw; }
+.monogram { font-family: var(--sans); font-weight: 300; font-size: 64px; letter-spacing: 0.05em; }
+.monogram .dot { display: inline-block; width: 10px; height: 10px; background: var(--rosa); border-radius: 50%; margin: 0 16px; vertical-align: middle; }
+.lockup-stacked { font-family: var(--sans); font-weight: 300; font-size: 22px; letter-spacing: 0.35em; line-height: 1; text-align: center; }
+.lockup-stacked .b { display: block; margin-top: 8px; font-size: 32px; letter-spacing: 0.04em; font-family: var(--serif); font-style: italic; color: var(--rosa); }
+
+/* ==== COLOR ==== */
+.color-header { margin-bottom: 6vh; }
+.color-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; height: 50vh; }
+.swatch { display: flex; flex-direction: column; justify-content: flex-end; padding: 2vh 1.2vw; position: relative; }
+.swatch-name { font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.swatch-hex { font-family: var(--sans); font-size: 9px; font-weight: 400; letter-spacing: 0.1em; opacity: 0.6; }
+.swatch-tag { position: absolute; top: 2vh; left: 1.2vw; font-family: var(--sans); font-size: 8px; letter-spacing: 0.25em; opacity: 0.7; font-weight: 500; }
+.sw-rosa { background: var(--rosa); color: var(--cream); }
+.sw-rosa-deep { background: var(--rosa-deep); color: var(--cream); }
+.sw-rosa-soft { background: var(--rosa-soft); color: var(--umber); }
+.sw-cream { background: var(--cream); color: var(--ink); }
+.sw-blush { background: var(--blush); color: var(--ink); border: 1px solid var(--hairline); }
+.sw-paper { background: var(--paper); color: var(--ink); border: 1px solid var(--hairline); }
+.sw-stone { background: var(--stone); color: var(--ink); }
+.sw-umber { background: var(--umber); color: var(--cream); }
+.sw-charcoal { background: var(--charcoal); color: var(--cream); }
+
+/* ==== TYPE ==== */
+.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; height: 70vh; }
+.type-card { display: flex; flex-direction: column; justify-content: space-between; padding-top: 4vh; border-top: 1px solid var(--rosa); }
+.type-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--rosa); font-weight: 500; }
+.type-specimen-serif { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: clamp(60px, 9vw, 140px); line-height: 1; letter-spacing: -0.02em; color: var(--rosa); }
+.type-specimen-sans { font-family: var(--sans); font-weight: 200; font-size: clamp(60px, 9vw, 140px); line-height: 1; letter-spacing: 0.02em; }
+.type-meta { font-family: var(--sans); font-size: 11px; letter-spacing: 0.15em; color: var(--mute); text-transform: uppercase; }
+.type-meta strong { font-weight: 500; color: var(--ink); }
+
+/* ==== SOAP HERO ==== */
+.bar-slide { background: var(--paper); justify-content: center; align-items: center; }
+.bar-stage { display: flex; flex-direction: column; align-items: center; gap: 6vh; text-align: center; }
+.bar-stage svg { display: block; filter: drop-shadow(0 30px 60px rgba(42,31,27,0.15)); }
+.bar-caption { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 28px; color: var(--mute); max-width: 32ch; line-height: 1.5; }
+.bar-caption em { color: var(--rosa); }
+
+/* ==== DETERGENT HERO ==== */
+.detergent-slide { background: var(--ivory); justify-content: center; align-items: center; }
+.detergent-stage { display: flex; flex-direction: column; align-items: center; gap: 6vh; text-align: center; }
+.detergent-stage svg { display: block; filter: drop-shadow(0 30px 60px rgba(42,31,27,0.15)); }
+
+/* ==== RANGE ==== */
+.range-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr;
+  gap: 1px; background: var(--hairline); border: 1px solid var(--hairline);
+  flex: 1; margin-top: 4vh;
+}
+.range-item { background: var(--blush); padding: 2.5vh 1.4vw; display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: background 400ms ease; text-align: center; }
+.range-item:hover { background: var(--cream); }
+.range-num { font-family: var(--sans); font-size: 9px; letter-spacing: 0.3em; color: var(--rosa); align-self: flex-start; font-weight: 500; }
+.range-bar-svg { width: 100%; max-width: 100px; margin: 0.5vh 0; }
+.range-name { font-family: var(--sans); font-weight: 400; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; }
+.range-desc { font-family: var(--serif); font-style: italic; font-size: 12px; color: var(--mute); margin-top: 0.3vh; line-height: 1.4; }
+
+/* ==== DETERGENT RANGE ==== */
+.det-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 1px;
+  background: var(--hairline); border: 1px solid var(--hairline);
+  flex: 1; margin-top: 2.5vh; min-height: 0;
+}
+.det-item { background: var(--blush); padding: 1.6vh 1.4vw; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; gap: 0.6vh; min-height: 0; overflow: hidden; }
+.det-item svg { width: 100%; max-width: 80px; max-height: 22vh; }
+.det-name { font-family: var(--sans); font-weight: 400; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; }
+.det-desc { font-family: var(--serif); font-style: italic; font-size: 12px; color: var(--mute); line-height: 1.4; }
+.det-num { font-family: var(--sans); font-size: 9px; letter-spacing: 0.3em; color: var(--rosa); align-self: flex-start; font-weight: 500; }
+
+/* ==== PACKAGING FAMILY ==== */
+.pkg-slide { background: var(--paper); }
+.pkg-stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 2vw;
+  margin-top: 4vh;
+  align-items: end;
+}
+.pkg-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh;
+  position: relative;
+}
+.pkg-col svg {
+  display: block;
+  filter: drop-shadow(0 18px 30px rgba(42,31,27,0.10));
+}
+.pkg-floor {
+  width: 100%;
+  height: 1px;
+  background: var(--hairline);
+  margin-top: 2vh;
+}
+.pkg-meta { text-align: center; padding-top: 2vh; }
+.pkg-tag {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--rosa);
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 1vh;
+}
+.pkg-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  line-height: 1.1;
+}
+.pkg-spec {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--mute);
+  margin-top: 0.8vh;
+  text-transform: uppercase;
+}
+
+/* ==== LABEL ==== */
+.label-line { font-family: var(--sans); letter-spacing: 0.2em; text-transform: uppercase; border-bottom: 1px solid var(--hairline); padding: 1.2vh 0; }
+.label-line:last-child { border-bottom: none; }
+.label-line-1 { font-size: 14px; font-weight: 500; letter-spacing: 0.35em; }
+.label-line-1 .rosa { font-family: var(--serif); font-style: italic; letter-spacing: 0.04em; text-transform: lowercase; color: var(--rosa); font-weight: 300; font-size: 18px; }
+.label-line-2 { font-size: 11px; font-weight: 400; color: var(--mute); }
+.label-line-3 { font-family: var(--serif); font-style: italic; font-size: 18px; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink); }
+.label-line-4 { font-size: 10px; font-weight: 400; color: var(--mute); }
+.label-line-5 { font-size: 9px; font-weight: 400; color: var(--mute); letter-spacing: 0.3em; }
+
+/* ==== DUAL LABEL ==== */
+.dual-label { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; flex: 1; margin-top: 4vh; align-items: center; }
+.dual-label-col { display: flex; flex-direction: column; align-items: center; gap: 3vh; }
+.dual-label-tag { font-family: var(--sans); font-size: 10px; letter-spacing: 0.4em; color: var(--rosa); text-transform: uppercase; font-weight: 500; }
+.dual-render { background: var(--paper); border: 1px solid var(--hairline); padding: 6vh 3vw; display: flex; flex-direction: column; justify-content: center; position: relative; aspect-ratio: 3 / 4; max-height: 50vh; width: 100%; max-width: 280px; }
+.dual-render::before { content: ''; position: absolute; top: 2.5vh; left: 3vw; right: 3vw; height: 1px; background: var(--rosa); }
+
+/* ==== MARKETS ==== */
+.market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3vw; flex: 1; margin-top: 4vh; }
+.market-col { display: flex; flex-direction: column; border-top: 1px solid var(--rosa); padding-top: 3vh; }
+.market-tier { font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 0.3em; color: var(--rosa); text-transform: uppercase; margin-bottom: 2vh; }
+.market-phase { font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--mute); margin-bottom: 4vh; }
+.market-cities { font-family: var(--sans); font-weight: 300; font-size: 26px; line-height: 1.5; letter-spacing: 0.01em; }
+
+/* ==== THEMES ==== */
+.themes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5vh 8vw; flex: 1; align-content: center; }
+.theme { display: flex; gap: 3vw; align-items: baseline; border-top: 1px solid var(--rosa); padding-top: 2.5vh; }
+.theme-num { font-family: var(--sans); font-size: 11px; letter-spacing: 0.3em; color: var(--rosa); font-weight: 500; }
+.theme-name { font-family: var(--serif); font-style: italic; font-size: 32px; font-weight: 300; letter-spacing: -0.005em; }
+.theme-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--mute); margin-top: 1vh; letter-spacing: 0.03em; line-height: 1.5; }
+
+/* ==== SUSTAINABILITY ==== */
+.sus-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; flex: 1; align-items: center; margin-top: 4vh; }
+.sus-step { display: flex; flex-direction: column; align-items: flex-start; gap: 2vh; padding: 3vh 1.5vw; border-left: 1px solid var(--hairline); }
+.sus-step:first-child { border-left: none; padding-left: 0; }
+.sus-num { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--rosa); display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 12px; color: var(--rosa); }
+.sus-name { font-family: var(--sans); font-weight: 400; font-size: 18px; letter-spacing: 0.04em; }
+.sus-desc { font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--mute); line-height: 1.5; }
+
+/* ==== VOICE ==== */
+.voice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; flex: 1; margin-top: 4vh; }
+.voice-col { border-top: 1px solid var(--hairline); padding-top: 3vh; }
+.voice-head { font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 4vh; font-weight: 500; }
+.voice-head.avoid { color: var(--umber); }
+.voice-head.use { color: var(--rosa); }
+.voice-words { font-family: var(--serif); font-style: italic; font-size: 26px; font-weight: 300; line-height: 1.8; color: var(--ink); }
+.voice-words.muted { opacity: 0.4; text-decoration: line-through; text-decoration-thickness: 1px; }
+
+/* ==== JOURNEY ==== */
+.journey-track { display: flex; flex-direction: column; gap: 0; margin-top: 4vh; flex: 1; }
+.journey-row { display: grid; grid-template-columns: 60px 200px 1fr; gap: 3vw; align-items: center; padding: 3vh 0; border-bottom: 1px solid var(--hairline); }
+.journey-row:last-child { border-bottom: none; }
+.journey-num { font-family: var(--sans); font-size: 11px; letter-spacing: 0.3em; color: var(--rosa); font-weight: 500; }
+.journey-stage { font-family: var(--sans); font-weight: 300; font-size: 22px; letter-spacing: 0.04em; }
+.journey-emotion { font-family: var(--serif); font-style: italic; font-size: 20px; font-weight: 300; color: var(--ink); opacity: 0.85; }
+.journey-emotion::before { content: '— '; color: var(--rosa); }
+
+/* ==== HOSPITALITY ==== */
+.hotel-slide { background: var(--cream); color: var(--ink); }
+.hotel-list { list-style: none; margin-top: 3vh; }
+.hotel-list li { font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 2; border-bottom: 1px solid rgba(92,46,39,0.15); padding: 0.5vh 0; }
+
+/* ==== CODA ==== */
+.coda-slide { background: var(--rosa); color: var(--cream); justify-content: center; align-items: center; text-align: center; }
+.coda-mark { font-family: var(--sans); font-weight: 200; font-size: clamp(64px, 11vw, 180px); letter-spacing: 0.12em; color: var(--cream); line-height: 1; }
+.coda-mark .rosa-mark { font-family: var(--serif); font-style: italic; font-weight: 300; letter-spacing: 0.02em; color: var(--blush); }
+.coda-tag { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 24px; color: rgba(252,232,228,0.85); margin-top: 5vh; }
+.coda-foot { margin-top: 12vh; font-family: var(--sans); font-size: 10px; letter-spacing: 0.35em; color: rgba(252,232,228,0.6); text-transform: uppercase; }
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 900px) {
+  .slide { padding: 5vh 6vw; }
+  .editorial, .pillars-grid, .market-grid, .voice-grid, .themes-grid,
+  .type-grid, .sus-grid, .dual-label, .two-grid, .name-defs {
+    grid-template-columns: 1fr; gap: 4vh;
+  }
+  .two-divider { display: none; }
+  .range-grid, .det-grid { grid-template-columns: 1fr 1fr; }
+  .pkg-stage { grid-template-columns: 1fr 1fr; gap: 4vh 2vw; }
+  .color-grid { grid-template-columns: repeat(4, 1fr); height: 40vh; }
+  .logo-grid { grid-template-columns: 1fr; }
+  .journey-row { grid-template-columns: 40px 1fr; }
+  .journey-emotion { grid-column: 2; }
+}
+</style>
+</head>
+<body>
+
+<div class="chrome-top"><div class="progress" id="progress"></div></div>
+<div class="chrome-mark">RB ∙ ROSA</div>
+<div class="chrome-section" id="section">SOAP & DETERGENT</div>
+<div class="chrome-counter" id="counter">01 / 24</div>
+<div class="chrome-help">← →   navigate</div>
+
+<div class="nav-zone left" onclick="prevSlide()"></div>
+<div class="nav-zone right" onclick="nextSlide()"></div>
+
+<div class="deck" id="deck">
+
+<!-- 01 — COVER — SPLIT FRAME -->
+<section class="slide cover active" data-section="Cover">
+  <div class="cover-left">
+    <div class="cover-mark-top-left reveal reveal-1">A Brand by Redbox</div>
+    <div class="cover-mono reveal reveal-2">
+      <span class="cover-mono-rb">R<span class="cover-dot"></span>B</span>
+      <span class="cover-mono-rosa">Rosa</span>
+    </div>
+    <div class="cover-mark-left reveal reveal-4">Born in the Philippines · Made for the world</div>
+  </div>
+  <div class="cover-right">
+    <div class="cover-meta-top reveal reveal-1">
+      <span>Volume 01</span>
+      <span>Soap &amp; Detergent</span>
+    </div>
+    <div class="cover-headline-wrap reveal reveal-3">
+      <h1 class="cover-headline">Clean for the body.<br>Clean for the home.</h1>
+      <div class="cover-rule"></div>
+      <p class="cover-subhead">A global brand identity system for the modern household — minimalist, warm, and quietly considered.</p>
+    </div>
+    <div class="cover-meta-bottom reveal reveal-4">
+      <div>Global Brand<br>Identity System</div>
+      <div class="right">2026<br>Version 1.0</div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 — NAME EXPLAINER -->
+<section class="slide name-slide" data-section="The Name">
+  <div class="name-eyebrow reveal reveal-1">
+    <div class="eyebrow">— The Name</div>
+  </div>
+  <div class="name-word reveal reveal-2">Rosa</div>
+  <div class="name-defs reveal reveal-3">
+    <div class="name-def">
+      <div class="name-def-lang">Filipino</div>
+      <div class="name-def-mean">pink · rose</div>
+    </div>
+    <div class="name-def">
+      <div class="name-def-lang">Spanish</div>
+      <div class="name-def-mean">pink · rose</div>
+    </div>
+    <div class="name-def">
+      <div class="name-def-lang">Italian</div>
+      <div class="name-def-mean">rose · soft</div>
+    </div>
+    <div class="name-def">
+      <div class="name-def-lang">Latin</div>
+      <div class="name-def-mean">flower · symbol</div>
+    </div>
+  </div>
+  <p class="reveal reveal-4" style="font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--umber); margin-top: 6vh; max-width: 50ch; text-align: center; line-height: 1.5;">
+    One word. Four languages. The same warm meaning everywhere.
+  </p>
+</section>
+
+<!-- 03 — MANIFESTO -->
+<section class="slide manifesto-slide" data-section="Manifesto">
+  <div class="manifesto-eyebrow reveal reveal-1">
+    <div class="eyebrow">— Manifesto</div>
+  </div>
+  <div class="manifesto-text reveal reveal-2">
+    What washes the body.<br>
+    What washes the home.<br>
+    <em>Both should be pure.</em><br>
+    Both should be warm.
+  </div>
+  <div class="manifesto-author reveal reveal-3">RB Rosa — 2026</div>
+</section>
+
+<!-- 04 — ESSENCE -->
+<section class="slide essence-slide" data-section="Brand Essence">
+  <div class="essence-eyebrow reveal reveal-1">
+    <div class="eyebrow">Brand Essence</div>
+  </div>
+  <div class="essence-text reveal reveal-2">
+    The <em>warm</em><br>essential.
+  </div>
+  <div class="essence-tag reveal reveal-3">— two products, one warmth</div>
+</section>
+
+<!-- 05 — TWO PRODUCTS HERO -->
+<section class="slide two-slide" data-section="The Two Products">
+  <div class="two-header reveal reveal-1">
+    <div class="eyebrow">— The Architecture</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 56px; margin-top: 2vh; letter-spacing: -0.01em;">Two products. <em style="color: var(--rosa);">One philosophy.</em></h2>
+  </div>
+  <div class="two-grid">
+    <div class="two-side reveal reveal-2">
+      <div class="two-num">01</div>
+      <div class="two-label">SOAP</div>
+      <div class="two-sub">For the body.<br>Pressed, debossed, wrapped in terracotta paper.</div>
+      <img src="rosa-soap.png" alt="RB Rosa Soap" loading="lazy" style="width:auto;height:auto;max-width:240px;max-height:180px;object-fit:contain;display:block;" />
+    </div>
+    <div class="two-divider"></div>
+    <div class="two-side reveal reveal-3">
+      <div class="two-num">02</div>
+      <div class="two-label">DETERGENT</div>
+      <div class="two-sub">For the home.<br>Bottled, refillable, plant-derived.</div>
+      <img src="rosa-detergent.png" alt="RB Rosa Detergent" loading="lazy" style="width:auto;height:auto;max-width:240px;max-height:180px;object-fit:contain;display:block;" />
+    </div>
+  </div>
+</section>
+
+<!-- 06 — PILLARS -->
+<section class="slide pillars-slide" data-section="Three Pillars">
+  <div class="pillars-header reveal reveal-1">
+    <div class="eyebrow">— Brand Pillars</div>
+    <h2 class="pillars-title">Three principles. Held warmly.</h2>
+  </div>
+  <div class="pillars-grid">
+    <div class="pillar reveal reveal-2">
+      <div class="pillar-num">01</div>
+      <div class="pillar-name">Purity</div>
+      <p class="pillar-desc">Clean ingredients on skin. Clean ingredients in water. The same standard for both.</p>
+    </div>
+    <div class="pillar reveal reveal-3">
+      <div class="pillar-num">02</div>
+      <div class="pillar-name">Warmth</div>
+      <p class="pillar-desc">An earthy terracotta that says: this is for the home, this is for the family, this is for you.</p>
+    </div>
+    <div class="pillar reveal reveal-4">
+      <div class="pillar-num">03</div>
+      <div class="pillar-name">Restraint</div>
+      <p class="pillar-desc">Two products. One promise. Made better than anyone else's.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 08 — LOGO -->
+<section class="slide logo-slide" data-section="Logo System">
+  <div style="margin-bottom: 4vh;" class="reveal reveal-1">
+    <div class="eyebrow">— The Mark</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 44px; margin-top: 2vh;">Sans serif meets italic. <em style="color: var(--rosa);">Structure meets warmth.</em></h2>
+  </div>
+  <div class="logo-grid">
+    <div class="logo-main reveal reveal-2">
+      <div class="logo-main-mark">RB <span class="rosa-mark">Rosa</span></div>
+    </div>
+    <div class="logo-side">
+      <div class="logo-side-box reveal reveal-3">
+        <div class="monogram">R<span class="dot"></span>B</div>
+      </div>
+      <div class="logo-side-box reveal reveal-4">
+        <div class="lockup-stacked">RB<span class="b">Rosa</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 — COLOR -->
+<section class="slide" data-section="Color System">
+  <div class="color-header reveal reveal-1">
+    <div class="eyebrow">— Color System</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 56px; margin-top: 2vh; letter-spacing: -0.01em;">Terracotta at the center. <em style="color: var(--rosa);">Warm earth around it.</em></h2>
+  </div>
+  <div class="color-grid reveal reveal-2">
+    <div class="swatch sw-rosa"><div class="swatch-tag">HERO</div><div class="swatch-name">Rosa</div><div class="swatch-hex">#C97064</div></div>
+    <div class="swatch sw-rosa-deep"><div class="swatch-name">Rosa Deep</div><div class="swatch-hex">#A1554B</div></div>
+    <div class="swatch sw-rosa-soft"><div class="swatch-name">Rosa Soft</div><div class="swatch-hex">#E5A599</div></div>
+    <div class="swatch sw-cream"><div class="swatch-name">Cream</div><div class="swatch-hex">#FCE8E4</div></div>
+    <div class="swatch sw-blush"><div class="swatch-name">Blush</div><div class="swatch-hex">#F8ECE9</div></div>
+    <div class="swatch sw-stone"><div class="swatch-name">Stone</div><div class="swatch-hex">#E6D7C5</div></div>
+    <div class="swatch sw-umber"><div class="swatch-name">Umber</div><div class="swatch-hex">#5C2E27</div></div>
+    <div class="swatch sw-charcoal"><div class="swatch-name">Charcoal</div><div class="swatch-hex">#2A1F1B</div></div>
+  </div>
+</section>
+
+<!-- 10 — TYPOGRAPHY -->
+<section class="slide paper" data-section="Typography">
+  <div class="reveal reveal-1" style="margin-bottom: 4vh;">
+    <div class="eyebrow">— Typography</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 48px; margin-top: 2vh; letter-spacing: -0.01em;"><em style="color: var(--rosa);">A serif. A sans.</em> Italic for Rosa.</h2>
+  </div>
+  <div class="type-grid">
+    <div class="type-card reveal reveal-2">
+      <div>
+        <div class="type-label">Display · The Rosa Voice</div>
+        <div class="type-specimen-serif">Rr</div>
+      </div>
+      <div class="type-meta">
+        <strong>Cormorant Garamond</strong> · Italic 300<br>
+        For the word Rosa. For warmth, intimacy, emotion.
+      </div>
+    </div>
+    <div class="type-card reveal reveal-3">
+      <div>
+        <div class="type-label">Structural · The RB Voice</div>
+        <div class="type-specimen-sans">Rr</div>
+      </div>
+      <div class="type-meta">
+        <strong>Jost</strong> · Light 200 / 300<br>
+        For wordmark, labels, body, navigation
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 — THE SOAP -->
+<section class="slide bar-slide" data-section="The Soap">
+  <div class="bar-stage">
+    <div class="reveal reveal-1" style="margin-bottom: -2vh;">
+      <div class="eyebrow">— Family 01 · The Soap</div>
+    </div>
+    <div class="reveal reveal-2" style="display:flex;align-items:center;justify-content:center;">
+      <img src="rosa-soap.png" alt="RB Rosa Soap — 100g cleansing bar in terracotta paper" loading="lazy" style="max-width:min(420px, 60vw);max-height:50vh;width:auto;height:auto;object-fit:contain;display:block;" />
+    </div>
+    <div class="bar-caption reveal reveal-3">
+      One hundred grams. Pressed, debossed, wrapped in <em>terracotta paper</em>.<br>
+      For the skin.
+    </div>
+  </div>
+</section>
+
+<!-- 12 — SOAP RANGE -->
+<section class="slide" data-section="Soap Range">
+  <div class="reveal reveal-1">
+    <div class="eyebrow">— Soap Range</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 52px; margin-top: 2vh; letter-spacing: -0.01em;">One bar. <em style="color: var(--rosa);">Eight expressions.</em></h2>
+  </div>
+  <div class="range-grid reveal reveal-2" style="display:flex;align-items:center;justify-content:center;flex:1;min-height:0;margin-top:4vh;background:transparent;border:none;">
+    <img src="rosa-soap-products.png" alt="RB Rosa Soap Range — eight expressions: Rice Milk, Coconut, Charcoal, Hibiscus, Oat Protein, Calamansi, Mineral Clay, Rosa Hero" loading="lazy" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;" />
+  </div>
+</section>
+
+<!-- 13 — THE DETERGENT -->
+<section class="slide detergent-slide" data-section="The Detergent">
+  <div class="detergent-stage">
+    <div class="reveal reveal-1" style="margin-bottom: -2vh;">
+      <div class="eyebrow">— Family 02 · The Detergent</div>
+    </div>
+    <div class="reveal reveal-2" style="display:flex;align-items:center;justify-content:center;">
+      <img src="rosa-detergent.png" alt="RB Rosa Detergent — 500ml frosted glass, refillable, plant-derived" loading="lazy" style="max-width:min(420px, 60vw);max-height:50vh;width:auto;height:auto;object-fit:contain;display:block;" />
+    </div>
+    <div class="bar-caption reveal reveal-3">
+      Five hundred milliliters. Frosted glass, refillable, <em>plant-derived</em>.<br>
+      For the home.
+    </div>
+  </div>
+</section>
+
+<!-- 14 — DETERGENT RANGE -->
+<section class="slide" data-section="Detergent Range">
+  <div class="reveal reveal-1">
+    <div class="eyebrow">— Detergent Range</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 52px; margin-top: 2vh; letter-spacing: -0.01em;">Six formulations. <em style="color: var(--rosa);">One bottle.</em></h2>
+  </div>
+  <div class="det-grid reveal reveal-2" style="display:flex;align-items:center;justify-content:center;flex:1;min-height:0;margin-top:4vh;background:transparent;border:none;">
+    <img src="rosa-detergent-products.png" alt="RB Rosa Detergent Range — six formulations: Laundry, Delicate, Dish, Surface, Floor, Heavy Duty" loading="lazy" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;" />
+  </div>
+</section>
+
+<!-- 15 — PACKAGING FAMILY -->
+<section class="slide pkg-slide" data-section="Packaging Family">
+  <div class="reveal reveal-1">
+    <div class="eyebrow">— Packaging Family</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 52px; margin-top: 2vh; letter-spacing: -0.01em;">Four formats. <em style="color: var(--rosa);">One household.</em></h2>
+  </div>
+  <div class="pkg-stage reveal reveal-2" style="display:flex;align-items:center;justify-content:center;flex:1;min-height:0;">
+    <img src="rosa-packaging.png" alt="RB Rosa Packaging Family — Detergent, Hand Wash, Soap Bar, and Refill Pouch" loading="lazy" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;" />
+  </div>
+</section>
+
+<!-- 19 — STORYTELLING -->
+<section class="slide" data-section="Storytelling">
+  <div class="reveal reveal-1">
+    <div class="eyebrow">— Storytelling Themes</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 56px; margin-top: 2vh; letter-spacing: -0.01em;">One story. <em style="color: var(--rosa);">Five returns.</em></h2>
+  </div>
+  <div class="themes-grid">
+    <div class="theme reveal reveal-2"><div class="theme-num">01</div><div><div class="theme-name">Return</div><div class="theme-desc">Coming back to what matters.</div></div></div>
+    <div class="theme reveal reveal-2"><div class="theme-num">02</div><div><div class="theme-name">Warmth</div><div class="theme-desc">A brand with a body temperature.</div></div></div>
+    <div class="theme reveal reveal-3"><div class="theme-num">03</div><div><div class="theme-name">Ritual</div><div class="theme-desc">The sacred in the daily.</div></div></div>
+    <div class="theme reveal reveal-3"><div class="theme-num">04</div><div><div class="theme-name">Roots</div><div class="theme-desc">The quiet Philippine origin.</div></div></div>
+    <div class="theme reveal reveal-4"><div class="theme-num">05</div><div><div class="theme-name">Repair</div><div class="theme-desc">Care for self, others, earth.</div></div></div>
+    <div class="theme reveal reveal-4"><div class="theme-num"></div><div><div class="theme-name" style="opacity: 0.4;">—</div><div class="theme-desc">A single narrative<br>in five movements.</div></div></div>
+  </div>
+</section>
+
+<!-- 20 — SUSTAINABILITY -->
+<section class="slide" data-section="Quiet Sustainability">
+  <div class="reveal reveal-1">
+    <div class="eyebrow">— Quiet Sustainability</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 52px; margin-top: 2vh; letter-spacing: -0.01em;"><em style="color: var(--rosa);">Two products.</em> One closed loop.</h2>
+  </div>
+  <div class="sus-grid">
+    <div class="sus-step reveal reveal-2">
+      <div class="sus-num">1</div>
+      <div class="sus-name">Paper for Soap</div>
+      <div class="sus-desc">FSC paper, soy ink, fully compostable.</div>
+    </div>
+    <div class="sus-step reveal reveal-3">
+      <div class="sus-num">2</div>
+      <div class="sus-name">Glass for Detergent</div>
+      <div class="sus-desc">Frosted glass, refillable, designed for 25+ cycles.</div>
+    </div>
+    <div class="sus-step reveal reveal-3">
+      <div class="sus-num">3</div>
+      <div class="sus-name">Refill Pouches</div>
+      <div class="sus-desc">Mono-material PE, returned for re-processing.</div>
+    </div>
+    <div class="sus-step reveal reveal-4">
+      <div class="sus-num">4</div>
+      <div class="sus-name">Plant-Derived</div>
+      <div class="sus-desc">Biodegradable surfactants. Phosphate-free. Vegan.</div>
+    </div>
+  </div>
+  <div class="reveal reveal-4" style="margin-top: 6vh; text-align: center;">
+    <p style="font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--mute); max-width: 52ch; margin: 0 auto;">
+      What washes the body should not poison the water. What washes the home should not poison the earth.
+    </p>
+  </div>
+</section>
+
+<!-- 21 — VOICE -->
+<section class="slide paper" data-section="Voice & Tone">
+  <div class="reveal reveal-1">
+    <div class="eyebrow">— Voice & Tone</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 52px; margin-top: 2vh; letter-spacing: -0.01em;">Warm. <em style="color: var(--rosa);">Considered.</em> Honest.</h2>
+  </div>
+  <div class="voice-grid">
+    <div class="voice-col reveal reveal-2">
+      <div class="voice-head avoid">— Avoid</div>
+      <div class="voice-words muted">
+        Revolutionary.<br>Luxurious.<br>Ultimate.<br>Miracle.<br>Powerful.<br>Cold.
+      </div>
+    </div>
+    <div class="voice-col reveal reveal-3">
+      <div class="voice-head use">— Use</div>
+      <div class="voice-words">
+        Warm.<br>Pure.<br>Considered.<br>Daily.<br>Made.<br>Home.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 — JOURNEY -->
+<section class="slide" data-section="Customer Journey">
+  <div class="reveal reveal-1">
+    <div class="eyebrow">— Customer Journey</div>
+    <h2 style="font-family: var(--serif); font-weight: 300; font-size: 52px; margin-top: 2vh; letter-spacing: -0.01em;">From a single bar. <em style="color: var(--rosa);">To a household identity.</em></h2>
+  </div>
+  <div class="journey-track">
+    <div class="journey-row reveal reveal-2"><div class="journey-num">01</div><div class="journey-stage">Encounter</div><div class="journey-emotion">warm curiosity</div></div>
+    <div class="journey-row reveal reveal-2"><div class="journey-num">02</div><div class="journey-stage">First Bar</div><div class="journey-emotion">quiet trust</div></div>
+    <div class="journey-row reveal reveal-3"><div class="journey-num">03</div><div class="journey-stage">First Detergent</div><div class="journey-emotion">recognition</div></div>
+    <div class="journey-row reveal reveal-3"><div class="journey-num">04</div><div class="journey-stage">Whole Household</div><div class="journey-emotion">belonging</div></div>
+    <div class="journey-row reveal reveal-4"><div class="journey-num">05</div><div class="journey-stage">Advocacy</div><div class="journey-emotion">identity</div></div>
+  </div>
+</section>
+
+<!-- 23 — CODA -->
+<section class="slide coda-slide" data-section="Coda">
+  <div class="reveal reveal-1">
+    <div class="eyebrow" style="color: rgba(252,232,228,0.65); margin-bottom: 6vh;">— Coda</div>
+  </div>
+  <div class="coda-mark reveal reveal-2">RB&nbsp;<span class="rosa-mark">Rosa</span></div>
+  <div class="coda-tag reveal reveal-3"><em>Clean for the body. Clean for the home.</em></div>
+  <div class="coda-foot reveal reveal-4">
+    Born in the Philippines · Made for the world<br>
+    A Brand by Redbox · 2026
+  </div>
+</section>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+const counterEl = document.getElementById('counter');
+const sectionEl = document.getElementById('section');
+const progressEl = document.getElementById('progress');
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function update() {
+  slides.forEach((s, i) => s.classList.toggle('active', i === current));
+  counterEl.textContent = pad(current + 1) + ' / ' + pad(total);
+  sectionEl.textContent = slides[current].dataset.section || '';
+  progressEl.style.width = ((current + 1) / total * 100) + '%';
+}
+
+function nextSlide() { if (current < total - 1) { current++; update(); } }
+function prevSlide() { if (current > 0) { current--; update(); } }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+  if (e.key === 'Home') { current = 0; update(); }
+  if (e.key === 'End') { current = total - 1; update(); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(dx) > 50) {
+    if (dx < 0) nextSlide(); else prevSlide();
+  }
+});
+
+update();
+</script>
+
+</body>
+</html>

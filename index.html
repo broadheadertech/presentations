@@ -250,13 +250,16 @@
     color: var(--ink);
   }
 
-  /* Card grid */
+  /* Card grid — 2-up on desktop so each card is wide enough to showcase deck UI/UX */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1px;
     background: var(--ink);
     border: 1px solid var(--ink);
+  }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
   }
 
   .card {
@@ -264,10 +267,15 @@
     background: var(--paper-soft);
     cursor: pointer;
     display: grid;
-    grid-template-rows: auto 1fr auto;
-    min-height: 380px;
+    grid-template-rows: auto 1fr auto auto;
+    min-height: 460px;
     overflow: hidden;
     transition: background 200ms ease;
+  }
+  /* The 5th (odd) card spans both columns so there's no orphan slot */
+  @media (min-width: 641px) {
+    .card:nth-child(5):last-child { grid-column: 1 / -1; }
+    .card:nth-child(5):last-child .card-cover { aspect-ratio: 21 / 9; }
   }
   .card:hover { background: var(--ink); }
 
@@ -299,34 +307,61 @@
     text-align: right;
   }
 
-  /* Brand cover band — preserves brand color identity */
+  /* Brand cover band — live iframe preview of each deck's cover */
   .card-cover {
     margin: 18px 22px 0;
     aspect-ratio: 16 / 9;
     border: 1px solid var(--hair-strong);
     position: relative;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
     transition: border-color 200ms ease;
   }
   .card:hover .card-cover { border-color: var(--accent); }
-  .card-cover-mark {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-align: center;
-    line-height: 1;
-    width: 100%;
-    max-width: 220px;
+  .card-cover-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    pointer-events: none;
+    transform-origin: 0 0;
+    opacity: 0;
+    transition: opacity 600ms ease;
+    background: transparent;
   }
-  .card-cover-mark svg { display: block; }
+  .card-cover-frame.loaded { opacity: 1; }
+
+  /* Brand palette strip — sits directly under the cover preview */
+  .card-palette {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 22px 0;
+    margin: 0 0 -4px;
+  }
+  .card-palette .palette-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mute);
+    flex-shrink: 0;
+    transition: color 200ms ease;
+  }
+  .card:hover .card-palette .palette-label { color: var(--paper-deep); }
+  .card-palette .swatch-row {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+  }
+  .card-palette .swatch {
+    flex: 1;
+    height: 22px;
+    border-radius: 2px;
+    border: 1px solid rgba(10,10,10,0.12);
+    transition: transform 200ms ease, border-color 200ms ease;
+  }
+  .card:hover .card-palette .swatch { border-color: rgba(255,255,255,0.15); }
+  .card:hover .card-palette .swatch:hover { transform: translateY(-2px); }
 
   /* Brand-specific wordmark styles inside the cover band */
   .mark-dalisay {
@@ -368,14 +403,14 @@
   .mark-rbpure {
     font-family: 'Jost', sans-serif;
     font-weight: 200;
-    color: #1F1D1A;
+    color: #5C2E27;
     line-height: 1;
   }
   .mark-rbpure .rb {
     font-size: 11px;
     letter-spacing: 0.4em;
     font-weight: 400;
-    color: #8A8278;
+    color: #A1554B;
     display: block;
     margin-bottom: 10px;
   }
@@ -492,9 +527,9 @@
   }
   .cover-rbpure {
     background:
-      radial-gradient(ellipse at 70% 30%, rgba(184,58,46,0.22) 0%, transparent 55%),
-      linear-gradient(140deg, #F5F1EA 0%, #C9BFAE 100%);
-    color: #1F1D1A;
+      radial-gradient(ellipse at 70% 30%, rgba(201,112,100,0.35) 0%, transparent 55%),
+      linear-gradient(140deg, #F8ECE9 0%, #E5A599 100%);
+    color: #5C2E27;
   }
   .cover-sibol {
     background:
@@ -729,7 +764,7 @@
   <section class="hero">
     <div class="hero-inner">
       <div>
-        <div class="hero-eyebrow">Centralized Deck <span class="slash">/</span> 06 Brands</div>
+        <div class="hero-eyebrow">Centralized Deck <span class="slash">/</span> 05 Brands</div>
         <h1 class="hero-title">
           <span class="stack">Six Brand</span>
           <span class="stack">Stories<span class="slash">/</span></span>
@@ -738,7 +773,7 @@
       </div>
       <aside class="hero-side">
         <p class="hero-sub">A single point of entry for the brand presentations. Open a deck, then use the arrows or keyboard to move between them without leaving the room.</p>
-        <div class="hero-stat">06<small>Decks Loaded</small></div>
+        <div class="hero-stat">05<small>Decks Loaded</small></div>
       </aside>
     </div>
   </section>
@@ -747,7 +782,7 @@
     <div class="deck-head">
       <h2>The Index <span class="slash">/</span></h2>
       <div class="rule"></div>
-      <span class="count">01 — 06</span>
+      <span class="count">01 — 05</span>
     </div>
     <div class="grid" id="grid"></div>
   </section>
@@ -790,6 +825,7 @@
       file: 'dalisay_brand_book.html', title: 'Dalisay',
       tagline: 'Filipino Soap & Detergent House',
       cover: 'cover-dalisay',
+      palette: ['#F4EDE0', '#D9C9AE', '#A8895C', '#8C6F45', '#2A2622'],
       logo: `
         <div class="mark-dalisay">
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -813,6 +849,7 @@
       file: 'habi-brand-presentation.html', title: 'Habi',
       tagline: 'Handcrafted Soap & Detergent',
       cover: 'cover-habi',
+      palette: ['#F2ECDC', '#C7B391', '#A8896B', '#523524', '#243528'],
       logo: `
         <div class="mark-habi">
           HABI
@@ -823,6 +860,7 @@
       file: 'KALINGA_Brand_Book_v2.html', title: 'Kalinga',
       tagline: 'Sabon at Wash — Brand Book',
       cover: 'cover-kalinga',
+      palette: ['#FCFCF9', '#BFDDEB', '#4A8FB5', '#A8C9A0', '#D7263D'],
       logo: `
         <div class="mark-kalinga">
           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -839,31 +877,26 @@
         </div>`
     },
     {
-      file: 'RB_PURE_Presentation.html', title: 'RB Pure',
+      file: 'RB_ROSA_Presentation.html', title: 'RB Rosa',
       tagline: 'Soap & Detergent',
       cover: 'cover-rbpure',
+      palette: ['#F8ECE9', '#E5A599', '#C97064', '#A1554B', '#5C2E27'],
       logo: `
         <div class="mark-rbpure">
           <span class="rb">RB</span>
-          <span class="pure">PURE</span>
+          <span class="pure">ROSA</span>
         </div>`
     },
     {
       file: 'sibol-brand-book.html', title: 'Sibol',
       tagline: 'Brand Identity System',
       cover: 'cover-sibol',
+      palette: ['#F5EFE3', '#D4C5A3', '#5C7A4F', '#3F5837', '#C56B47'],
       logo: `
         <div class="mark-sibol">
           <img src="sibol-mark.png" alt="Sibol sprout" />
           sibol
         </div>`
-    },
-    {
-      file: 'unboxed-branding.html', title: 'Unboxed',
-      tagline: 'Redbox Home & Personal Care',
-      cover: 'cover-unboxed',
-      logo: `
-        <div class="mark-unboxed">UNB<span class="open-o"></span>XED</div>`
     },
   ];
 
@@ -881,7 +914,13 @@
         <span class="tag">Deck / ${pad(i + 1)} of ${pad(decks.length)}</span>
       </div>
       <div class="card-cover ${d.cover}">
-        <div class="card-cover-mark">${d.logo}</div>
+        <iframe class="card-cover-frame" src="${d.file}" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true" onload="this.classList.add('loaded')"></iframe>
+      </div>
+      <div class="card-palette">
+        <span class="palette-label">Palette /</span>
+        <div class="swatch-row">
+          ${(d.palette || []).map(c => `<span class="swatch" style="background:${c}" title="${c}"></span>`).join('')}
+        </div>
       </div>
       <div class="card-foot">
         <div>
@@ -947,6 +986,31 @@
       if (!isNaN(n) && n >= 1 && n <= decks.length) openViewer(n - 1);
     }
   });
+
+  // Scale each card-cover iframe so a 1440-wide deck fits inside the card cover
+  const VIRTUAL_W = 1440;  // simulate desktop viewport so deck renders at its intended layout
+  function scaleCovers() {
+    document.querySelectorAll('.card-cover').forEach(cover => {
+      const frame = cover.querySelector('.card-cover-frame');
+      if (!frame) return;
+      const w = cover.clientWidth;
+      const h = cover.clientHeight;
+      if (w === 0 || h === 0) return;
+      const scale = w / VIRTUAL_W;
+      frame.style.width  = VIRTUAL_W + 'px';
+      frame.style.height = (h / scale) + 'px';
+      frame.style.transform = 'scale(' + scale + ')';
+    });
+  }
+  // Use ResizeObserver so each card recalculates if the grid reflows (e.g. window resize)
+  if (typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(scaleCovers);
+    document.querySelectorAll('.card-cover').forEach(c => ro.observe(c));
+  }
+  window.addEventListener('resize', scaleCovers);
+  // Initial scale once layout settles
+  requestAnimationFrame(scaleCovers);
+  setTimeout(scaleCovers, 100);
 
   // Live clock
   const clock = document.getElementById('clock');

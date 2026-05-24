@@ -518,46 +518,43 @@ body { overflow-y: auto; }
 /* ====== SLIDE 5 — THE EIGHT ====== */
 .eight {
   background: var(--paper);
+  /* Image-only slide: zero side padding, just enough bottom for the fixed footer */
+  padding: 40px 1vw 80px;
+  align-items: center;
+  justify-content: center;
 }
-.eight-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 50px;
-}
-.eight-head h2 {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-size: var(--display-s);
-  letter-spacing: -0.02em;
-  font-variation-settings: "SOFT" 80;
-}
+.eight-head { display: none; }
 .eight-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 36px;
+  grid-template-rows: repeat(2, auto);
+  gap: 22px 24px;
   flex: 1;
+  align-content: center;
+  min-height: 0;
 }
 .bar-cell {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
   text-align: left;
+  min-width: 0;
 }
 .bar-img {
   width: 100%;
-  aspect-ratio: 5/3;
+  aspect-ratio: 16/9;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.bar-img svg { max-height: 100%; }
 .bar-name {
   font-family: 'Fraunces', serif;
   font-weight: 300;
-  font-size: 17px;
+  font-size: 15px;
   letter-spacing: -0.005em;
   font-variation-settings: "SOFT" 80;
+  line-height: 1.15;
 }
 .bar-quality {
   font-family: 'Geist', sans-serif;
@@ -768,17 +765,20 @@ body { overflow-y: auto; }
 /* ====== SLIDE 9 — VOICE ====== */
 .voice {
   background: var(--paper);
+  /* Bottom space so column tails clear the fixed .foot footer */
+  padding-bottom: 100px;
 }
 .voice-head {
   text-align: center;
-  margin-bottom: 70px;
+  margin-bottom: 28px;
 }
 .voice-head h2 {
   font-family: 'Fraunces', serif;
   font-weight: 300;
-  font-size: var(--display-m);
+  font-size: clamp(28px, 4vw, 56px);
   letter-spacing: -0.025em;
   font-variation-settings: "SOFT" 80;
+  line-height: 1.05;
 }
 .voice-head h2 em {
   font-style: italic;
@@ -789,6 +789,7 @@ body { overflow-y: auto; }
   grid-template-columns: 1fr 1px 1fr;
   gap: 60px;
   flex: 1;
+  min-height: 0;
 }
 .voice-divider {
   background: var(--hair);
@@ -797,6 +798,7 @@ body { overflow-y: auto; }
 .voice-col {
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 .voice-col h3 {
   font-family: 'Geist', sans-serif;
@@ -804,21 +806,24 @@ body { overflow-y: auto; }
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--ink-mute);
-  margin-bottom: 28px;
-  padding-bottom: 18px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--hair);
 }
 .voice-words {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 10px;
+  flex: 1;
+  justify-content: space-around;
 }
 .voice-word {
   font-family: 'Fraunces', serif;
   font-weight: 300;
-  font-size: 26px;
+  font-size: clamp(18px, 1.6vw, 22px);
   letter-spacing: -0.005em;
   font-variation-settings: "SOFT" 80;
+  line-height: 1.2;
 }
 .voice-word.strike {
   color: var(--ink-mute);
@@ -1233,178 +1238,14 @@ body { overflow-y: auto; }
     </div>
   </div>
 
-  <div class="eight-grid">
-    <!-- ======== THE BODY ======== -->
-    <!-- Bar 01 -->
-    <div class="bar-cell reveal d3">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#3A3833" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(255,255,255,0.18)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.22)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Body · No. 01</div>
-      <div class="bar-name">Bamboo Charcoal</div>
-      <div class="bar-quality">Detox</div>
-    </div>
-    <!-- Bar 02 -->
-    <div class="bar-cell reveal d3">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#8B6B4F" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(255,255,255,0.22)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(255,255,255,0.28)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Body · No. 02</div>
-      <div class="bar-name">Cacao Butter</div>
-      <div class="bar-quality">Restore</div>
-    </div>
-    <!-- Bar 03 -->
-    <div class="bar-cell reveal d4">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#EDE2C8" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.06)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.18)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.22)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Body · No. 03</div>
-      <div class="bar-name">Coconut Milk</div>
-      <div class="bar-quality">Ritual</div>
-    </div>
-    <!-- Bar 04 -->
-    <div class="bar-cell reveal d4">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#C8A570" stroke="rgba(0,0,0,0.16)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.08)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.2)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.26)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Body · No. 04</div>
-      <div class="bar-name">Honey Oat</div>
-      <div class="bar-quality">Comfort</div>
-    </div>
-
-    <!-- ======== THE HOME ======== -->
-    <!-- Bar 05 -->
-    <div class="bar-cell reveal d5">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#D4C56A" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.06)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.22)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.28)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Home · No. 05</div>
-      <div class="bar-name">Calamansi</div>
-      <div class="bar-quality">Brighten</div>
-    </div>
-    <!-- Bar 06 -->
-    <div class="bar-cell reveal d5">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#EFEAD7" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.05)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.18)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.24)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Home · No. 06</div>
-      <div class="bar-name">Rice Water</div>
-      <div class="bar-quality">Soften</div>
-    </div>
-    <!-- Bar 07 -->
-    <div class="bar-cell reveal d6">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#97A972" stroke="rgba(0,0,0,0.16)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.22)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.28)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Home · No. 07</div>
-      <div class="bar-name">Lemongrass</div>
-      <div class="bar-quality">Fresh</div>
-    </div>
-    <!-- Bar 08 -->
-    <div class="bar-cell reveal d6">
-      <div class="bar-img">
-        <svg viewBox="0 0 200 130" width="100%" height="100%">
-          <ellipse cx="100" cy="120" rx="78" ry="3" fill="#000" opacity="0.08"/>
-          <rect x="22" y="22" width="156" height="92" rx="6" fill="#E8C8B5" stroke="rgba(0,0,0,0.18)" stroke-width="0.5"/>
-          <line x1="22" y1="28" x2="178" y2="28" stroke="rgba(0,0,0,0.06)" stroke-width="0.4"/>
-          <circle cx="100" cy="62" r="9" stroke="rgba(0,0,0,0.2)" stroke-width="0.6" fill="none"/>
-          <text x="100" y="86" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="3" text-anchor="middle" fill="rgba(0,0,0,0.26)">HABI</text>
-        </svg>
-      </div>
-      <div class="bar-num">Home · No. 08</div>
-      <div class="bar-name">Pomelo & Salt</div>
-      <div class="bar-quality">Linen</div>
-    </div>
-  </div>
+  <img src="habi-products.png" alt="The HABI Collection — eight handcrafted bars: four for the body, four for the cloth" loading="lazy" style="width:100%;height:100%;object-fit:contain;display:block;margin:0 auto;" />
 </section>
 
 <!-- ====== SLIDE 6 — PACKAGING ====== -->
 <section class="slide pack" id="s6" data-name="Packaging" data-num="VI">
   <div class="pack-grid">
     <div class="pack-art reveal d2">
-      <svg viewBox="0 0 360 360" width="100%" height="100%" style="max-width:420px;">
-        <defs>
-          <pattern id="cloth" width="6" height="6" patternUnits="userSpaceOnUse">
-            <rect width="6" height="6" fill="#E5DAC0"/>
-            <line x1="0" y1="3" x2="6" y2="3" stroke="#C7B391" stroke-width="0.3"/>
-            <line x1="3" y1="0" x2="3" y2="6" stroke="#C7B391" stroke-width="0.3"/>
-          </pattern>
-        </defs>
-
-        <!-- Drop shadow -->
-        <ellipse cx="180" cy="320" rx="130" ry="6" fill="#000" opacity="0.08"/>
-
-        <!-- The bar (back) -->
-        <rect x="80" y="120" width="200" height="150" rx="8" fill="#A8896B" opacity="0.95"/>
-
-        <!-- Cloth wrap (muslin) -->
-        <rect x="70" y="130" width="220" height="130" fill="url(#cloth)" stroke="#C7B391" stroke-width="0.5"/>
-        <rect x="70" y="130" width="220" height="130" fill="#E5DAC0" opacity="0.3"/>
-
-        <!-- Outer paper band -->
-        <rect x="60" y="170" width="240" height="60" fill="#F2ECDC" stroke="#221F1A" stroke-width="0.5"/>
-        <text x="180" y="195" text-anchor="middle" font-family="Fraunces" font-size="11" font-weight="300" letter-spacing="6" fill="#221F1A">HABI</text>
-        <line x1="100" y1="205" x2="260" y2="205" stroke="#221F1A" stroke-width="0.4"/>
-        <text x="180" y="219" text-anchor="middle" font-family="Fraunces" font-size="8" font-style="italic" fill="#54504A">Forest Tea &mdash; Calm</text>
-
-        <!-- Wax seal -->
-        <circle cx="180" cy="245" r="10" fill="#523524"/>
-        <text x="180" y="248" text-anchor="middle" font-family="Fraunces" font-size="7" fill="#F2ECDC" letter-spacing="1">H</text>
-
-        <!-- Annotation lines -->
-        <g stroke="#54504A" stroke-width="0.4" fill="none" opacity="0.6">
-          <line x1="60" y1="200" x2="20" y2="200"/>
-          <line x1="70" y1="135" x2="20" y2="115"/>
-          <line x1="290" y1="200" x2="340" y2="200"/>
-        </g>
-        <g font-family="Geist Mono, monospace" font-size="7" fill="#54504A" letter-spacing="1.5">
-          <text x="14" y="203" text-anchor="end" text-transform="uppercase">01</text>
-          <text x="14" y="118" text-anchor="end" text-transform="uppercase">02</text>
-          <text x="346" y="203" text-transform="uppercase">03</text>
-        </g>
-      </svg>
+      <img src="habi-packaging.png" alt="HABI packaging — cloth-wrapped bar with paper band and wax seal" loading="lazy" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;" />
     </div>
 
     <div class="pack-list">
@@ -1438,101 +1279,8 @@ body { overflow-y: auto; }
   </div>
 </section>
 
-<!-- ====== SLIDE 7 — SOURCED BY HAND ====== -->
-<section class="slide sourced" id="s7" data-name="Sourced" data-num="VII">
-  <div class="sourced-grid">
-    <div class="sourced-text">
-      <div class="label reveal d1" style="margin-bottom: 24px;">— Ingredient Authorship</div>
-      <h2 class="reveal d2">Sourced by <em>hand</em>.<br>Named on the wrap.</h2>
-      <p class="reveal d3">
-        Every ingredient is traceable to a specific cooperative, farm, or community. We name them on the band, the way wine credits a vineyard. Specificity is the luxury.
-      </p>
-    </div>
-
-    <div class="sourced-list">
-      <div class="source-row reveal d2">
-        <span class="source-num">01.</span>
-        <span class="source-ingredient">Coconut Oil</span>
-        <span class="source-region">From <em>Tiaong, Quezon</em></span>
-        <span class="source-meta">Body & Home</span>
-      </div>
-      <div class="source-row reveal d3">
-        <span class="source-num">02.</span>
-        <span class="source-ingredient">Cacao Butter</span>
-        <span class="source-region">From <em>Davao del Sur</em></span>
-        <span class="source-meta">Body</span>
-      </div>
-      <div class="source-row reveal d3">
-        <span class="source-num">03.</span>
-        <span class="source-ingredient">Bamboo Charcoal</span>
-        <span class="source-region">From <em>Bohol</em></span>
-        <span class="source-meta">Body</span>
-      </div>
-      <div class="source-row reveal d4">
-        <span class="source-num">04.</span>
-        <span class="source-ingredient">Wild Honey</span>
-        <span class="source-region">From <em>Coron, Palawan</em></span>
-        <span class="source-meta">Body</span>
-      </div>
-      <div class="source-row reveal d4">
-        <span class="source-num">05.</span>
-        <span class="source-ingredient">Calamansi</span>
-        <span class="source-region">From <em>Batangas</em></span>
-        <span class="source-meta">Home</span>
-      </div>
-      <div class="source-row reveal d5">
-        <span class="source-num">06.</span>
-        <span class="source-ingredient">Rice Water</span>
-        <span class="source-region">From <em>Nueva Ecija</em></span>
-        <span class="source-meta">Home</span>
-      </div>
-      <div class="source-row reveal d5">
-        <span class="source-num">07.</span>
-        <span class="source-ingredient">Lemongrass</span>
-        <span class="source-region">From <em>Pampanga</em></span>
-        <span class="source-meta">Body & Home</span>
-      </div>
-      <div class="source-row reveal d6">
-        <span class="source-num">08.</span>
-        <span class="source-ingredient">Abaca Cloth</span>
-        <span class="source-region">From <em>Abra & Ilocos Sur</em></span>
-        <span class="source-meta">Inabel Weave</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SLIDE 8 — SHELF PSYCHOLOGY ====== -->
-<section class="slide shelf" id="s8" data-name="Shelf" data-num="VIII">
-  <div class="shelf-head">
-    <div class="reveal d1">
-      <div class="label" style="margin-bottom: 16px;">— Shelf Psychology</div>
-      <h2>HABI wins by silence.</h2>
-    </div>
-    <div class="micro reveal d2" style="max-width: 280px; text-align: right; line-height: 1.6;">In a category of color and claim,<br>restraint becomes the loudest signal.</div>
-  </div>
-
-  <div class="shelf-grid">
-    <div class="shelf-col reveal d3">
-      <span class="shelf-num">i.</span>
-      <h3>Negative Space</h3>
-      <p>Sixty to seventy percent of every face is empty. Surrounded by clutter, the empty band reads as confidence — the same way a fine fragrance does on a department-store counter.</p>
-    </div>
-    <div class="shelf-col reveal d4">
-      <span class="shelf-num">ii.</span>
-      <h3>Editorial Type</h3>
-      <p>The serif wordmark, set wide and quiet, signals fashion-adjacent luxury — the visual register of fine fragrance, not mass beauty. Type is the price tag before the price tag.</p>
-    </div>
-    <div class="shelf-col reveal d5">
-      <span class="shelf-num">iii.</span>
-      <h3>Tactile Invitation</h3>
-      <p>Matte uncoated paper, embossed weave, cloth peeking from the band. People pick HABI up. The pickup is the conversion event in artisan retail — and the most reliable one.</p>
-    </div>
-  </div>
-</section>
-
 <!-- ====== SLIDE 9 — VOICE ====== -->
-<section class="slide voice" id="s9" data-name="Voice" data-num="IX">
+<section class="slide voice" id="s7" data-name="Voice" data-num="VII">
   <div class="voice-head">
     <div class="label reveal d1" style="margin-bottom: 16px;">— Brand Voice</div>
     <h2 class="reveal d2">How HABI <em>speaks</em>.</h2>
@@ -1568,26 +1316,8 @@ body { overflow-y: auto; }
   </div>
 </section>
 
-<!-- ====== SLIDE 10 — THE STORY ====== -->
-<section class="slide story" id="s10" data-name="The Story" data-num="X">
-  <div class="story-body">
-    <div class="story-eyebrow reveal d1">— A Closing Word —</div>
-    <p class="lead reveal d2">A bar is a small thing.</p>
-    <p class="reveal d3">
-      It sits at the edge of the basin, or beside the laundry. It is used once, twice, a hundred times, then it is gone. Most people never think about it. <em>HABI is for the people who do.</em>
-    </p>
-    <p class="reveal d4">
-      The bars are cold-processed in a small workshop in Manila &mdash; one line for the body, one for the cloth. The coconut oil comes from a family in Quezon. The honey is from beekeepers in Palawan. The calamansi from a grove in Batangas. The cloth that wraps each bar is woven by hand in a town in the north. Cut by hand. Cured for six weeks before it leaves us.
-    </p>
-    <p class="reveal d5">
-      It costs more than a supermarket soap. It costs less than a department-store soap. It is worth, we think, what it costs &mdash; because of the time, and the source, and the hands.
-    </p>
-    <div class="story-sign reveal d6">For the body. For the cloth.</div>
-  </div>
-</section>
-
 <!-- ====== SLIDE 11 — SIGN-OFF ====== -->
-<section class="slide signoff" id="s11" data-name="Signature" data-num="XI">
+<section class="slide signoff" id="s8" data-name="Signature" data-num="VIII">
   <div class="signoff-emblem reveal d1">
     <svg viewBox="0 0 140 140" width="120" height="120">
       <circle cx="70" cy="70" r="56" fill="none" stroke="#221F1A" stroke-width="0.8"/>
