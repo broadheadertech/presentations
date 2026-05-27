@@ -1118,6 +1118,14 @@ section { padding: 140px 32px; position: relative; }
   min-height: 280px;
   width: 100%;
 }
+.pkg-tile-visual img {
+  max-width: 100%;
+  max-height: 300px;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
 .pkg-tile-name {
   font-family: 'Archivo Black', sans-serif;
   font-size: 26px;
@@ -2058,15 +2066,7 @@ section { padding: 140px 32px; position: relative; }
     <div class="pkg-tile">
       <div class="pkg-tile-num"><span>[ FORMAT 01 ]</span><span>BOTTLE</span></div>
       <div class="pkg-tile-visual">
-        <div class="trio-bottle">
-          <div class="tb-top">LAUNDRY · 1L</div>
-          <div class="tb-mid">
-            <div class="tb-wordmark">UNB<span class="o">O</span>XED</div>
-            <div class="tb-bracket">[ WASH ]</div>
-          </div>
-          <div class="tb-redline"></div>
-          <div class="tb-bottom">REFILL<br>FOREVER</div>
-        </div>
+        <img src="unboxed-bottle.png" alt="UNBOXED 1L aluminum bottle" />
       </div>
       <div class="pkg-tile-name">The Bottle</div>
       <div class="pkg-tile-format">1L aluminum · refillable</div>
@@ -2076,15 +2076,7 @@ section { padding: 140px 32px; position: relative; }
     <div class="pkg-tile featured">
       <div class="pkg-tile-num"><span>[ FORMAT 02 ]</span><span>REFILL POUCH</span></div>
       <div class="pkg-tile-visual">
-        <div class="trio-pouch">
-          <div class="tp-top">REFILL · 450ML</div>
-          <div class="tp-mid">
-            <div class="tp-wordmark">UNB<span class="o">O</span>XED</div>
-            <div class="tp-bracket">[ WASH ]</div>
-          </div>
-          <div class="tp-redbar"></div>
-          <div class="tp-bottom">16 WASHES<br>CONCENTRATED</div>
-        </div>
+        <img src="unboxed-pouch.png" alt="UNBOXED 450ml refill pouch" />
       </div>
       <div class="pkg-tile-name">The Pouch</div>
       <div class="pkg-tile-format">450ml concentrate · mono-PE</div>
@@ -2094,10 +2086,7 @@ section { padding: 140px 32px; position: relative; }
     <div class="pkg-tile">
       <div class="pkg-tile-num"><span>[ FORMAT 03 ]</span><span>BAR</span></div>
       <div class="pkg-tile-visual">
-        <div class="trio-bar">
-          <div class="bar-wm">UNB<span class="o">O</span>XED</div>
-          <div class="bar-bracket">[ BODY ]</div>
-        </div>
+        <img src="unboxed-soap.png" alt="UNBOXED pressed soap bar" />
       </div>
       <div class="pkg-tile-name">The Bar</div>
       <div class="pkg-tile-format">Pressed soap · 110g · paper-wrapped</div>
@@ -2156,81 +2145,6 @@ section { padding: 140px 32px; position: relative; }
           <div class="corner bl">3× CONCENTRATED<br>78% LESS PLASTIC<br>MONO-MATERIAL</div>
           <div class="corner br">A REDBOX <span class="red">●</span><br>HOME &amp; PERSONAL<br>CARE BRAND</div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========= LINEUP / SHELF VIEW ========= -->
-<section class="lineup-section paper">
-  <div class="container">
-    <div class="section-meta">
-      <div><span class="strong"><span class="red-acc">[</span> 07 <span class="red-acc">]</span></span> &nbsp; The Lineup</div>
-      <div>One brand. Six bottles. One shelf.</div>
-    </div>
-
-    <h2 class="section-title">Family <span class="red">resemblance.</span></h2>
-    <p class="section-sub">The same bottle silhouette across the range — alternating ink and paper — held together by the red cap, the red waistline, and the embossed wordmark. <em>Identifiable from across the aisle.</em></p>
-
-    <div class="lineup-stage">
-      <div class="lineup-row">
-        <div class="lineup-bottle">
-          <div class="lb-top">LAUNDRY</div>
-          <div class="lb-mid">
-            <div class="lb-wm">UNB<span class="o">O</span>XED</div>
-            <div class="lb-bracket">[ WASH ]</div>
-          </div>
-          <div class="lb-redline"></div>
-        </div>
-        <div class="lineup-bottle invert">
-          <div class="lb-top">CONDITIONER</div>
-          <div class="lb-mid">
-            <div class="lb-wm">UNB<span class="o">O</span>XED</div>
-            <div class="lb-bracket">[ SOFT ]</div>
-          </div>
-          <div class="lb-redline"></div>
-        </div>
-        <div class="lineup-bottle">
-          <div class="lb-top">DISH</div>
-          <div class="lb-mid">
-            <div class="lb-wm">UNB<span class="o">O</span>XED</div>
-            <div class="lb-bracket">[ DISH ]</div>
-          </div>
-          <div class="lb-redline"></div>
-        </div>
-        <div class="lineup-bottle invert">
-          <div class="lb-top">HAND</div>
-          <div class="lb-mid">
-            <div class="lb-wm">UNB<span class="o">O</span>XED</div>
-            <div class="lb-bracket">[ HAND ]</div>
-          </div>
-          <div class="lb-redline"></div>
-        </div>
-        <div class="lineup-bottle">
-          <div class="lb-top">BODY</div>
-          <div class="lb-mid">
-            <div class="lb-wm">UNB<span class="o">O</span>XED</div>
-            <div class="lb-bracket">[ BODY ]</div>
-          </div>
-          <div class="lb-redline"></div>
-        </div>
-        <div class="lineup-bottle invert">
-          <div class="lb-top">SURFACE</div>
-          <div class="lb-mid">
-            <div class="lb-wm">UNB<span class="o">O</span>XED</div>
-            <div class="lb-bracket">[ SURFACE ]</div>
-          </div>
-          <div class="lb-redline"></div>
-        </div>
-      </div>
-      <div class="lineup-shelf"></div>
-      <div class="lineup-labels">
-        <span><span class="red">01</span> WASH</span>
-        <span><span class="red">02</span> SOFT</span>
-        <span><span class="red">03</span> DISH</span>
-        <span><span class="red">04</span> HAND</span>
-        <span><span class="red">05</span> BODY</span>
-        <span><span class="red">06</span> SURFACE</span>
       </div>
     </div>
   </div>
