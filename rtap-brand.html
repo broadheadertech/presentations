@@ -140,6 +140,8 @@ h1,h2,h3,.dh{font-family:var(--display);font-weight:800;line-height:1.02;letter-
 .sec-head{max-width:840px;margin-bottom:clamp(44px,6vw,80px)}
 .sec-head h2{font-size:clamp(34px,5.4vw,72px);margin:18px 0 0}
 .sec-head p{margin-top:22px;font-size:clamp(16px,1.7vw,19px);max-width:620px}
+.sec-ico{width:62px;height:62px;border-radius:17px;display:inline-flex;align-items:center;justify-content:center;background:var(--grad);color:#fff;margin-bottom:24px;box-shadow:0 16px 32px -10px rgba(229,18,31,.55),inset 0 1px 0 rgba(255,255,255,.18)}
+.sec-ico svg{display:block}
 
 /* light section */
 .light{background:var(--paper);color:var(--ink)}
@@ -468,6 +470,58 @@ footer{background:var(--midnight);border-top:1px solid var(--line-dark);padding:
 footer .lockup{color:#fff}
 footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:#6E6E76;text-transform:uppercase;text-align:right}
 .divider{height:1px;background:var(--line-dark);max-width:1240px;margin:0 auto}
+
+/* ============ PRESENTATION — HORIZONTAL SLIDE DECK ============ */
+html,body{height:100%;overflow:hidden}
+#deck{
+  display:flex;flex-direction:row;height:100vh;width:100vw;
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+#deck::-webkit-scrollbar{display:none}
+#deck>section{
+  flex:0 0 100vw;width:100vw;height:100vh;
+  overflow-y:auto;overflow-x:hidden;
+  scroll-snap-align:start;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+#deck>section::-webkit-scrollbar{display:none}
+
+/* progress line across the top */
+.s-prog{position:fixed;top:0;left:0;height:3px;z-index:61;background:var(--grad);width:0;transition:width .4s ease}
+
+/* side arrows */
+.s-arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:60;
+  width:54px;height:54px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(8,8,9,.5);backdrop-filter:blur(12px);
+  border:1px solid var(--line-dark);color:#fff;
+  transition:background .2s,border-color .2s,transform .15s}
+.s-arrow:hover{background:var(--blue);border-color:var(--blue)}
+.s-arrow:active{transform:translateY(-50%) scale(.92)}
+.s-arrow.prev{left:20px}.s-arrow.next{right:20px}
+.s-arrow[disabled]{opacity:.18;pointer-events:none}
+.s-arrow svg{width:22px;height:22px}
+
+/* bottom bar — counter + dots */
+.s-bar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;
+  display:flex;align-items:center;gap:16px;padding:10px 18px;border-radius:100px;
+  background:rgba(8,8,9,.5);backdrop-filter:blur(12px);border:1px solid var(--line-dark)}
+.s-bar .count{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;color:#C9C9CF;white-space:nowrap}
+.s-bar .count b{color:#fff}
+.s-bar .dots{display:flex;gap:8px;align-items:center}
+.s-bar .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);cursor:pointer;transition:.25s;padding:0;border:0}
+.s-bar .dot:hover{background:rgba(255,255,255,.6)}
+.s-bar .dot.on{background:var(--blue);width:24px;border-radius:5px}
+
+@media(max-width:760px){
+  .s-arrow{width:42px;height:42px}
+  .s-arrow.prev{left:10px}.s-arrow.next{right:10px}
+  .s-bar{gap:10px;padding:8px 12px;bottom:14px}
+  .s-bar .count{font-size:10px}
+}
+@media(max-width:520px){.s-bar .dots{display:none}}
 </style>
 </head>
 <body>
@@ -517,6 +571,9 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
   </div>
 </nav>
 
+<!-- ====== SLIDE DECK ====== -->
+<div class="deck" id="deck">
+
 <!-- ====== HERO ====== -->
 <section class="hero">
   <div class="grid-bg"></div>
@@ -535,13 +592,14 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
     <span>v1.0 — 2026</span>
     <span>Payment Access Network</span>
   </div>
-  <div class="scroll-cue">Scroll</div>
+  <div class="scroll-cue">Slide →</div>
 </section>
 
 <!-- ====== POSITIONING ====== -->
 <section class="position" id="position">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 1.5V5M12 19v3.5M1.5 12H5M19 12h3.5"/></svg></div>
       <span class="eyebrow">01 — Positioning</span>
       <h2>Not a bank.<br>Not a wallet.<br>The rail underneath both.</h2>
     </div>
@@ -583,7 +641,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
       <span class="eyebrow" style="color:var(--cyan);margin-bottom:18px;display:inline-flex">The catch — as simple as 1 + 1</span>
       <p class="bigstate" style="font-size:clamp(24px,3.4vw,40px);max-width:880px">
         <span class="hl">1.</span> Our own credits can only be <b style="color:#fff;font-weight:700">spent inside</b> — never cashed out.<br>
-        <span class="hl">2.</span> GCash runs on money the <b style="color:#fff;font-weight:700">owner loads up front</b>.
+        <span class="hl">2.</span> Partner e-wallets run on money the <b style="color:#fff;font-weight:700">owner loads up front</b>.
       </p>
     </div>
 
@@ -592,13 +650,13 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
         <div class="glow"></div>
         <div class="k">Part 1 · Closed-Loop Credits</div>
         <div class="v">Spend it inside. Never cash it out.</div>
-        <p>Any wallet credit we issue — like <b style="color:#fff">R-Eload</b> — is a <b style="color:#fff">closed-loop credit</b>. It exists only to push a transaction through: buy prepaid load, or pay a utility bill. It is <b style="color:#fff">not</b> transferable e-money — you can't withdraw it, send it to a friend, or treat it as cash.</p>
+        <p>The kiosk operator uses <b style="color:#fff">internal credits</b> — like <b style="color:#fff">eCash</b> or <b style="color:#fff">Load Wallet</b>. These are <b style="color:#fff">closed-loop</b> credits: they can only be spent <b style="color:#fff">inside the RTAP network</b> to request specific services, such as processing a top-up. They're <b style="color:#fff">not</b> transferable e-money — they can't be withdrawn, sent to anyone, or treated as cash.</p>
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:20px;font-family:var(--mono);font-size:11.5px">
-          <span style="padding:8px 12px;border:1px solid var(--line-dark);border-radius:8px;color:#fff;background:rgba(255,255,255,.03)">Top up cash</span>
+          <span style="padding:8px 12px;border:1px solid var(--line-dark);border-radius:8px;color:#fff;background:rgba(255,255,255,.03)">Operator buys credits</span>
           <span style="color:var(--cyan)">→</span>
-          <span style="padding:8px 12px;border:1px solid var(--line-dark);border-radius:8px;color:#fff;background:rgba(255,255,255,.03)">R-Eload credit</span>
+          <span style="padding:8px 12px;border:1px solid var(--line-dark);border-radius:8px;color:#fff;background:rgba(255,255,255,.03)">eCash / Load Wallet</span>
           <span style="color:var(--cyan)">→</span>
-          <span style="padding:8px 12px;border:1px solid var(--line-dark);border-radius:8px;color:#fff;background:rgba(255,255,255,.03)">Load / Bills</span>
+          <span style="padding:8px 12px;border:1px solid var(--line-dark);border-radius:8px;color:#fff;background:rgba(255,255,255,.03)">Spend inside RTAP (top-up)</span>
           <span style="color:#7C7C84">✕ No cash-out &nbsp;·&nbsp; ✕ No transfer</span>
         </div>
         <p style="margin-top:18px;color:#7C7C84;font-style:italic">Think arcade tokens — useful inside the arcade, worthless outside it.</p>
@@ -606,17 +664,17 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 
       <div class="tcard is reveal d2">
         <div class="glow"></div>
-        <div class="k">Part 2 · The GCash Catch</div>
-        <div class="v">The owner pre-funds the wallet.</div>
-        <p>To offer GCash, the machine owner advances <b style="color:#fff">their own capital first</b> — depositing money into Dafoxtech's corporate bank accounts (<b style="color:#fff">UnionBank, PNB, Security Bank</b>). Dafoxtech then credits them with a digital <b style="color:#fff">eCash Wallet</b> balance. Every GCash cash-in a customer makes is drawn down from that pre-loaded balance.</p>
+        <div class="k">Part 2 · The E-Wallet Catch</div>
+        <div class="v">The machine owner pre-funds their wallet.</div>
+        <p>To offer E-wallet services, the machine owner first advances <b style="color:#fff">their own capital</b> by depositing funds into <b style="color:#fff">RTAP's corporate bank accounts (UnionBank, PNB, Security Bank)</b>. RTAP then credits the owner with a digital <b style="color:#fff">eCash Wallet</b> balance. Every E-wallet transaction made by customers is deducted from that pre-loaded balance.</p>
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:20px;font-family:var(--mono);font-size:11.5px">
           <span style="padding:8px 12px;border:1px solid rgba(255,46,58,.4);border-radius:8px;color:#fff;background:rgba(255,46,58,.06)">Owner deposits capital</span>
           <span style="color:var(--cyan)">→</span>
-          <span style="padding:8px 12px;border:1px solid rgba(255,46,58,.4);border-radius:8px;color:#fff;background:rgba(255,46,58,.06)">Dafoxtech bank</span>
+          <span style="padding:8px 12px;border:1px solid rgba(255,46,58,.4);border-radius:8px;color:#fff;background:rgba(255,46,58,.06)">RTAP corporate bank accounts</span>
           <span style="color:var(--cyan)">→</span>
-          <span style="padding:8px 12px;border:1px solid rgba(255,46,58,.4);border-radius:8px;color:#fff;background:rgba(255,46,58,.06)">eCash Wallet</span>
+          <span style="padding:8px 12px;border:1px solid rgba(255,46,58,.4);border-radius:8px;color:#fff;background:rgba(255,46,58,.06)">eCash Wallet balance</span>
           <span style="color:var(--cyan)">→</span>
-          <span style="padding:8px 12px;border:1px solid rgba(255,46,58,.4);border-radius:8px;color:#fff;background:rgba(255,46,58,.06)">Sell GCash</span>
+          <span style="padding:8px 12px;border:1px solid rgba(255,46,58,.4);border-radius:8px;color:#fff;background:rgba(255,46,58,.06)">Sell E-wallet services</span>
         </div>
         <p style="margin-top:18px;color:rgba(255,255,255,.6);font-style:italic">Think of stocking a store — pay for inventory up front, then sell from your stock.</p>
       </div>
@@ -628,6 +686,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 <section class="light" id="logo">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="5.5"/><rect x="10" y="10" width="10" height="10" rx="2.5"/></svg></div>
       <span class="eyebrow">02 — Logo System</span>
       <h2>One symbol. A signal that reaches every RBS store.</h2>
       <p>The RTAP mark is a payment rail meeting a tap — a vertical spine anchored by three radiating arcs. It reads at once as an <b>R</b>, a contactless tap, and a signal of access broadcasting outward across the RBS store network.</p>
@@ -705,6 +764,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 <section id="color" style="background:var(--midnight)">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4.2 5 6.5 7.9 6.5 11.2A6.5 6.5 0 0 1 5.5 14.2C5.5 10.9 7.8 8 12 3z"/></svg></div>
       <span class="eyebrow">03 — Colour System</span>
       <h2>Bold red. Grounded in black.</h2>
       <p>A disciplined red, white &amp; black system. Black and white carry trust and clarity; a single decisive red carries energy and action — used sparingly, never decoratively.</p>
@@ -760,6 +820,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 <section class="light" id="type">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><span style="font-family:var(--display);font-weight:800;font-size:25px;line-height:1;letter-spacing:-.02em">Aa</span></div>
       <span class="eyebrow">04 — Typography</span>
       <h2>Geometric. Confident. Built to scale down.</h2>
       <p>A widened grotesque for institutional headlines, a humanist grotesque for effortless reading, and a mono for the technical texture of a payment rail.</p>
@@ -801,6 +862,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 <section class="voice">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.4a7.5 7.5 0 0 1-10.8 6.7L4 20l1.9-5.5A7.5 7.5 0 1 1 20.5 11.4z"/><path d="M9 10.5h6M9 8h4" stroke-width="1.7"/></svg></div>
       <span class="eyebrow" style="color:var(--cyan)">05 — Voice &amp; Taglines</span>
     </div>
     <p class="quote reveal d1">Financial access is now <span class="hl">built into every RBS store.</span> We speak plainly, warmly, and with the steadiness of infrastructure people can trust.</p>
@@ -820,6 +882,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 <section class="product" id="product">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M9.5 20.5h5M12 16.5v4"/><circle cx="12" cy="9.5" r="2.2"/></svg></div>
       <span class="eyebrow">06 — Self-Service Kiosk</span>
       <h2>One standing surface.<br>Every transaction.</h2>
       <p>RTAP's customer touchpoint is a single free-standing kiosk — installed in every RBS store across the franchise. Nothing to download, no account to open. Walk up, tap, done.</p>
@@ -828,45 +891,8 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
     <div class="kiosk-feature">
       <!-- physical standing kiosk unit -->
       <div class="reveal d1">
-        <div class="kunit">
-          <div class="chassis">
-            <div class="kscr2">
-              <div class="ktop">
-                <span class="lockup" style="color:#fff"><span class="mark" style="--mf:url(#gradA);--ms:url(#gradA)"><img src="rtap-logo.png" alt="RTAP" style="display:block;width:28px;height:28px"></span><span class="wordmark" style="font-size:21px">RTAP</span></span>
-                <span class="clock">Self-Service</span>
-              </div>
-              <div class="welcome">
-                <div class="s">// Tap to begin</div>
-                <h3>What would you<br>like to pay?</h3>
-              </div>
-              <div class="ktiles">
-                <div class="ktile pri" style="grid-column:1 / -1">
-                  <span class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
-                  <div><div class="kt">Cash In</div><div class="kd">Load any e-wallet</div></div>
-                </div>
-                <div class="ktile">
-                  <span class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span>
-                  <div><div class="kt">Pay Bills</div><div class="kd">Power, water, internet</div></div>
-                </div>
-                <div class="ktile">
-                  <span class="ki"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></span>
-                  <div><div class="kt">Buy Load</div><div class="kd">Prepaid &amp; data</div></div>
-                </div>
-              </div>
-              <div class="kfoot">
-                <span>Secured by licensed partners</span>
-                <span style="color:var(--cyan)">Need help? Tap the bell</span>
-              </div>
-            </div>
-            <div class="deck">
-              <div class="reader"><span class="rzone"><svg width="26" height="26"><use href="#nfc"/></svg></span><span class="rl">Tap card or phone<br>to pay</span></div>
-              <div><span class="slot"></span><span class="rl" style="display:block;text-align:right">Receipt</span></div>
-            </div>
-          </div>
-          <div class="neck"></div>
-          <div class="base"></div>
-          <div class="floor-cap">Floor-Standing Kiosk · 15.6&Prime;</div>
-        </div>
+        <img src="rtap-kiosk.png" alt="RTAP floor-standing self-service kiosk" style="display:block;width:100%;max-width:430px;margin:0 auto;border-radius:18px;border:1px solid var(--line-dark);box-shadow:0 60px 110px -45px rgba(0,0,0,.85)">
+        <div style="text-align:center;margin-top:20px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9A9AA2">Floor-Standing Kiosk · 15.6&Prime; Touchscreen</div>
       </div>
 
       <!-- on-screen transaction flow + printed output -->
@@ -875,7 +901,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
           <div class="kscreen">
             <div class="kshead"><span>On-screen · Cash In</span><span class="kstep">Step 2 of 3</span></div>
             <div class="ksbody">
-              <div class="fl-s">Cash in to GCash · 0917•••4421</div>
+              <div class="fl-s">Cash in to e-wallet · 0917•••4421</div>
               <div class="fl-amt">₱ 500<span>.00</span></div>
               <div class="fl-pad"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>·</span><span>0</span><span>⌫</span></div>
               <div class="fl-tap"><span class="tg"><svg width="30" height="30"><use href="#nfc"/></svg></span><div><b>Tap or insert cash</b><small>to confirm ₱500.00</small></div></div>
@@ -885,7 +911,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
           <div class="kscreen">
             <div class="kshead"><span>On-screen · Complete</span><span class="kstep">Done</span></div>
             <div class="ksbody">
-              <div class="fl-done"><span class="ok"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Payment complete</b><small>₱500.00 · GCash · RT-8842-PH</small></div></div>
+              <div class="fl-done"><span class="ok"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Payment complete</b><small>₱500.00 · E-Wallet · RT-8842-PH</small></div></div>
               <div class="fl-final">
                 <div class="fl-qr">
                   <svg viewBox="0 0 100 100" width="100%" height="100%" style="color:var(--ink)">
@@ -905,7 +931,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
               <div class="rlogo"><span class="lockup"><span class="mark"><img src="rtap-logo.png" alt="RTAP" style="display:block;width:18px;height:18px"></span><span class="wordmark" style="font-size:15px;color:var(--ink)">RTAP</span></span></div>
               <div style="text-align:center;font-size:10px;margin-bottom:10px">RBS Store · Sta. Maria Branch</div>
               <div class="rrow"><span>Service</span><span>Cash-In</span></div>
-              <div class="rrow"><span>Wallet</span><span>GCash •4421</span></div>
+              <div class="rrow"><span>Wallet</span><span>E-Wallet •4421</span></div>
               <div class="rrow"><span>Date</span><span>03 Jun 2026</span></div>
               <div class="rrow"><span>Ref No.</span><span>RT-8842-PH</span></div>
               <div class="rtot"><span>TOTAL</span><span>₱500.00</span></div>
@@ -933,6 +959,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 <section class="howto" id="how">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="6" rx="1.6"/><rect x="14" y="14" width="7" height="6" rx="1.6"/><path d="M6.5 10v3.5a3 3 0 0 0 3 3H14"/></svg></div>
       <span class="eyebrow">07 — How It Works</span>
       <h2>Cash goes in.<br>Digital <span class="hl">comes out.</span></h2>
       <p>A walk-up bridge from physical cash to the digital economy — powered entirely by licensed partners. No app, no account, and no money ever held by RTAP.</p>
@@ -974,6 +1001,7 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 <section class="world" id="world">
   <div class="wrap">
     <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.6 2.7 2.6 15.3 0 18c-2.6-2.7-2.6-15.3 0-18z"/></svg></div>
       <span class="eyebrow">08 — Brand in the World</span>
       <h2>From one RBS store to the whole franchise.</h2>
       <p>The system flexes from a single RBS branch to the full franchise network — always reading as the same trusted infrastructure.</p>
@@ -1027,17 +1055,113 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
     <div class="big">Modern Payments<br>in Every <span class="hl">RBS Store.</span></div>
     <div class="sub">RTAP · The payment infrastructure of the RBS store franchise</div>
   </div>
+  <div class="divider" style="margin-top:64px"></div>
+  <footer>
+    <span class="lockup"><span class="mark" style="--mf:url(#gradA);--ms:url(#gradA)"><img src="rtap-logo.png" alt="RTAP" style="display:block;width:26px;height:26px"></span><span class="wordmark" style="font-size:20px">RTAP</span></span>
+    <span class="meta">Brand Identity System · v1.0<br>Philippines → Southeast Asia · 2026</span>
+  </footer>
 </section>
+</div><!-- /deck -->
 
-<div class="divider"></div>
-<footer>
-  <span class="lockup"><span class="mark" style="--mf:url(#gradA);--ms:url(#gradA)"><img src="rtap-logo.png" alt="RTAP" style="display:block;width:26px;height:26px"></span><span class="wordmark" style="font-size:20px">RTAP</span></span>
-  <span class="meta">Brand Identity System · v1.0<br>Philippines → Southeast Asia · 2026</span>
-</footer>
+<!-- ====== PRESENTATION CONTROLS ====== -->
+<div class="s-prog" id="sProg"></div>
+<button class="s-arrow prev" id="sPrev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="s-arrow next" id="sNext" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+<div class="s-bar">
+  <span class="count" id="sCount"><b>01</b> / 10</span>
+  <div class="dots" id="dots"></div>
+</div>
 
 <script>
-  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  /* ---- reveal-on-view ---- */
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.08,rootMargin:'0px 0px -6% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ---- horizontal slide deck ---- */
+  const deck=document.getElementById('deck');
+  const slides=Array.from(deck.querySelectorAll(':scope > section'));
+  const total=slides.length;
+  const pad=n=>String(n).padStart(2,'0');
+  let current=0;
+
+  const dotsWrap=document.getElementById('dots');
+  slides.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='dot'+(i===0?' on':'');
+    b.setAttribute('aria-label','Go to slide '+(i+1));
+    b.addEventListener('click',()=>goTo(i));
+    dotsWrap.appendChild(b);
+  });
+  const prevBtn=document.getElementById('sPrev');
+  const nextBtn=document.getElementById('sNext');
+  const countEl=document.getElementById('sCount');
+  const progEl=document.getElementById('sProg');
+
+  function sync(){
+    countEl.innerHTML='<b>'+pad(current+1)+'</b> / '+pad(total);
+    dotsWrap.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===current));
+    prevBtn.disabled=current===0;
+    nextBtn.disabled=current===total-1;
+    progEl.style.width=(total>1?current/(total-1)*100:100)+'%';
+    /* make sure every reveal on the active slide is shown, even below the fold */
+    slides[current].querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+  }
+  function goTo(i){
+    current=Math.max(0,Math.min(total-1,i));
+    deck.scrollTo({left:current*deck.clientWidth,behavior:'smooth'});
+    sync();
+  }
+  const next=()=>goTo(current+1);
+  const prev=()=>goTo(current-1);
+  prevBtn.addEventListener('click',prev);
+  nextBtn.addEventListener('click',next);
+
+  /* keep current synced when the user swipes / drags horizontally */
+  let st;
+  deck.addEventListener('scroll',()=>{
+    clearTimeout(st);
+    st=setTimeout(()=>{
+      const i=Math.round(deck.scrollLeft/deck.clientWidth);
+      if(i!==current){current=i;sync();}
+    },90);
+  },{passive:true});
+
+  /* keyboard */
+  window.addEventListener('keydown',(e)=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='Home'){e.preventDefault();goTo(0);}
+    else if(e.key==='End'){e.preventDefault();goTo(total-1);}
+  });
+
+  /* top-nav links + logo jump to slides */
+  const idIndex={};
+  slides.forEach((s,i)=>{if(s.id)idIndex[s.id]=i;});
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const id=a.getAttribute('href').slice(1);
+      if(id in idIndex){e.preventDefault();goTo(idIndex[id]);}
+    });
+  });
+  const lk=document.querySelector('.nav .lockup');
+  if(lk){lk.style.cursor='pointer';lk.addEventListener('click',()=>goTo(0));}
+
+  /* mouse wheel advances slides when the current slide has no vertical overflow */
+  let wheelLock=false;
+  deck.addEventListener('wheel',(e)=>{
+    const s=slides[current];
+    if(s.scrollHeight>s.clientHeight+2) return;          /* let it scroll vertically */
+    if(Math.abs(e.deltaX)>Math.abs(e.deltaY)) return;    /* horizontal handled natively */
+    e.preventDefault();
+    if(wheelLock) return;
+    wheelLock=true;
+    (e.deltaY>0?next:prev)();
+    setTimeout(()=>{wheelLock=false;},650);
+  },{passive:false});
+
+  window.addEventListener('resize',()=>{deck.scrollLeft=current*deck.clientWidth;});
+
+  sync();
 </script>
 </body>
 </html>
