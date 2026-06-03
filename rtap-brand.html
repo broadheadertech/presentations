@@ -261,6 +261,9 @@ h1,h2,h3,.dh{font-family:var(--display);font-weight:800;line-height:1.02;letter-
 
 /* ---------- PRODUCT / UI ---------- */
 .product{background:var(--paper)}
+.product .eyebrow{color:var(--blue)}
+.product .sec-head h2{color:var(--ink)}
+.product .sec-head p{color:var(--ink-2)}
 .device-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:26px;align-items:start}
 @media(max-width:920px){.device-grid{grid-template-columns:1fr}}
 .phone{width:300px;max-width:100%;margin:0 auto;border-radius:42px;background:#0B0B0C;padding:13px;box-shadow:0 40px 90px -30px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.06);position:relative}
@@ -474,35 +477,50 @@ footer .meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color
 /* ============ PRESENTATION — HORIZONTAL SLIDE DECK ============ */
 html,body{height:100%;overflow:hidden}
 #deck{
-  display:flex;flex-direction:row;height:100vh;width:100vw;
-  overflow-x:auto;overflow-y:hidden;
-  scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  height:100vh;width:100vw;
+  overflow-y:auto;overflow-x:hidden;
+  scroll-snap-type:y proximity;scroll-behavior:smooth;
   scrollbar-width:none;-ms-overflow-style:none;
 }
 #deck::-webkit-scrollbar{display:none}
 #deck>section{
-  flex:0 0 100vw;width:100vw;height:100vh;
-  overflow-y:auto;overflow-x:hidden;
+  width:100%;min-height:100vh;
   scroll-snap-align:start;
-  scrollbar-width:none;-ms-overflow-style:none;
+  padding-bottom:clamp(96px,12vh,140px);
 }
-#deck>section::-webkit-scrollbar{display:none}
+
+/* ---- futuristic entrance: focus-pull blur + rise, replays per slide ---- */
+.reveal{
+  opacity:0;transform:translateY(44px) scale(.984);filter:blur(10px);
+  transition:opacity .85s cubic-bezier(.16,1,.3,1),
+             transform .95s cubic-bezier(.16,1,.3,1),
+             filter .85s cubic-bezier(.16,1,.3,1);
+  will-change:opacity,transform,filter;
+}
+.reveal.in{opacity:1;transform:none;filter:blur(0)}
+/* the active slide's icon badge gets a brief power-on glow */
+#deck>section.active .sec-ico{animation:icoOn 1.1s cubic-bezier(.16,1,.3,1) both}
+@keyframes icoOn{
+  0%{box-shadow:0 0 0 0 rgba(229,18,31,0)}
+  35%{box-shadow:0 0 0 6px rgba(229,18,31,.22),0 16px 32px -10px rgba(229,18,31,.7)}
+  100%{box-shadow:0 16px 32px -10px rgba(229,18,31,.55),inset 0 1px 0 rgba(255,255,255,.18)}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{transition:opacity .3s ease;transform:none;filter:none}
+  #deck>section.active .sec-ico{animation:none}
+}
 
 /* progress line across the top */
 .s-prog{position:fixed;top:0;left:0;height:3px;z-index:61;background:var(--grad);width:0;transition:width .4s ease}
 
-/* side arrows */
-.s-arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:60;
-  width:54px;height:54px;border-radius:50%;cursor:pointer;
+/* up / down nav buttons (inside the bar) */
+.s-nav{width:32px;height:32px;border-radius:50%;cursor:pointer;flex:0 0 auto;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(8,8,9,.5);backdrop-filter:blur(12px);
-  border:1px solid var(--line-dark);color:#fff;
-  transition:background .2s,border-color .2s,transform .15s}
-.s-arrow:hover{background:var(--blue);border-color:var(--blue)}
-.s-arrow:active{transform:translateY(-50%) scale(.92)}
-.s-arrow.prev{left:20px}.s-arrow.next{right:20px}
-.s-arrow[disabled]{opacity:.18;pointer-events:none}
-.s-arrow svg{width:22px;height:22px}
+  background:transparent;border:1px solid var(--line-dark);color:#fff;
+  transition:background .2s,border-color .2s;padding:0}
+.s-nav:hover{background:var(--blue);border-color:var(--blue)}
+.s-nav[disabled]{opacity:.25;pointer-events:none}
+.s-nav svg{width:16px;height:16px}
 
 /* bottom bar — counter + dots */
 .s-bar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;
@@ -516,8 +534,6 @@ html,body{height:100%;overflow:hidden}
 .s-bar .dot.on{background:var(--blue);width:24px;border-radius:5px}
 
 @media(max-width:760px){
-  .s-arrow{width:42px;height:42px}
-  .s-arrow.prev{left:10px}.s-arrow.next{right:10px}
   .s-bar{gap:10px;padding:8px 12px;bottom:14px}
   .s-bar .count{font-size:10px}
 }
@@ -554,22 +570,7 @@ html,body{height:100%;overflow:hidden}
   </defs>
 </svg>
 
-<!-- ====== NAV ====== -->
-<nav class="nav">
-  <span class="lockup">
-    <span class="mark" style="--mf:url(#gradA);--ms:url(#gradA)"><img src="rtap-logo.png" alt="RTAP" style="display:block;width:26px;height:26px"></span>
-    <span class="wordmark" style="font-size:22px">RTAP</span>
-  </span>
-  <div class="nav-links">
-    <a href="#position">Positioning</a>
-    <a href="#logo">Logo</a>
-    <a href="#color">Color</a>
-    <a href="#type">Type</a>
-    <a href="#product">Product</a>
-    <a href="#how">How It Works</a>
-    <a href="#world">In the World</a>
-  </div>
-</nav>
+<!-- nav removed — presentation mode -->
 
 <!-- ====== SLIDE DECK ====== -->
 <div class="deck" id="deck">
@@ -580,7 +581,7 @@ html,body{height:100%;overflow:hidden}
   <div class="wrap">
     <div class="hero-mark float">
       <span class="mark" style="--mf:url(#gradA);--ms:url(#gradA)">
-        <img src="rtap-logo.png" alt="RTAP" style="display:block;width:118px;height:118px">
+        <img src="rtap-logo.png" alt="RTAP" style="display:block;width:clamp(150px,20vw,220px);height:auto">
       </span>
     </div>
     <h1>RTAP<span class="dim">.</span></h1>
@@ -592,7 +593,7 @@ html,body{height:100%;overflow:hidden}
     <span>v1.0 — 2026</span>
     <span>Payment Access Network</span>
   </div>
-  <div class="scroll-cue">Slide →</div>
+  <div class="scroll-cue">Scroll ↓</div>
 </section>
 
 <!-- ====== POSITIONING ====== -->
@@ -1051,7 +1052,7 @@ html,body{height:100%;overflow:hidden}
 <section class="closing">
   <div class="grid-bg"></div>
   <div class="wrap">
-    <div class="mk"><span class="mark float" style="--mf:url(#gradA);--ms:url(#gradA)"><img src="rtap-logo.png" alt="RTAP" style="display:block;width:84px;height:84px"></span></div>
+    <div class="mk"><span class="mark float" style="--mf:url(#gradA);--ms:url(#gradA)"><img src="rtap-logo.png" alt="RTAP" style="display:block;width:clamp(110px,14vw,160px);height:auto"></span></div>
     <div class="big">Modern Payments<br>in Every <span class="hl">RBS Store.</span></div>
     <div class="sub">RTAP · The payment infrastructure of the RBS store franchise</div>
   </div>
@@ -1065,103 +1066,83 @@ html,body{height:100%;overflow:hidden}
 
 <!-- ====== PRESENTATION CONTROLS ====== -->
 <div class="s-prog" id="sProg"></div>
-<button class="s-arrow prev" id="sPrev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-<button class="s-arrow next" id="sNext" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
 <div class="s-bar">
+  <button class="s-nav" id="sPrev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
   <span class="count" id="sCount"><b>01</b> / 10</span>
   <div class="dots" id="dots"></div>
+  <button class="s-nav" id="sNext" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
 </div>
 
 <script>
-  /* ---- reveal-on-view ---- */
-  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.08,rootMargin:'0px 0px -6% 0px'});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-  /* ---- horizontal slide deck ---- */
+  /* vertical slide deck — each slide's content animates in when it becomes active */
   const deck=document.getElementById('deck');
   const slides=Array.from(deck.querySelectorAll(':scope > section'));
   const total=slides.length;
   const pad=n=>String(n).padStart(2,'0');
-  let current=0;
+  let current=-1;
 
   const dotsWrap=document.getElementById('dots');
   slides.forEach((s,i)=>{
     const b=document.createElement('button');
-    b.className='dot'+(i===0?' on':'');
+    b.className='dot';
     b.setAttribute('aria-label','Go to slide '+(i+1));
     b.addEventListener('click',()=>goTo(i));
     dotsWrap.appendChild(b);
   });
+  const dots=Array.from(dotsWrap.children);
   const prevBtn=document.getElementById('sPrev');
   const nextBtn=document.getElementById('sNext');
   const countEl=document.getElementById('sCount');
   const progEl=document.getElementById('sProg');
 
-  function sync(){
-    countEl.innerHTML='<b>'+pad(current+1)+'</b> / '+pad(total);
-    dotsWrap.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===current));
-    prevBtn.disabled=current===0;
-    nextBtn.disabled=current===total-1;
-    progEl.style.width=(total>1?current/(total-1)*100:100)+'%';
-    /* make sure every reveal on the active slide is shown, even below the fold */
-    slides[current].querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+  function activate(i){
+    if(i===current) return;
+    current=i;
+    countEl.innerHTML='<b>'+pad(i+1)+'</b> / '+pad(total);
+    dots.forEach((d,k)=>d.classList.toggle('on',k===i));
+    prevBtn.disabled=i===0;
+    nextBtn.disabled=i===total-1;
+    progEl.style.width=(total>1?i/(total-1)*100:100)+'%';
+    slides.forEach((s,k)=>{
+      const on=k===i;
+      s.classList.toggle('active',on);
+      /* reset siblings so their entrance replays on return; play the current one */
+      s.querySelectorAll('.reveal').forEach(el=>el.classList.toggle('in',on));
+    });
   }
   function goTo(i){
-    current=Math.max(0,Math.min(total-1,i));
-    deck.scrollTo({left:current*deck.clientWidth,behavior:'smooth'});
-    sync();
+    i=Math.max(0,Math.min(total-1,i));
+    activate(i);
+    deck.scrollTo({top:slides[i].offsetTop,behavior:'smooth'});
   }
   const next=()=>goTo(current+1);
   const prev=()=>goTo(current-1);
   prevBtn.addEventListener('click',prev);
   nextBtn.addEventListener('click',next);
 
-  /* keep current synced when the user swipes / drags horizontally */
+  /* sync the active slide while the user scrolls / swipes vertically */
   let st;
   deck.addEventListener('scroll',()=>{
     clearTimeout(st);
     st=setTimeout(()=>{
-      const i=Math.round(deck.scrollLeft/deck.clientWidth);
-      if(i!==current){current=i;sync();}
-    },90);
+      const mid=deck.scrollTop+window.innerHeight*0.45;
+      let i=0;
+      for(let k=0;k<total;k++){ if(slides[k].offsetTop<=mid) i=k; }
+      activate(i);
+    },70);
   },{passive:true});
 
   /* keyboard */
   window.addEventListener('keydown',(e)=>{
-    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();next();}
-    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();next();}
+    else if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();prev();}
     else if(e.key==='Home'){e.preventDefault();goTo(0);}
     else if(e.key==='End'){e.preventDefault();goTo(total-1);}
   });
 
-  /* top-nav links + logo jump to slides */
-  const idIndex={};
-  slides.forEach((s,i)=>{if(s.id)idIndex[s.id]=i;});
-  document.querySelectorAll('.nav-links a').forEach(a=>{
-    a.addEventListener('click',(e)=>{
-      const id=a.getAttribute('href').slice(1);
-      if(id in idIndex){e.preventDefault();goTo(idIndex[id]);}
-    });
-  });
-  const lk=document.querySelector('.nav .lockup');
-  if(lk){lk.style.cursor='pointer';lk.addEventListener('click',()=>goTo(0));}
+  window.addEventListener('resize',()=>{deck.scrollTop=slides[Math.max(0,current)].offsetTop;});
 
-  /* mouse wheel advances slides when the current slide has no vertical overflow */
-  let wheelLock=false;
-  deck.addEventListener('wheel',(e)=>{
-    const s=slides[current];
-    if(s.scrollHeight>s.clientHeight+2) return;          /* let it scroll vertically */
-    if(Math.abs(e.deltaX)>Math.abs(e.deltaY)) return;    /* horizontal handled natively */
-    e.preventDefault();
-    if(wheelLock) return;
-    wheelLock=true;
-    (e.deltaY>0?next:prev)();
-    setTimeout(()=>{wheelLock=false;},650);
-  },{passive:false});
-
-  window.addEventListener('resize',()=>{deck.scrollLeft=current*deck.clientWidth;});
-
-  sync();
+  activate(0);
 </script>
 </body>
 </html>
