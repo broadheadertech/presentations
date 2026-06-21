@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>REDBOX Loyalty Platform — Purpose & Vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#161311; --ink2:#1f1916; --card-d:#241d18;
+    --red:#d62828; --red-bright:#f1554f;
+    --cream:#f4f0eb; --paper:#fbfaf7;
+    --muted:#9a8e84; --muted-c:#8a7f76;
+    --line-d:#352a22; --line-c:#e2d9cf;
+    --title-d:#f7f3ef; --body-d:#cfc6be;
+    --ink-t:#191310; --body-c:#473d35;
+    --disp:'Archivo',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+    --mono:'Space Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:var(--body); background:#0e0b0a; color:var(--title-d);
+    overflow:hidden; -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Deck ---------- */
+  .deck{position:fixed; inset:0}
+  .slide{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    justify-content:center; padding:clamp(2rem,6vw,6.5rem);
+    background:var(--ink); color:var(--title-d);
+    opacity:0; visibility:hidden; transform:scale(1.012);
+    transition:opacity .55s ease, transform .55s ease, visibility .55s;
+    background-image:radial-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:26px 26px;
+  }
+  .slide.active{opacity:1; visibility:visible; transform:none; z-index:2}
+  .slide.theme-cream{
+    background:var(--cream); color:var(--ink-t);
+    background-image:radial-gradient(rgba(0,0,0,.025) 1px, transparent 1px);
+  }
+  .wrap{width:100%; max-width:1180px; margin:0 auto; position:relative; z-index:3}
+
+  /* ---------- Type ---------- */
+  .eyebrow{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.34em;
+    text-transform:uppercase; color:var(--red); margin-bottom:1.4rem;
+    display:flex; align-items:center; gap:.7rem;
+  }
+  .eyebrow::before{content:""; width:9px; height:9px; background:var(--red); border-radius:2px; display:inline-block}
+  h1.title{
+    font-family:var(--disp); font-weight:800; text-transform:uppercase;
+    font-size:clamp(2.1rem,5.2vw,3.7rem); line-height:.98; letter-spacing:-.01em;
+  }
+  .theme-cream h1.title{color:var(--ink-t)}
+  .lead{
+    font-size:clamp(1.05rem,1.7vw,1.32rem); line-height:1.55; color:var(--body-d);
+    max-width:46ch; margin-top:1.5rem;
+  }
+  .theme-cream .lead{color:var(--body-c)}
+  .foot-note{font-size:.95rem; color:var(--muted); margin-top:2.2rem; font-style:italic}
+  .theme-cream .foot-note{color:var(--muted-c)}
+  .accent{color:var(--red-bright)}
+  .theme-cream .accent{color:var(--red)}
+
+  /* ---------- Logo ---------- */
+  .mark{position:relative; background:var(--red); border-radius:24%; flex:none}
+  .mark::after{content:""; position:absolute; inset:28%; background:#fff; border-radius:8%}
+  .lockup{display:flex; align-items:center; gap:.6rem}
+  .lockup .wm{font-family:var(--disp); font-weight:800; letter-spacing:.02em; font-size:1.05rem}
+  .lockup .wm span{color:var(--muted); font-weight:600}
+  .theme-cream .lockup .wm span{color:var(--muted-c)}
+
+  /* ---------- Cover ---------- */
+  .cover h1{font-size:clamp(3rem,8.5vw,6.6rem); line-height:.92}
+  .cover .sub{font-size:clamp(1.1rem,1.9vw,1.45rem); color:var(--body-d); max-width:40ch; margin-top:1.8rem; line-height:1.5}
+  .chips{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2.4rem}
+  .chip{
+    font-family:var(--mono); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--red-bright); border:1px solid var(--line-d); background:var(--card-d);
+    padding:.55rem 1rem; border-radius:8px;
+  }
+
+  /* ---------- Cards / grids ---------- */
+  .grid{display:grid; gap:1.1rem; margin-top:2.4rem}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .card{
+    background:var(--card-d); border:1px solid var(--line-d); border-radius:16px;
+    padding:1.7rem 1.6rem; transition:transform .3s ease, border-color .3s ease;
+  }
+  .theme-cream .card{background:#fff; border-color:var(--line-c); box-shadow:0 8px 26px rgba(80,60,45,.07)}
+  .card:hover{transform:translateY(-4px); border-color:var(--red)}
+  .card .ch{font-family:var(--disp); font-weight:700; font-size:1.32rem; text-transform:uppercase; letter-spacing:.01em; margin-bottom:.6rem}
+  .theme-cream .card .ch{color:var(--ink-t)}
+  .card p{font-size:1rem; line-height:1.5; color:var(--body-d)}
+  .theme-cream .card p{color:var(--body-c)}
+  .card .cmark{width:34px;height:34px;margin-bottom:1rem}
+
+  /* business 2x2 */
+  .biz{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem 2.6rem; margin-top:2.2rem; max-width:980px}
+  .biz .row{display:flex; gap:1rem; align-items:flex-start}
+  .biz .sq{width:16px;height:16px;background:var(--red);border-radius:4px;margin-top:.45rem;flex:none}
+  .biz h3{font-family:var(--disp); font-weight:700; font-size:1.18rem; text-transform:uppercase; margin-bottom:.25rem}
+  .theme-cream .biz h3{color:var(--ink-t)}
+  .biz p{color:var(--body-d); line-height:1.45; font-size:1rem}
+  .theme-cream .biz p{color:var(--body-c)}
+
+  /* coupon */
+  .coupon-wrap{display:grid; grid-template-columns:1.1fr .9fr; gap:3rem; align-items:center; margin-top:1.6rem}
+  .bigdeal{font-family:var(--disp); font-weight:900; text-transform:uppercase; line-height:1; letter-spacing:-.01em}
+  .bigdeal .a{font-size:clamp(2.4rem,5vw,3.6rem); color:var(--title-d)}
+  .bigdeal .b{font-size:clamp(3.4rem,8vw,5.4rem); color:var(--red-bright); display:block}
+  .cups{display:grid; grid-template-columns:repeat(5,1fr); gap:.6rem; margin-top:.4rem}
+  .cup{aspect-ratio:1; border-radius:10px; border:1.5px solid var(--line-d); background:var(--card-d); display:flex; align-items:center; justify-content:center; color:var(--muted); font-family:var(--mono); font-size:.8rem}
+  .cup.used{background:var(--red); border-color:var(--red); color:#fff}
+  .cup-label{font-family:var(--mono); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-top:1rem; display:block}
+
+  /* trust two-up */
+  .trust{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-top:2.2rem}
+  .trust .panel{background:var(--card-d); border:1px solid var(--line-d); border-radius:16px; padding:1.8rem}
+  .trust .panel .lbl{font-family:var(--mono); font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--red-bright); margin-bottom:.7rem}
+  .trust .panel h3{font-family:var(--disp); font-weight:700; font-size:1.4rem; text-transform:uppercase; margin-bottom:.7rem}
+  .trust .panel p{color:var(--body-d); line-height:1.55; font-size:1.02rem}
+
+  /* journey steps */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; margin-top:2.4rem}
+  .step{position:relative; padding-top:1.2rem}
+  .step .n{font-family:var(--disp); font-weight:900; font-size:3rem; color:var(--red); line-height:1}
+  .step h3{font-family:var(--disp); font-weight:700; font-size:1.4rem; text-transform:uppercase; margin:.5rem 0 .55rem}
+  .step p{color:var(--body-d); line-height:1.5; font-size:1.02rem; max-width:30ch}
+
+  /* vision svg */
+  .vision-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:2rem; align-items:center}
+  .vis-svg{width:100%; height:auto; max-height:46vh}
+
+  /* closing */
+  .closing h1{font-size:clamp(2.6rem,7vw,5.4rem); line-height:.98; max-width:18ch}
+  .closing .cta{font-size:clamp(1.1rem,1.9vw,1.4rem); color:var(--body-d); margin-top:1.8rem; max-width:42ch; line-height:1.5}
+
+  /* ---------- Chrome (persistent UI) ---------- */
+  .topbar{position:fixed; top:0; left:0; right:0; height:3px; background:rgba(255,255,255,.06); z-index:50}
+  .topbar .fill{height:100%; background:var(--red); width:10%; transition:width .45s ease}
+  .brandtag{position:fixed; left:clamp(1.4rem,5vw,3.4rem); bottom:clamp(1.2rem,3.5vh,2rem); z-index:40}
+  .nav{position:fixed; right:clamp(1.4rem,5vw,3.4rem); bottom:clamp(1.2rem,3.5vh,2rem); z-index:40; display:flex; align-items:center; gap:1rem}
+  .dots{display:flex; gap:.5rem}
+  .dot{width:8px;height:8px;border-radius:2px;background:rgba(255,255,255,.22);border:none;padding:0;cursor:pointer;transition:all .25s}
+  .dot.on{background:var(--red); width:20px}
+  .counter{font-family:var(--mono); font-size:.78rem; letter-spacing:.1em; color:var(--muted)}
+  .arrows{display:flex; gap:.4rem}
+  .arrows button{
+    width:38px;height:38px;border-radius:9px;border:1px solid var(--line-d);
+    background:var(--card-d); color:var(--title-d); cursor:pointer; font-size:1rem;
+    display:flex;align-items:center;justify-content:center; transition:all .2s;
+  }
+  .arrows button:hover{border-color:var(--red); color:var(--red-bright)}
+  .arrows button:focus-visible{outline:2px solid var(--red); outline-offset:2px}
+  /* theme-aware chrome */
+  .slide.theme-cream ~ .brandtag{} /* noop */
+  body.on-cream .counter{color:var(--muted-c)}
+  body.on-cream .dot{background:rgba(0,0,0,.18)}
+  body.on-cream .dot.on{background:var(--red)}
+  body.on-cream .arrows button{background:#fff;border-color:var(--line-c);color:var(--ink-t)}
+  body.on-cream .topbar{background:rgba(0,0,0,.06)}
+
+  .navzone{position:fixed;top:0;bottom:0;width:22%;z-index:30;cursor:pointer}
+  .navzone.left{left:0}
+  .navzone.right{right:0}
+
+  /* ---------- Entrance animation ---------- */
+  .anim{opacity:0; transform:translateY(18px)}
+  .slide.active .anim{animation:rise .65s cubic-bezier(.2,.7,.2,1) forwards; animation-delay:var(--d,0s)}
+  @keyframes rise{to{opacity:1; transform:none}}
+
+  @media (max-width:820px){
+    .g3,.g2,.biz,.steps,.trust,.coupon-wrap,.vision-grid{grid-template-columns:1fr}
+    .coupon-wrap{gap:1.6rem}
+    .vis-svg{max-height:30vh}
+    .slide{padding:2rem 1.4rem 4.5rem}
+    .navzone{display:none}
+    .lead,.cover .sub{max-width:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .slide,.dot,.fill,.card{transition:none}
+    .slide.active .anim{animation:none; opacity:1; transform:none}
+  }
+</style>
+</head>
+<body class="on-dark">
+
+<div class="topbar"><div class="fill" id="fill"></div></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · COVER -->
+  <section class="slide cover active">
+    <div class="wrap">
+      <div class="lockup anim" style="--d:.05s; margin-bottom:2.4rem">
+        <span class="mark" style="width:38px;height:38px"></span>
+        <span class="wm">REDBOX <span>LOYALTY PLATFORM</span></span>
+      </div>
+      <h1 class="title anim" style="--d:.15s">One reason<br>to come back.<br><span class="accent">Everywhere.</span></h1>
+      <p class="sub anim" style="--d:.32s">A single rewards program that connects every Red Box shop — coffee, food, and retail — into one family worth being loyal to.</p>
+      <div class="chips anim" style="--d:.46s">
+        <span class="chip">Earn anywhere</span>
+        <span class="chip">Enjoy anywhere</span>
+        <span class="chip">One family of shops</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · THE OPPORTUNITY -->
+  <section class="slide">
+    <div class="wrap vision-grid">
+      <div>
+        <div class="eyebrow anim" style="--d:.05s">The opportunity</div>
+        <h1 class="title anim" style="--d:.14s">Many shops.<br>One missed<br>connection.</h1>
+        <p class="lead anim" style="--d:.3s">Red Box is a whole family of places people love. But today, being a regular at the coffee shop earns you nothing at the next counter over. Every shop is its own island — and every loyal visit is a reward we never gave.</p>
+      </div>
+      <div class="anim" style="--d:.4s">
+        <svg class="vis-svg" viewBox="0 0 400 320" aria-label="Scattered, unconnected shops">
+          <g fill="none" stroke="#4a3c32" stroke-width="2">
+            <rect x="30"  y="40"  width="46" height="46" rx="10"/>
+            <rect x="150" y="20"  width="46" height="46" rx="10"/>
+            <rect x="300" y="55"  width="46" height="46" rx="10"/>
+            <rect x="70"  y="150" width="46" height="46" rx="10"/>
+            <rect x="220" y="130" width="46" height="46" rx="10"/>
+            <rect x="330" y="170" width="46" height="46" rx="10"/>
+            <rect x="40"  y="250" width="46" height="46" rx="10"/>
+            <rect x="180" y="240" width="46" height="46" rx="10"/>
+            <rect x="300" y="260" width="46" height="46" rx="10"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · THE VISION -->
+  <section class="slide">
+    <div class="wrap vision-grid">
+      <div>
+        <div class="eyebrow anim" style="--d:.05s">The vision</div>
+        <h1 class="title anim" style="--d:.14s">One program.<br>Every shop.<br><span class="accent">Nationwide.</span></h1>
+        <p class="lead anim" style="--d:.3s">Connect every shop into a single rewards program. Earn at one, enjoy it at any other — anywhere in the country. One app, one balance, one family of brands that all give back.</p>
+      </div>
+      <div class="anim" style="--d:.4s">
+        <svg class="vis-svg" viewBox="0 0 400 320" aria-label="Shops connected into one program">
+          <g stroke="#d62828" stroke-width="2" opacity=".55">
+            <line x1="200" y1="160" x2="53"  y2="63"/>
+            <line x1="200" y1="160" x2="173" y2="43"/>
+            <line x1="200" y1="160" x2="323" y2="78"/>
+            <line x1="200" y1="160" x2="93"  y2="173"/>
+            <line x1="200" y1="160" x2="353" y2="193"/>
+            <line x1="200" y1="160" x2="63"  y2="273"/>
+            <line x1="200" y1="160" x2="203" y2="263"/>
+            <line x1="200" y1="160" x2="323" y2="283"/>
+          </g>
+          <g fill="#241d18" stroke="#d62828" stroke-width="2">
+            <rect x="30"  y="40"  width="46" height="46" rx="10"/>
+            <rect x="150" y="20"  width="46" height="46" rx="10"/>
+            <rect x="300" y="55"  width="46" height="46" rx="10"/>
+            <rect x="70"  y="150" width="46" height="46" rx="10"/>
+            <rect x="330" y="170" width="46" height="46" rx="10"/>
+            <rect x="40"  y="250" width="46" height="46" rx="10"/>
+            <rect x="180" y="240" width="46" height="46" rx="10"/>
+            <rect x="300" y="260" width="46" height="46" rx="10"/>
+          </g>
+          <rect x="168" y="128" width="64" height="64" rx="14" fill="#d62828"/>
+          <rect x="188" y="148" width="24" height="24" rx="5" fill="#fff"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · FOR CUSTOMERS -->
+  <section class="slide theme-cream">
+    <div class="wrap">
+      <div class="eyebrow anim" style="--d:.05s">For customers</div>
+      <h1 class="title anim" style="--d:.13s">Rewards worth<br>coming back for</h1>
+      <div class="grid g3">
+        <div class="card anim" style="--d:.26s">
+          <span class="mark cmark"></span>
+          <div class="ch">Points</div>
+          <p>Earn on everything you buy. They add up, and they're yours to spend across the whole family of shops.</p>
+        </div>
+        <div class="card anim" style="--d:.36s">
+          <span class="mark cmark"></span>
+          <div class="ch">Credit</div>
+          <p>Store value earned as a thank-you for sticking with us — ready to spend at any Red Box shop, anytime.</p>
+        </div>
+        <div class="card anim" style="--d:.46s">
+          <span class="mark cmark"></span>
+          <div class="ch">Coupons</div>
+          <p>Buy a bundle once — like ten coffees in one go — and enjoy it whenever and wherever you like.</p>
+        </div>
+      </div>
+      <p class="foot-note anim" style="--d:.58s">Three simple ways to be rewarded — all in one place, all yours.</p>
+    </div>
+  </section>
+
+  <!-- 5 · THE COUPON -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="eyebrow anim" style="--d:.05s">A new kind of deal</div>
+      <h1 class="title anim" style="--d:.13s">Pay once.<br>Enjoy ten times.</h1>
+      <div class="coupon-wrap">
+        <div>
+          <p class="lead anim" style="--d:.28s">A coffee coupon turns one purchase into ten visits. Claim a cup at a time, or treat the whole office — at any Red Box café in the country. Great value for the customer, and cash in the door for us.</p>
+          <p class="foot-note anim" style="--d:.42s">Convenient for them. A real revenue stream for the group.</p>
+        </div>
+        <div class="anim" style="--d:.5s">
+          <div class="bigdeal"><span class="a">₱1,000 =</span><span class="b">10 cups</span></div>
+          <div class="cups" aria-label="Ten cups, three already enjoyed">
+            <div class="cup used">✓</div><div class="cup used">✓</div><div class="cup used">✓</div><div class="cup">4</div><div class="cup">5</div>
+            <div class="cup">6</div><div class="cup">7</div><div class="cup">8</div><div class="cup">9</div><div class="cup">10</div>
+          </div>
+          <span class="cup-label">3 enjoyed · 7 still to go</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · FOR THE BUSINESS -->
+  <section class="slide theme-cream">
+    <div class="wrap">
+      <div class="eyebrow anim" style="--d:.05s">For the business</div>
+      <h1 class="title anim" style="--d:.13s">Loyalty that grows<br>the whole group</h1>
+      <div class="biz">
+        <div class="row anim" style="--d:.26s"><span class="sq"></span><div><h3>Repeat customers</h3><p>A reward earned at one shop is a reason to walk into the next one.</p></div></div>
+        <div class="row anim" style="--d:.34s"><span class="sq"></span><div><h3>One connected brand</h3><p>Every shop starts to feel like part of a single, familiar family.</p></div></div>
+        <div class="row anim" style="--d:.42s"><span class="sq"></span><div><h3>New revenue</h3><p>Coupons and bundles bring cash in the door, today.</p></div></div>
+        <div class="row anim" style="--d:.5s"><span class="sq"></span><div><h3>Know your customers</h3><p>See what people love most — and reward it to keep them coming.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · TRUST -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="eyebrow anim" style="--d:.05s">Built on trust</div>
+      <h1 class="title anim" style="--d:.13s">Every reward,<br>always accounted for</h1>
+      <div class="trust">
+        <div class="panel anim" style="--d:.28s">
+          <div class="lbl">For the customer</div>
+          <h3>Nothing hidden</h3>
+          <p>People see exactly what they've earned and spent — clear and honest, never a balance that quietly changes. Trust is what makes a reward feel real.</p>
+        </div>
+        <div class="panel anim" style="--d:.4s">
+          <div class="lbl">For the company</div>
+          <h3>Clean books</h3>
+          <p>The group always knows what's been promised and what's still owed — every coupon, point, and credit traceable, with nothing slipping through.</p>
+        </div>
+      </div>
+      <p class="foot-note anim" style="--d:.52s">Trust in both directions is the foundation — not an afterthought.</p>
+    </div>
+  </section>
+
+  <!-- 8 · EXPERIENCE -->
+  <section class="slide theme-cream">
+    <div class="wrap">
+      <div class="eyebrow anim" style="--d:.05s">How it feels</div>
+      <h1 class="title anim" style="--d:.13s">Simple for everyone<br>who touches it</h1>
+      <div class="grid g3">
+        <div class="card anim" style="--d:.26s">
+          <span class="mark cmark"></span>
+          <div class="ch">Customers</div>
+          <p>A friendly app: your balance, your coupons, your rewards, and a code to scan at the counter.</p>
+        </div>
+        <div class="card anim" style="--d:.36s">
+          <span class="mark cmark"></span>
+          <div class="ch">Cashiers</div>
+          <p>One quick screen: find the customer, ring up the sale, done. No training, no friction.</p>
+        </div>
+        <div class="card anim" style="--d:.46s">
+          <span class="mark cmark"></span>
+          <div class="ch">Owners &amp; admins</div>
+          <p>A clear dashboard of what's selling, what's being claimed, and what the group owes.</p>
+        </div>
+      </div>
+      <p class="foot-note anim" style="--d:.58s">One program behind it all — so everyone sees the same thing, instantly.</p>
+    </div>
+  </section>
+
+  <!-- 9 · THE JOURNEY -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="eyebrow anim" style="--d:.05s">The plan</div>
+      <h1 class="title anim" style="--d:.13s">Start small.<br>Prove it. Roll it out.</h1>
+      <div class="steps">
+        <div class="step anim" style="--d:.28s"><div class="n">01</div><h3>Start</h3><p>Launch at one shop and make the full experience real — earn, see your rewards, redeem them.</p></div>
+        <div class="step anim" style="--d:.4s"><div class="n">02</div><h3>Prove</h3><p>Add coupons and rewards, and watch customers come back more often.</p></div>
+        <div class="step anim" style="--d:.52s"><div class="n">03</div><h3>Grow</h3><p>Roll it out across every Red Box shop — one program, nationwide.</p></div>
+      </div>
+      <p class="foot-note anim" style="--d:.62s">Prove the loop with one shop before scaling — momentum, not risk.</p>
+    </div>
+  </section>
+
+  <!-- 10 · CLOSING -->
+  <section class="slide closing">
+    <div class="wrap">
+      <div class="lockup anim" style="--d:.05s; margin-bottom:2.2rem">
+        <span class="mark" style="width:34px;height:34px"></span>
+        <span class="wm">REDBOX <span>LOYALTY PLATFORM</span></span>
+      </div>
+      <h1 class="title anim" style="--d:.16s">One family.<br>Every shop.<br><span class="accent">Every customer rewarded.</span></h1>
+      <p class="cta anim" style="--d:.36s">Let's turn every purchase into the start of the next one.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- persistent chrome -->
+<div class="brandtag">
+  <div class="lockup">
+    <span class="mark" style="width:24px;height:24px"></span>
+    <span class="wm" style="font-size:.82rem">REDBOX <span>LOYALTY</span></span>
+  </div>
+</div>
+<div class="nav">
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter">01 / 10</span>
+  <div class="arrows">
+    <button id="prev" aria-label="Previous slide">‹</button>
+    <button id="next" aria-label="Next slide">›</button>
+  </div>
+</div>
+<div class="navzone left"  id="zoneL" aria-hidden="true"></div>
+<div class="navzone right" id="zoneR" aria-hidden="true"></div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsBox = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const fill = document.getElementById('fill');
+  let i = 0;
+
+  slides.forEach((_, n) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (n === 0 ? ' on' : '');
+    d.setAttribute('aria-label', 'Go to slide ' + (n + 1));
+    d.addEventListener('click', () => go(n));
+    dotsBox.appendChild(d);
+  });
+  const dots = Array.from(dotsBox.children);
+  const pad = n => String(n).padStart(2, '0');
+
+  function go(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('on', k === i));
+    counter.textContent = pad(i + 1) + ' / ' + pad(slides.length);
+    fill.style.width = ((i + 1) / slides.length * 100) + '%';
+    const cream = slides[i].classList.contains('theme-cream');
+    document.body.classList.toggle('on-cream', cream);
+    document.body.classList.toggle('on-dark', !cream);
+  }
+  const next = () => go(i + 1);
+  const prev = () => go(i - 1);
+
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  document.getElementById('zoneR').addEventListener('click', next);
+  document.getElementById('zoneL').addEventListener('click', prev);
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight',' ','PageDown'].includes(e.key)){ e.preventDefault(); next(); }
+    else if (['ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); prev(); }
+    else if (e.key === 'Home'){ go(0); }
+    else if (e.key === 'End'){ go(slides.length - 1); }
+  });
+
+  let tx = 0;
+  addEventListener('touchstart', e => tx = e.changedTouches[0].clientX, {passive:true});
+  addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 55){ dx < 0 ? next() : prev(); }
+  }, {passive:true});
+
+  go(0);
+</script>
+</body>
+</html>
