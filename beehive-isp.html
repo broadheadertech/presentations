@@ -100,6 +100,17 @@ body.fs #stage.peek{cursor:default}
 body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* phones: reclaim rail space, enlarge tap targets, denser overview grid */
+@media(max-width:560px){
+  #rail{gap:8px;padding:0 10px}
+  #rail .ttl{display:none}
+  #rail .cnt{min-width:44px;font-size:11px}
+  #cells{gap:2px}
+  #rail .btns{gap:5px}
+  #rail .btns button{width:34px;height:32px;font-size:15px}
+  #ov{padding:16px}
+  #ovg{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+}
 @page{size:1280px 720px;margin:0}
 @media print{
   body{background:#fff;overflow:visible}
@@ -478,7 +489,7 @@ const isFs=()=>!!document.fullscreenElement;
    API, which is commonly blocked inside an iframe. Real browser fullscreen is
    attempted on top as a bonus; if it's refused, the slide still goes edge to edge. */
 function fit(){
-  const pad=fill?0:48, railH=fill?0:52;
+  const pad=fill?0:(innerWidth<700?14:48), railH=fill?0:52;
   const s=Math.min((innerWidth-pad)/1280,(innerHeight-railH-pad)/720);
   slides.forEach(el=>el.style.transform=`scale(${s})`);
 }
@@ -526,6 +537,15 @@ stage.addEventListener('click',e=>{
   if(!fill||ovOpen) return;
   go(e.clientX < innerWidth*0.25 ? cur-1 : cur+1);
 });
+
+// touch swipe — primary navigation on phones/tablets
+let _tx=0,_ty=0;
+stage.addEventListener('touchstart',e=>{const t=e.changedTouches[0];_tx=t.clientX;_ty=t.clientY;},{passive:true});
+stage.addEventListener('touchend',e=>{
+  if(ovOpen) return;
+  const t=e.changedTouches[0],dx=t.clientX-_tx,dy=t.clientY-_ty;
+  if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.4) go(dx<0 ? cur+1 : cur-1);
+},{passive:true});
 
 const cw=document.getElementById('cells');
 slides.forEach((el,i)=>{
