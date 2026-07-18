@@ -561,6 +561,20 @@
       linear-gradient(140deg, #161311 0%, #241D18 100%);
     color: #F4F0EB;
   }
+  .cover-spark {
+    background:
+      radial-gradient(ellipse at 75% 25%, rgba(45,212,191,0.38) 0%, transparent 58%),
+      radial-gradient(ellipse at 18% 82%, rgba(52,211,153,0.18) 0%, transparent 55%),
+      linear-gradient(140deg, #080D0E 0%, #111C1E 100%);
+    color: #E9F2F0;
+  }
+  .cover-beehive {
+    background:
+      radial-gradient(ellipse at 75% 25%, rgba(251,195,18,0.48) 0%, transparent 58%),
+      radial-gradient(ellipse at 18% 82%, rgba(255,215,94,0.24) 0%, transparent 55%),
+      linear-gradient(140deg, #16130E 0%, #241F16 100%);
+    color: #FDF8EE;
+  }
 
   /* ─── FOOTER ─── */
   footer {
@@ -781,16 +795,16 @@
   <section class="hero">
     <div class="hero-inner">
       <div>
-        <div class="hero-eyebrow">Centralized Deck <span class="slash">/</span> 08 Brands</div>
+        <div class="hero-eyebrow">Centralized Deck <span class="slash">/</span> <span id="heroCount">—</span> Projects</div>
         <h1 class="hero-title">
-          <span class="stack">Eight Brand</span>
-          <span class="stack">Stories<span class="slash">/</span></span>
+          <span class="stack">Broadheader</span>
+          <span class="stack">Projects<span class="slash">/</span></span>
           <span class="stack">One Stage.</span>
         </h1>
       </div>
       <aside class="hero-side">
-        <p class="hero-sub">A single point of entry for the brand presentations. Open a deck, then use the arrows or keyboard to move between them without leaving the room.</p>
-        <div class="hero-stat">08<small>Decks Loaded</small></div>
+        <p class="hero-sub">A single point of entry for the project presentations. Open a deck, then use the arrows or keyboard to move between them without leaving the room.</p>
+        <div class="hero-stat"><span id="heroStat">00</span><small>Decks Loaded</small></div>
       </aside>
     </div>
   </section>
@@ -807,7 +821,7 @@
 
   <div class="hint" id="hint">
     <span>Tip</span>
-    <kbd>1</kbd>–<kbd>7</kbd>
+    <kbd>1</kbd>–<kbd id="hintMax">1</kbd>
     <span>jumps to a deck</span>
   </div>
 
@@ -832,7 +846,21 @@
   </div>
 
 <script>
-  const decks = [
+  const allDecks = [
+    {
+      file: 'parking.html', title: 'Spark',
+      tagline: 'Parking + EV Charging Network',
+      cover: 'cover-spark',
+      series: 'Broadheader Projects',
+      palette: ['#080D0E', '#111C1E', '#2DD4BF', '#34D399', '#E9F2F0'],
+    },
+    {
+      file: 'beehive-isp.html', title: 'Beehive ISP',
+      tagline: 'Dorm Internet, Run Like an ISP',
+      cover: 'cover-beehive',
+      series: 'Broadheader Projects',
+      palette: ['#16130E', '#FBC312', '#FFD75E', '#B28B0D', '#FDF8EE'],
+    },
     {
       file: 'dalisay_brand_book.html', title: 'Dalisay',
       tagline: 'Filipino Soap & Detergent House',
@@ -938,6 +966,15 @@
 
   const pad = (n) => String(n).padStart(2, '0');
   const DEFAULT_SERIES = 'Brand Stories';
+
+  // Series to hide from the hub (kept in the data, just not rendered or navigable)
+  const HIDDEN_SERIES = new Set(['Brand Stories', 'R Series']);
+  const decks = allDecks.filter(d => !HIDDEN_SERIES.has(d.series || DEFAULT_SERIES));
+
+  // Keep hero + hint counts in sync with the number of visible decks
+  document.getElementById('heroCount').textContent = decks.length;
+  document.getElementById('heroStat').textContent = pad(decks.length);
+  document.getElementById('hintMax').textContent = decks.length;
 
   // Group decks by series while preserving each deck's global index (used by the viewer)
   const seriesOrder = [];

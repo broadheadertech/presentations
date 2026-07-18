@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spark — Presentation</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='84'>%E2%9A%A1</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080d0e; --bg2:#0b1213; --surface:#111c1e; --surface2:#162325; --ink:#e9f2f0; --muted:#8aa19d; --line:#20302e;
+    --teal:#2dd4bf; --cyan:#22d3ee; --green:#34d399; --amber:#fbbf24;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 44px rgba(0,0,0,.5); --shadow-lg:0 40px 90px rgba(0,0,0,.6);
+    --sans:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-snap-type:y mandatory;scroll-behavior:smooth;height:100%;}
+  body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{margin:0;letter-spacing:-.025em;line-height:1.04;text-wrap:balance;}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  b{font-weight:650;}
+
+  .slide{min-height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:center;padding:7vh 7vw;position:relative;overflow:hidden;}
+  .inner{max-width:1180px;margin:0 auto;width:100%;}
+  .eyebrow{font-family:var(--mono);font-size:clamp(11px,1.1vw,13px);letter-spacing:.24em;text-transform:uppercase;color:var(--teal);display:inline-flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--teal);opacity:.7;}
+  h2.t{font-size:clamp(30px,5vw,54px);font-weight:800;margin-top:18px;}
+  .lead{color:var(--muted);font-size:clamp(15px,1.8vw,20px);margin-top:18px;max-width:66ch;}
+  .kn{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+
+  /* chrome */
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--teal),var(--cyan));z-index:100;transition:width .3s;}
+  .hud{position:fixed;z-index:90;}
+  .brandmini{top:20px;left:24px;display:flex;align-items:center;gap:9px;font-weight:800;font-size:14px;}
+  .brandmini .lg{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:var(--teal);color:#04211d;font-weight:900;font-size:15px;}
+  .counter{bottom:20px;right:24px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;}
+  .ctrls{bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;}
+  .ctrls button{height:34px;min-width:34px;padding:0 10px;border-radius:9px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 80%,transparent);color:var(--ink);cursor:pointer;font-family:var(--sans);font-size:13px;backdrop-filter:blur(8px);}
+  .ctrls button:hover{border-color:var(--teal);}
+  .dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:90;display:flex;flex-direction:column;gap:9px;}
+  .dots i{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:background .2s,transform .2s;display:block;border:0;padding:0;}
+  .dots i.on{background:var(--teal);transform:scale(1.35);}
+  @media (max-width:720px){.dots{display:none;}.brandmini{font-size:0;}.brandmini .lg{font-size:15px;}}
+
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px;}
+  .chip{font-family:var(--mono);font-size:12px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);display:inline-flex;align-items:center;gap:8px;}
+  .chip.sm{font-size:11px;padding:5px 10px;background:var(--surface2);}
+  .chip .d{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.7s ease-in-out infinite;}
+
+  .grid{display:grid;gap:16px;margin-top:34px;}
+  .g4{grid-template-columns:repeat(4,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g2{grid-template-columns:1.05fr .95fr;}
+  @media (max-width:900px){.g4{grid-template-columns:1fr 1fr;}.g3{grid-template-columns:1fr;}.g2{grid-template-columns:1fr;}}
+  .card{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);padding:22px;}
+  .card .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:var(--surface2);margin-bottom:14px;color:var(--teal);}
+  .card h3{font-size:clamp(16px,1.7vw,19px);font-weight:700;}
+  .card p{color:var(--muted);font-size:clamp(13px,1.3vw,14.5px);margin:8px 0 0;}
+  .card.prob .ic{background:color-mix(in srgb,var(--amber) 15%,transparent);color:var(--amber);}
+  .card.prob{border-color:color-mix(in srgb,var(--amber) 30%,var(--line));}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;}
+  @media (max-width:820px){.steps{grid-template-columns:1fr 1fr;}}
+  .step{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:18px;box-shadow:var(--shadow);}
+  .step .n{font-family:var(--mono);font-size:12px;color:var(--teal);}
+  .step h3{font-size:15.5px;font-weight:700;margin-top:8px;}
+  .step p{color:var(--muted);font-size:13px;margin:6px 0 0;}
+
+  /* faces / mockups */
+  .face{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;margin-top:20px;}
+  @media (max-width:900px){.face{grid-template-columns:1fr;gap:26px;}}
+  .facelist{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;}
+  .facelist li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:var(--ink);}
+  .facelist li svg{flex:none;margin-top:3px;color:var(--teal);}
+  .facelist li span b{font-weight:650;}
+
+  .frame{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-lg);}
+  .frame .bar{display:flex;align-items:center;gap:9px;padding:9px 13px;}
+  .frame .bar .fd{display:flex;gap:6px;} .frame .bar .fd i{width:10px;height:10px;border-radius:50%;display:block;}
+  .frame .url{flex:1;height:22px;border-radius:7px;font-family:var(--mono);font-size:10.5px;display:flex;align-items:center;padding:0 11px;}
+
+  /* light UI mock */
+  .lite{--l-bg:#f4f8f7;--l-surf:#fff;--l-ink:#0b1a1b;--l-mut:#5b6f6c;--l-line:#dbe7e4;--l-teal:#0d9488;--l-cyan:#0891b2;--l-green:#059669;--l-amber:#d97706;}
+  .lite .bar{background:#e9f1ef;border-bottom:1px solid var(--l-line);} .lite .bar .fd i{background:#cdddd9;} .lite .url{background:#fff;color:var(--l-mut);border:1px solid var(--l-line);}
+  .lite .screen{background:var(--l-bg);color:var(--l-ink);padding:16px;}
+  .m-nav{display:flex;align-items:center;gap:9px;margin-bottom:16px;}
+  .m-logo{width:22px;height:22px;border-radius:6px;background:var(--l-teal);color:#04211d;display:grid;place-items:center;font-weight:900;font-size:12px;}
+  .m-nav b{font-size:13px;} .m-sp{flex:1;}
+  .m-link{font-size:11px;color:var(--l-mut);} .m-pill{font-size:11px;font-weight:600;background:var(--l-teal);color:#04211d;padding:5px 11px;border-radius:999px;}
+  .m-ghost{font-size:11px;font-weight:600;border:1px solid var(--l-line);color:var(--l-ink);padding:5px 11px;border-radius:999px;}
+  .m-hero{display:grid;grid-template-columns:1fr .9fr;gap:16px;align-items:center;}
+  .m-eye{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--l-teal);}
+  .m-h1{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:8px 0 0;color:var(--l-ink);}
+  .m-btns{display:flex;gap:8px;margin-top:14px;}
+  .m-statuscard{border:1px solid var(--l-line);border-radius:12px;background:var(--l-surf);box-shadow:0 10px 30px rgba(11,26,27,.1);padding:14px;}
+  .m-cardtop{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;color:var(--l-ink);}
+  .m-livepill{font-family:var(--mono);font-size:9px;color:var(--l-green);}
+  .m-big{font-family:var(--mono);font-size:30px;font-weight:600;color:var(--l-ink);margin-top:8px;line-height:1;}
+  .m-big span{font-size:11px;color:var(--l-mut);font-family:var(--sans);}
+  .m-chgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
+  .m-ch{border:1px solid var(--l-line);border-radius:8px;padding:8px;font-family:var(--mono);font-size:10px;color:var(--l-ink);display:flex;align-items:center;gap:6px;}
+  .d{width:7px;height:7px;border-radius:50%;flex:none;}
+  .d.g{background:#059669;} .d.c{background:#0891b2;animation:pulse 1.4s ease-in-out infinite;} .d.o{background:#94a3a0;} .d.a{background:#d97706;}
+
+  /* phone (app) */
+  .phone{width:270px;max-width:100%;margin:0 auto;border:9px solid #05201d;border-radius:34px;overflow:hidden;box-shadow:var(--shadow-lg);background:#05201d;position:relative;}
+  .phone .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:96px;height:16px;border-radius:0 0 12px 12px;background:#05201d;z-index:3;}
+  .phone .scr{background:var(--l-bg,#f4f8f7);padding:26px 13px 16px;}
+  .p-head{display:flex;align-items:center;gap:9px;margin-bottom:14px;}
+  .p-av{width:30px;height:30px;border-radius:50%;background:#e9f1ef;color:#0d9488;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:11px;}
+  .p-name{font-size:12.5px;font-weight:600;color:#0b1a1b;} .p-plan{font-size:9.5px;color:#5b6f6c;}
+  .p-wallet{border:1px solid #dbe7e4;border-radius:14px;background:#fff;padding:15px;box-shadow:0 8px 22px rgba(11,26,27,.08);}
+  .p-k{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#5b6f6c;}
+  .p-bal{font-family:var(--mono);font-size:30px;font-weight:600;color:#0b1a1b;margin-top:6px;line-height:1;}
+  .p-actions{display:flex;gap:7px;margin-top:12px;}
+  .p-sess{border-radius:14px;background:linear-gradient(135deg,#0d9488,#0a5f59 65%,#083d39);color:#eafffb;padding:14px;margin-top:12px;box-shadow:0 12px 28px rgba(0,0,0,.2);}
+  .p-sesspill{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.16);padding:4px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;}
+  .p-metrics{display:flex;gap:14px;margin-top:12px;}
+  .p-metrics .mv{font-family:var(--mono);font-size:16px;font-weight:600;} .p-metrics .ml{font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:rgba(234,255,251,.68);}
+  .p-station{display:flex;align-items:center;justify-content:space-between;border:1px solid #dbe7e4;border-radius:12px;background:#fff;padding:10px 12px;margin-top:12px;font-size:11px;color:#0b1a1b;}
+
+  /* dark admin mock */
+  .adm{--a-bg:#0a0e12;--a-surf:#10161c;--a-surf2:#161d25;--a-ink:#e6edf3;--a-mut:#8b98a6;--a-line:#232c36;--a-teal:#2dd4bf;--a-cyan:#22d3ee;--a-green:#34d399;--a-amber:#fbbf24;}
+  .adm .bar{background:#0d1319;border-bottom:1px solid var(--a-line);} .adm .bar .fd i{background:#2a3540;} .adm .url{background:#0a0e12;color:var(--a-mut);border:1px solid var(--a-line);}
+  .adm .screen{background:var(--a-bg);color:var(--a-ink);display:grid;grid-template-columns:120px 1fr;min-height:250px;}
+  .a-side{border-right:1px solid var(--a-line);background:var(--a-surf);padding:12px 9px;display:flex;flex-direction:column;gap:5px;}
+  .a-nav{font-size:10.5px;color:var(--a-mut);padding:7px 9px;border-radius:7px;display:flex;align-items:center;gap:7px;}
+  .a-nav.on{color:var(--a-teal);background:color-mix(in srgb,var(--a-teal) 14%,transparent);}
+  .a-nav .sq{width:11px;height:11px;border-radius:3px;border:1.5px solid currentColor;flex:none;}
+  .a-main{padding:14px;display:grid;grid-template-columns:1.2fr .8fr;gap:12px;}
+  .a-h{font-size:13px;font-weight:700;grid-column:1/-1;}
+  .a-panel{border:1px solid var(--a-line);border-radius:10px;background:var(--a-surf);overflow:hidden;}
+  .a-ptop{font-size:10px;font-weight:600;padding:8px 11px;border-bottom:1px solid var(--a-line);}
+  .a-chg{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px;}
+  .a-c{border:1px solid var(--a-line);border-radius:7px;padding:8px;font-family:var(--mono);font-size:9px;}
+  .a-c .r1{display:flex;align-items:center;gap:6px;}
+  .a-c .badge{font-size:8px;padding:2px 6px;border-radius:999px;margin-top:6px;display:inline-block;}
+  .a-feed{padding:9px 11px;display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:9px;}
+  .a-feed .fl{display:flex;gap:6px;} .a-feed .ft{color:var(--a-mut);} .a-feed .fs{background:var(--a-surf2);color:var(--a-mut);border-radius:3px;padding:0 4px;font-size:8px;}
+
+  /* materials */
+  .devices{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+  .device{flex:1 1 0;min-width:88px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);padding:14px 6px 10px;text-align:center;}
+  .device svg{color:var(--ink);opacity:.9;width:40px;height:40px;}
+  .device .cap{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:8px;}
+  .speclist{list-style:none;margin:16px 0 0;padding:0;}
+  .speclist li{padding:10px 0;border-top:1px solid var(--line);}
+  .speclist li:first-child{border-top:0;padding-top:0;}
+  .speclist .part{font-weight:650;font-size:14px;}
+  .speclist .brand2{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .note{font-size:12px;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);}
+
+  .pipe{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow);margin-top:28px;}
+  .stage{flex:1;min-width:150px;padding:16px 16px;border-right:1px solid var(--line);}
+  .stage:last-child{border-right:0;} @media (max-width:820px){.stage{flex:1 1 45%;border-bottom:1px solid var(--line);}}
+  .stage .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);}
+  .stage h4{font-size:14px;font-weight:700;margin:7px 0 0;} .stage p{color:var(--muted);font-size:11px;margin:5px 0 0;font-family:var(--mono);}
+
+  .statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px;}
+  @media (max-width:820px){.statgrid{grid-template-columns:1fr 1fr;}}
+  .stat{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:18px;}
+  .stat .v{font-family:var(--mono);font-size:28px;font-weight:600;letter-spacing:-.02em;} .stat .l{color:var(--muted);font-size:12px;margin-top:5px;}
+  .checklist{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;}
+  @media (max-width:680px){.checklist{grid-template-columns:1fr;}}
+  .checklist li{display:flex;gap:10px;align-items:flex-start;font-size:14px;} .checklist li svg{flex:none;margin-top:2px;}
+  .done{color:var(--green);} .next{color:var(--amber);}
+
+  .urls{display:flex;flex-wrap:wrap;gap:11px;margin-top:26px;}
+  .url2{font-family:var(--mono);font-size:12.5px;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:10px 14px;} .url2 b{color:var(--teal);}
+  .cover h1{font-size:clamp(40px,7.4vw,84px);font-weight:800;margin-top:20px;} .cover h1 .g{color:var(--teal);}
+  #cov{position:absolute;inset:0;opacity:.5;pointer-events:none;}
+
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.8);}}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{animation:none!important;}}
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+<div class="hud brandmini"><span class="lg">S</span><span>Spark</span></div>
+<div class="hud counter" id="counter">01 / 12</div>
+<div class="hud ctrls">
+  <button id="prev" aria-label="Previous">‹</button>
+  <button id="full">⛶ Fullscreen</button>
+  <button id="next" aria-label="Next">›</button>
+</div>
+<div class="dots" id="dots"></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 COVER -->
+  <section class="slide cover">
+    <canvas id="cov" aria-hidden="true"></canvas>
+    <div class="inner">
+      <span class="eyebrow">Product presentation · Angeles City, Pampanga</span>
+      <h1>Park and charge on a network that <span class="g">actually works.</span></h1>
+      <p class="lead" style="margin-top:22px;">Spark is the software layer for a combined parking + EV-charging operator — the live-monitored network, the identity &amp; billing engine, and the apps that make it effortless.</p>
+      <div class="chips">
+        <span class="chip"><span class="d"></span>Live charger status</span>
+        <span class="chip">One wallet · park + charge</span>
+        <span class="chip">OCPP 1.6-J</span>
+        <span class="chip">Exact-centavo billing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 PROBLEM -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">The problem</span>
+      <h2 class="t">EV charging here is a leap of faith.</h2>
+      <div class="grid g4">
+        <div class="card prob"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div><h3>Dead-plug roulette</h3><p>You drive to a charger with no idea if it's online, occupied, or broken.</p></div>
+        <div class="card prob"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div><h3>Two systems, one car</h3><p>Parking and charging are separate operators, payments, and queues.</p></div>
+        <div class="card prob"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Cash &amp; surprise fees</h3><p>Loose change, manual receipts, pricing nobody can see itemized.</p></div>
+        <div class="card prob"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><h3>Hardware, no software</h3><p>Operators own chargers and gates — but nothing to run them.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 SOLUTION -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">The solution</span>
+      <h2 class="t">One network. One tag. One wallet.</h2>
+      <p class="lead">A combined park-and-charge network you can trust — every charger reports live — paid from one prepaid balance, billed exactly to the centavo.</p>
+      <div class="grid g4">
+        <div class="card"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div><h3>Live-monitored</h3><p>Every charger speaks OCPP in real time — drivers and staff see the whole network.</p></div>
+        <div class="card"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg></div><h3>One account</h3><p>UHF tag for parking, card for charging, plate on file — one wallet.</p></div>
+        <div class="card"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2.5"/><path d="M16 12h3M2 10h20"/></svg></div><h3>Prepaid load</h3><p>Reload like expressway RFID. Spent across every site; never negative.</p></div>
+        <div class="card"><div class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></div><h3>To the centavo</h3><p>Metered live; settled against your wallet with an exact, itemized receipt.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 HOW IT WORKS -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">How it works</span>
+      <h2 class="t">From sign-up to receipt.</h2>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>Register &amp; get your tag</h3><p>Sign up online with your plate; an attendant links your UHF tag + card.</p></div>
+        <div class="step"><div class="n">02</div><h3>Load your wallet</h3><p>Reload online or over the counter — good across the whole network.</p></div>
+        <div class="step"><div class="n">03</div><h3>Tap in</h3><p>Present your tag; authorized in a second, the barrier lifts or charger unlocks.</p></div>
+        <div class="step"><div class="n">04</div><h3>Charge or park, live</h3><p>kWh and time metered in real time — watch it from the app.</p></div>
+        <div class="step"><div class="n">05</div><h3>Auto-billed on exit</h3><p>Priced against the site tariff, settled from your wallet — to the centavo.</p></div>
+        <div class="step"><div class="n">06</div><h3>See everything</h3><p>Balance, live session, and itemized history in your console.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 FACE: WEBSITE -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">The face · 1 of 3</span>
+      <h2 class="t" style="font-size:clamp(26px,4vw,42px);">The Website — the front door.</h2>
+      <div class="face">
+        <div class="frame lite">
+          <div class="bar"><span class="fd"><i></i><i></i><i></i></span><span class="url">spark.ph</span></div>
+          <div class="screen">
+            <div class="m-nav"><span class="m-logo">S</span><b>Spark</b><span class="m-sp"></span><span class="m-link">How it works</span><span class="m-link">Stations</span><span class="m-pill">Register</span></div>
+            <div class="m-hero">
+              <div>
+                <div class="m-eye">● LIVE NETWORK · MANILA</div>
+                <div class="m-h1">Charge and park on a network that <span style="color:#0d9488;">actually works.</span></div>
+                <div class="m-btns"><span class="m-pill">Create account →</span><span class="m-ghost">Find a station</span></div>
+              </div>
+              <div class="m-statuscard">
+                <div class="m-cardtop">Network status <span class="m-livepill">● LIVE</span></div>
+                <div class="m-big">6 <span>/ 9 available</span></div>
+                <div class="m-chgrid">
+                  <div class="m-ch"><span class="d c"></span>SP-MK-01</div><div class="m-ch"><span class="d g"></span>SP-MK-02</div>
+                  <div class="m-ch"><span class="d g"></span>SP-QC-01</div><div class="m-ch"><span class="d o"></span>SP-AL-02</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <span class="kn">Public · marketing</span>
+          <ul class="facelist">
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Live network hero</b> — real charger availability, pulled from the CSMS.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Stations &amp; plans</b> — real per-site pricing, transparent up front.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Passwordless sign-up</b> — register with your plate in under a minute.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 FACE: APP -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">The face · 2 of 3</span>
+      <h2 class="t" style="font-size:clamp(26px,4vw,42px);">The App — the driver's wallet.</h2>
+      <div class="face">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="scr">
+            <div class="p-head"><span class="p-av">JD</span><div><div class="p-name">Juan dela Cruz</div><div class="p-plan">Member plan</div></div></div>
+            <div class="p-wallet">
+              <div class="p-k">Wallet balance</div>
+              <div class="p-bal">₱480.00</div>
+              <div class="p-actions"><span class="m-pill">Reload</span><span class="m-ghost">History</span></div>
+            </div>
+            <div class="p-sess">
+              <span class="p-sesspill"><span class="d" style="background:#5eead4;"></span>Charging now</span>
+              <div style="font-size:13px;font-weight:700;margin-top:9px;">SP-MK-01 · Main Site</div>
+              <div class="p-metrics">
+                <div><div class="mv">6.42</div><div class="ml">kWh</div></div>
+                <div><div class="mv">18:00</div><div class="ml">Elapsed</div></div>
+                <div><div class="mv">₱96.30</div><div class="ml">Cost</div></div>
+              </div>
+            </div>
+            <div class="p-station"><span><b>North Branch</b> · Angeles</span><span style="color:#059669;font-family:var(--mono);">2 free</span></div>
+          </div>
+        </div>
+        <div>
+          <span class="kn">Customer · self-service</span>
+          <ul class="facelist">
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Wallet at a glance</b> — real balance, reload, and full history.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Live session</b> — watch kWh, time, and running cost tick in real time.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Nearby stations</b> + your tags and plate, all in one place.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 FACE: ADMIN -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">The face · 3 of 3</span>
+      <h2 class="t" style="font-size:clamp(26px,4vw,42px);">The Admin — mission control.</h2>
+      <div class="face">
+        <div class="frame adm">
+          <div class="bar"><span class="fd"><i></i><i></i><i></i></span><span class="url">console.spark.ph</span></div>
+          <div class="screen">
+            <div class="a-side">
+              <div class="a-nav on"><span class="sq"></span>Live Ops</div>
+              <div class="a-nav"><span class="sq"></span>Accounts</div>
+              <div class="a-nav"><span class="sq"></span>Sessions</div>
+              <div class="a-nav"><span class="sq"></span>Tariffs</div>
+              <div class="a-nav"><span class="sq"></span>Reports</div>
+            </div>
+            <div class="a-main">
+              <div class="a-h">Live Ops</div>
+              <div class="a-panel">
+                <div class="a-ptop">Chargers (9)</div>
+                <div class="a-chg">
+                  <div class="a-c"><div class="r1"><span class="d c"></span>SP-MK-01</div><span class="badge" style="background:color-mix(in srgb,#22d3ee 18%,transparent);color:#22d3ee;">Charging</span></div>
+                  <div class="a-c"><div class="r1"><span class="d g"></span>SP-MK-02</div><span class="badge" style="background:color-mix(in srgb,#34d399 16%,transparent);color:#34d399;">Available</span></div>
+                  <div class="a-c"><div class="r1"><span class="d a"></span>SP-QC-02</div><span class="badge" style="background:color-mix(in srgb,#fbbf24 16%,transparent);color:#fbbf24;">Faulted</span></div>
+                  <div class="a-c"><div class="r1"><span class="d o"></span>SP-AL-02</div><span class="badge" style="background:#161d25;color:#8b98a6;">Offline</span></div>
+                </div>
+              </div>
+              <div class="a-panel">
+                <div class="a-ptop">Machine feed <span style="color:#34d399;font-family:var(--mono);font-size:8px;">● live</span></div>
+                <div class="a-feed">
+                  <div class="fl"><span class="ft">10:42</span><span class="fs">OCPP</span><span style="color:#34d399;">StartTx 1004</span></div>
+                  <div class="fl"><span class="ft">10:42</span><span class="fs">PAY</span><span>Webhook ₱500</span></div>
+                  <div class="fl"><span class="ft">10:43</span><span class="fs">GATE</span><span>Barrier ↑ A02</span></div>
+                  <div class="fl"><span class="ft">10:43</span><span class="fs">OCPP</span><span>MeterValues 6.4kWh</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <span class="kn">Operator · staff</span>
+          <ul class="facelist">
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Live Ops</b> — every charger's status + a real-time event feed.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Registration</b> — issue UHF tags / cards, set plates, top up at the counter.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20 6 9 17l-5-5"/></svg><span><b>Tariffs &amp; reports</b> — set pricing, run revenue &amp; reconciliation.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 MATERIALS: CHARGING -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">Materials · charging</span>
+      <h2 class="t" style="font-size:clamp(26px,4vw,42px);">Any OCPP 1.6-J charger plugs in.</h2>
+      <p class="lead">The one hard rule: the charger speaks <b>OCPP 1.6-J</b> and lets you set a server URL. Then it's brand-agnostic — buy on price and availability.</p>
+      <div class="devices" style="max-width:360px;">
+        <div class="device"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="6" width="24" height="26" rx="3"/><rect x="16" y="11" width="16" height="8" rx="1.5"/><circle cx="24" cy="26" r="2"/><path d="M24 32v3c0 3 4 3 4 6"/><rect x="25.5" y="41" width="7" height="4.5" rx="1.5"/></svg><div class="cap">AC wallbox</div></div>
+        <div class="device"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="15" y="4" width="18" height="38" rx="3"/><rect x="18.5" y="9" width="11" height="9" rx="1.5"/><circle cx="21" cy="27" r="2.3"/><circle cx="27" cy="27" r="2.3"/><path d="M15 42h18"/></svg><div class="cap">DC fast</div></div>
+      </div>
+      <div class="kn" style="margin-top:22px;">AC · 7–22 kW · Type 2</div>
+      <div class="chips" style="margin-top:10px;"><span class="chip sm">Autel MaxiCharger</span><span class="chip sm">Wallbox</span><span class="chip sm">Teltonika</span><span class="chip sm">ABB Terra AC</span><span class="chip sm">Delta</span><span class="chip sm">Schneider EVlink</span><span class="chip sm">Alfen</span><span class="chip sm">EVBox</span><span class="chip sm">BENY</span></div>
+      <div class="kn" style="margin-top:16px;">DC fast · 30–180 kW</div>
+      <div class="chips" style="margin-top:10px;"><span class="chip sm">ABB Terra</span><span class="chip sm">Autel DC</span><span class="chip sm">Delta</span><span class="chip sm">Siemens</span><span class="chip sm">Kempower</span><span class="chip sm">BTC Power</span></div>
+      <div class="note">A bundled home wallbox (e.g. BYD 7 kW) has no OCPP — charges cars, can't join the network. Look for “OCPP 1.6-J” + a server-URL setting.</div>
+    </div>
+  </section>
+
+  <!-- 9 MATERIALS: PARKING -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">Materials · parking</span>
+      <h2 class="t" style="font-size:clamp(26px,4vw,42px);">A standard gate, our brain.</h2>
+      <div class="grid g2" style="margin-top:28px;">
+        <div>
+          <div class="devices">
+            <div class="device"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="14" width="11" height="28" rx="2"/><circle cx="12.5" cy="19" r="1.4"/><path d="M18 20h25"/><path d="M43 20v3.5"/><path d="M5 42h15"/></svg><div class="cap">Barrier</div></div>
+            <div class="device"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="17" height="30" rx="2"/><circle cx="17.5" cy="24" r="1.6"/><path d="M31 17a10 10 0 0 1 0 14"/><path d="M35 13a16 16 0 0 1 0 22"/></svg><div class="cap">UHF reader</div></div>
+            <div class="device"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="15" width="21" height="13" rx="3"/><circle cx="15" cy="21.5" r="4"/><path d="M29 19l7-3v11l-7-3z"/><path d="M18 28v9M11 42h14"/></svg><div class="cap">LPR camera</div></div>
+            <div class="device"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="17" width="30" height="15" rx="2.5"/><circle cx="14" cy="24.5" r="1.3"/><circle cx="19" cy="24.5" r="1.3"/><path d="M28 21h6M28 24.5h6M28 28h6"/></svg><div class="cap">Controller</div></div>
+          </div>
+          <div class="note" style="border:0;padding-top:14px;">Long-range UHF so drivers never wind down a window — with plate recognition as a fallback. All widely stocked in the PH.</div>
+        </div>
+        <ul class="speclist">
+          <li><div class="part">Boom barrier</div><div class="brand2">ZKTeco PB/CMP · Hikvision · Magnetic · FAAC</div></li>
+          <li><div class="part">UHF reader + windshield tags (~12 m)</div><div class="brand2">ZKTeco UHF5 / UHF10 · 860–960 MHz</div></li>
+          <li><div class="part">LPR / ANPR camera</div><div class="brand2">ZKTeco LPRS2000 · Hikvision · Dahua</div></li>
+          <li><div class="part">Loop detector + edge controller</div><div class="brand2">Raspberry Pi / mini-PC running our gate client</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 UNDER THE HOOD -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">Under the hood</span>
+      <h2 class="t" style="font-size:clamp(26px,4vw,42px);">One path from the metal to the money.</h2>
+      <div class="pipe">
+        <div class="stage"><div class="k">Edge</div><h4>Charger / Gate</h4><p>OCPP · UHF/card · barrier</p></div>
+        <div class="stage"><div class="k">Protocol</div><h4>OCPP 1.6-J</h4><p>authorize · meter · stop</p></div>
+        <div class="stage"><div class="k">Brain</div><h4>CSMS</h4><p>identity · pricing</p></div>
+        <div class="stage"><div class="k">Money</div><h4>Append-only ledger</h4><p>exact centavos · idempotent</p></div>
+        <div class="stage"><div class="k">Surfaces</div><h4>Console &amp; App</h4><p>feed · wallet · reports</p></div>
+      </div>
+      <div class="chips" style="margin-top:26px;">
+        <span class="chip sm">Node · Fastify · TypeScript</span><span class="chip sm">OCPP 1.6-J / WebSocket</span><span class="chip sm">Supabase Postgres + Auth</span><span class="chip sm">PayMongo</span><span class="chip sm">Next.js</span><span class="chip sm">Docker → Render</span>
+      </div>
+      <p class="lead" style="margin-top:20px;font-size:16px;">Hexagonal architecture — storage, payments, and auth are swappable adapters. Every peso lands in an append-only, idempotent, auditable ledger.</p>
+    </div>
+  </section>
+
+  <!-- 11 STATUS -->
+  <section class="slide">
+    <div class="inner">
+      <span class="eyebrow">Where it stands</span>
+      <h2 class="t" style="font-size:clamp(26px,4vw,42px);">Built &amp; verified — ready to pilot.</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="v">3</div><div class="l">Apps live</div></div>
+        <div class="stat"><div class="v">2</div><div class="l">Flows proven — charge &amp; park</div></div>
+        <div class="stat"><div class="v">₱0.00</div><div class="l">Rounding error</div></div>
+        <div class="stat"><div class="v">100%</div><div class="l">Idempotent &amp; auditable</div></div>
+      </div>
+      <ul class="checklist">
+        <li><svg class="done" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Live database, real auth, exact-centavo money</li>
+        <li><svg class="done" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Website + customer app + operator console</li>
+        <li><svg class="done" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>UHF tag + card + plate registration</li>
+        <li><svg class="done" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Automated tests, CI, structured logging</li>
+        <li><svg class="next" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Deploy to the cloud + live PayMongo</li>
+        <li><svg class="next" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>First pilot site — real chargers + gate + drivers</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 12 CLOSE -->
+  <section class="slide" style="background:linear-gradient(160deg,color-mix(in srgb,var(--teal) 16%,var(--bg)),var(--bg) 62%);">
+    <div class="inner">
+      <span class="eyebrow">The pitch, in one line</span>
+      <h2 class="t">Make charging and parking feel like tapping through a toll gate — reliable, cashless, exact.</h2>
+      <p class="lead">Built and verified end-to-end. Next stop: one real site, a handful of drivers, and money reconciled daily.</p>
+      <div class="urls">
+        <span class="url2">Website &amp; app · <b>spark.ph</b></span>
+        <span class="url2">Operator console · <b>console.spark.ph</b></span>
+        <span class="url2">CSMS · <b>OCPP 1.6-J</b></span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var slides = [].slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length, cur = 0;
+  var counter = document.getElementById('counter'), bar = document.getElementById('bar'), dotsWrap = document.getElementById('dots');
+  slides.forEach(function(_,i){ var b=document.createElement('button'); b.className='dotbtn'; b.setAttribute('aria-label','Slide '+(i+1)); b.addEventListener('click',function(){go(i);}); dotsWrap.appendChild(b); });
+  var dotEls=[].slice.call(dotsWrap.children);
+  function pad(n){return String(n).padStart(2,'0');}
+  function setCur(i){cur=i;counter.textContent=pad(i+1)+' / '+pad(total);bar.style.width=((i+1)/total*100)+'%';dotEls.forEach(function(d,j){d.className=j===i?'on':'';});}
+  function go(i){i=Math.max(0,Math.min(total-1,i));slides[i].scrollIntoView({behavior:reduce?'auto':'smooth'});}
+  // observe which slide is centered
+  if('IntersectionObserver'in window){
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){setCur(slides.indexOf(e.target));}});},{threshold:.55});
+    slides.forEach(function(s){io.observe(s);});
+  }
+  setCur(0);
+  document.getElementById('next').addEventListener('click',function(){go(cur+1);});
+  document.getElementById('prev').addEventListener('click',function(){go(cur-1);});
+  document.getElementById('full').addEventListener('click',function(){ if(document.fullscreenElement){document.exitFullscreen();} else {document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();} });
+  addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key)>=0){e.preventDefault();go(cur+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>=0){e.preventDefault();go(cur-1);}
+    else if(e.key==='Home'){e.preventDefault();go(0);}
+    else if(e.key==='End'){e.preventDefault();go(total-1);}
+    else if(e.key==='f'||e.key==='F'){document.getElementById('full').click();}
+  });
+  // cover canvas
+  var cv=document.getElementById('cov');
+  if(cv&&cv.getContext&&!reduce){
+    var ctx=cv.getContext('2d'),W,H,last=0,lanes=[];
+    function resize(){var dpr=Math.min(devicePixelRatio||1,2),r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);var c=Math.max(5,Math.round(H/86));lanes=Array.from({length:c},function(_,i){return{y:(i+.5)*(H/c)+(Math.random()*22-11),pulses:[],next:Math.random()*2000,speed:24+Math.random()*30};});}
+    function frame(ts){var dt=last?ts-last:16;last=ts;ctx.clearRect(0,0,W,H);var r=45,g=212,b=191;lanes.forEach(function(ln){ctx.strokeStyle='rgba(45,212,191,0.05)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,ln.y);ctx.lineTo(W,ln.y);ctx.stroke();ln.next-=dt;if(ln.next<=0){ln.pulses.push({x:-40});ln.next=1300+Math.random()*2600;}ln.pulses=ln.pulses.filter(function(p){return p.x<W+60;});ln.pulses.forEach(function(p){p.x+=ln.speed*dt/1000;var gr=ctx.createLinearGradient(p.x-64,0,p.x+12,0);gr.addColorStop(0,'rgba(45,212,191,0)');gr.addColorStop(1,'rgba(45,212,191,0.55)');ctx.strokeStyle=gr;ctx.lineWidth=1.7;ctx.beginPath();ctx.moveTo(p.x-64,ln.y);ctx.lineTo(p.x,ln.y);ctx.stroke();ctx.fillStyle='rgba(45,212,191,0.95)';ctx.beginPath();ctx.arc(p.x,ln.y,1.8,0,Math.PI*2);ctx.fill();});});requestAnimationFrame(frame);}
+    resize();addEventListener('resize',resize);requestAnimationFrame(frame);
+  }
+})();
+</script>
+</body>
+</html>
