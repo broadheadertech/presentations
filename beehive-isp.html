@@ -63,6 +63,10 @@ h2{font-family:var(--disp);font-size:38px;font-weight:600;letter-spacing:-.025em
 .pill.yes{background:#DCF3E6;color:#186B44}
 .pill.no{background:#FBE4E0;color:#8F2C1D}
 .note{font-size:13.5px;font-style:italic;color:#9A6F14;margin-top:auto;padding-top:16px;flex-shrink:0}
+.brands{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:13px}
+.brand{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--comb);background:var(--wax);border:1px solid var(--line);border-radius:6px;padding:3px 7px;line-height:1}
+.brand::before{content:"";width:6px;height:7px;background:var(--gold);flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.tint .brand,.solid .brand{background:#fff}
 
 #rail{position:fixed;left:0;right:0;bottom:0;height:52px;background:#0B0906;display:flex;align-items:center;gap:14px;padding:0 18px;z-index:20;border-top:1px solid var(--comb2)}
 #cells{display:flex;gap:3px;flex:1}
@@ -488,16 +492,16 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 <!-- 13 -->
 <section class="slide" data-t="ISP hardware">
   <div class="head"><h2>What we need for the ISP</h2>
-    <p class="sub">The bill of materials for one building — and it reads the same for the next ten. Nothing exotic, nothing single-sourced.</p></div>
+    <p class="sub">The bill of materials for one building — and it reads the same for the next ten. Sample brands per line; pick on price and stock.</p></div>
   <div class="body-c grid4" style="align-content:start;gap:14px">
-    <div class="card"><div class="k">01 · Core</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">MikroTik gateway</h3><p style="font-size:13px">RB5009 / CCR class. PPPoE server, PCQ queues, NAT, firewall. Sized for <b>queued</b> throughput.</p></div>
-    <div class="card"><div class="k">02 · Access</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">TP-Link switches</h3><p style="font-size:13px">One port per room. Port isolation on. No VLANs to maintain.</p></div>
-    <div class="card"><div class="k">03 · Edge</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Router per room</h3><p style="font-size:13px">TP-Link CPE, WAN set to PPPoE. The tenant owns the WiFi behind it.</p></div>
-    <div class="card"><div class="k">04 · Uplink</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Fibre + ONT</h3><p style="font-size:13px">SME/business fibre, ONT in the rack. A static IP if you can get one.</p></div>
-    <div class="card"><div class="k">05 · Cabling</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Cat6 + patch</h3><p style="font-size:13px">A drop per room to a patch panel. Labelled at both ends.</p></div>
-    <div class="card"><div class="k">06 · Power</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Rack + UPS</h3><p style="font-size:13px">Wall rack, UPS, surge, a proper earth. The core must ride brownouts.</p></div>
-    <div class="card"><div class="k">07 · Spares</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">10% spare CPE</h3><p style="font-size:13px">Swap-on-fail beats truck-roll debugging. Keep a shelf stocked.</p></div>
-    <div class="card"><div class="k">08 · Eyes</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Monitoring</h3><p style="font-size:13px">MikroTik graphs plus the hive board — every room's state on one screen.</p></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">01 · Core</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">MikroTik gateway</h3><p style="font-size:13px">RB5009 / CCR class. PPPoE server, PCQ queues, NAT, firewall. Sized for <b>queued</b> throughput.</p><div class="brands"><span class="brand">MikroTik</span><span class="brand">Ubiquiti</span><span class="brand">Cisco</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">02 · Access</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Room switches</h3><p style="font-size:13px">One port per room. Port isolation on. No VLANs to maintain.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Cisco</span><span class="brand">D-Link</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">03 · Edge</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Router per room</h3><p style="font-size:13px">A CPE per room, WAN set to PPPoE. The tenant owns the WiFi behind it.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Tenda</span><span class="brand">Cudy</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">04 · Uplink</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Fibre + ONT</h3><p style="font-size:13px">SME/business fibre, ONT in the rack. A static IP if you can get one.</p><div class="brands"><span class="brand">PLDT</span><span class="brand">Converge</span><span class="brand">Globe</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">05 · Cabling</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Cat6 + patch</h3><p style="font-size:13px">A drop per room to a patch panel. Labelled at both ends.</p><div class="brands"><span class="brand">CommScope</span><span class="brand">Panduit</span><span class="brand">UGREEN</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">06 · Power</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Rack + UPS</h3><p style="font-size:13px">Wall rack, UPS, surge, a proper earth. The core must ride brownouts.</p><div class="brands"><span class="brand">APC</span><span class="brand">CyberPower</span><span class="brand">Eaton</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">07 · Spares</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">10% spare CPE</h3><p style="font-size:13px">Swap-on-fail beats truck-roll debugging. Keep a shelf stocked.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Tenda</span><span class="brand">Cudy</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="k">08 · Eyes</div><h3 style="font-family:var(--disp);font-size:17px;color:var(--comb);margin:7px 0 4px;font-weight:600">Monitoring</h3><p style="font-size:13px">MikroTik graphs plus the hive board — every room's state on one screen.</p><div class="brands"><span class="brand">The Dude</span><span class="brand">Zabbix</span><span class="brand">Grafana</span></div></div>
   </div>
   <p class="note">One skilled box, everything else boring on purpose — that's what makes the tenth building as easy as the first.</p>
 </section>
@@ -505,13 +509,14 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 <!-- 14 -->
 <section class="slide" data-t="EV &amp; parking kit">
   <div class="head"><h2>EV charging &amp; parking, the same way</h2>
-    <p class="sub">OCPP for the chargers, UHF for the gate, and one prepaid wallet across both. Buy on protocol, not on brand.</p></div>
+    <p class="sub">OCPP for the chargers, UHF for the gate, and one prepaid wallet across both. Sample brands shown — buy on protocol, not on brand.</p></div>
   <div class="body-c grid2">
     <div class="card" style="display:flex;flex-direction:column">
       <div class="k">Charging · OCPP</div>
       <h3 style="font-family:var(--disp);font-size:21px;color:var(--comb);font-weight:600;margin:9px 0 13px">1.6-J today, 2.0.1 ready</h3>
       <div class="row" style="align-items:flex-start;gap:12px"><span class="pill yes" style="flex-shrink:0">1.6-J</span><p style="font-size:13.5px;line-height:1.55">Any charger that speaks OCPP 1.6-J over WebSocket and lets you set a server URL. AC 7–22 kW Type 2 for the kerb, DC 30–180 kW for the fast lane.</p></div>
       <div class="row" style="align-items:flex-start;gap:12px;margin-top:11px"><span class="pill" style="flex-shrink:0">2.0.1</span><p style="font-size:13.5px;line-height:1.55">The roadmap: ISO 15118 Plug &amp; Charge, smart-charging profiles, device management and stronger security — same server, richer messages.</p></div>
+      <div class="brands" style="margin-top:15px"><span class="brand">Autel</span><span class="brand">Wallbox</span><span class="brand">ABB</span><span class="brand">Delta</span></div>
       <p class="note" style="margin-top:auto">What we build: a CSMS the chargers dial into, sessions metered to the centavo, and RFID-or-app auth against the wallet.</p>
     </div>
     <div class="card tint" style="display:flex;flex-direction:column">
@@ -522,6 +527,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
         <div class="row"><div class="hexdot">◑</div><div><h3>Boom barrier &amp; controller</h3><p>A relay from the reader lifts the arm. Dumb by design, like the switches.</p></div></div>
         <div class="row"><div class="hexdot">◕</div><div><h3>ANPR plate cameras</h3><p>Guests and enforcement — read the plate, then bill or admit without a tag.</p></div></div>
       </div>
+      <div class="brands" style="margin-top:auto;padding-top:16px"><span class="brand">Nedap</span><span class="brand">FAAC</span><span class="brand">Hikvision</span><span class="brand">Dahua</span></div>
     </div>
   </div>
 </section>
