@@ -178,6 +178,7 @@
   /* ── phones: relax snap so taller slides scroll freely, single-column layout ── */
   @media (max-width:600px){
     html{scroll-snap-type:y proximity;}
+    body{overflow-x:hidden;}
     .slide{padding:74px 20px 82px;min-height:100svh;}
     .slide.cover{padding-top:92px;justify-content:center;}
     h2.t{font-size:clamp(26px,7.4vw,32px);}
