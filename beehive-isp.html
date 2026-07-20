@@ -64,6 +64,9 @@ h2{font-family:var(--disp);font-size:38px;font-weight:600;letter-spacing:-.025em
 .pill.no{background:#FBE4E0;color:#8F2C1D}
 .note{font-size:13.5px;font-style:italic;color:#9A6F14;margin-top:auto;padding-top:16px;flex-shrink:0}
 .brands{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:13px}
+.brands::before{content:"Brands";flex-basis:100%;font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;line-height:1}
+.brands.builtby::before{content:"Built by"}
+.brands.methods::before{content:"Payment methods"}
 .brand{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--comb);background:var(--wax);border:1px solid var(--line);border-radius:6px;padding:3px 7px;line-height:1}
 .brand::before{content:"";width:6px;height:7px;background:var(--gold);flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
 .tint .brand,.solid .brand{background:#fff}
@@ -106,7 +109,24 @@ body.fs #stage{cursor:none}
 body.fs #stage.peek{cursor:default}
 body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ── entrance animation: content rises + fades in when a slide goes live ── */
+@keyframes bhRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.slide.live .head,
+.slide.live>.note,
+.slide.live[data-t="Title"]>div,
+.slide.live[data-t="Title"]>p,
+.slide.live .body-c>*{animation:bhRise .55s cubic-bezier(.16,1,.3,1) both}
+.slide.live .head{animation-delay:.02s}
+.slide.live .body-c>*{animation-delay:.10s}
+.slide.live .body-c>*:nth-child(2){animation-delay:.16s}
+.slide.live .body-c>*:nth-child(3){animation-delay:.22s}
+.slide.live .body-c>*:nth-child(4){animation-delay:.28s}
+.slide.live .body-c>*:nth-child(5){animation-delay:.34s}
+.slide.live .body-c>*:nth-child(6){animation-delay:.40s}
+.slide.live .body-c>*:nth-child(7){animation-delay:.46s}
+.slide.live .body-c>*:nth-child(8){animation-delay:.52s}
+.slide.live>.note{animation-delay:.30s}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* ─────────────────────────────────────────────────────────────
    PHONES: the deck is authored as fixed 1280×720 landscape slides
@@ -504,7 +524,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
     <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 4h9v4.5l1.5 1.5V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-9L7.5 8.5V4Z"/><path d="M9.5 8v2M12 8v2M14.5 8v2"/></svg></div><div><div class="k">05 · Cabling</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Cat6 + patch</h3></div></div><p style="font-size:13px">A drop per room to a patch panel. Labelled at both ends.</p><div class="brands"><span class="brand">CommScope</span><span class="brand">Panduit</span><span class="brand">UGREEN</span></div></div>
     <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="15" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M10.5 9l-2 3.2h3l-2 3.2"/></svg></div><div><div class="k">06 · Power</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Rack + UPS</h3></div></div><p style="font-size:13px">Wall rack, UPS, surge, a proper earth. The core must ride brownouts.</p><div class="brands"><span class="brand">APC</span><span class="brand">CyberPower</span><span class="brand">Eaton</span></div></div>
     <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 20 8v8l-8 4.5L4 16V8l8-4.5Z"/><path d="M4 8l8 4.5L20 8M12 12.5V21"/></svg></div><div><div class="k">07 · Spares</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">10% spare CPE</h3></div></div><p style="font-size:13px">Swap-on-fail beats truck-roll debugging. Keep a shelf stocked.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Tenda</span><span class="brand">Cudy</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="1.5"/><path d="M9 20h6M12 16.5V20"/><path d="M6.5 12l3-3 2 2 4-4.5"/></svg></div><div><div class="k">08 · Eyes</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Monitoring</h3></div></div><p style="font-size:13px">MikroTik graphs plus the hive board — every room's state on one screen.</p><div class="brands"><span class="brand">The Dude</span><span class="brand">Zabbix</span><span class="brand">Grafana</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18M6 6.6h.01"/><path d="M7 14.5l2.5-2.5 2 2 3.5-3.5"/></svg></div><div><div class="k">08 · Eyes</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">The hive board</h3></div></div><p style="font-size:13px">Our own web service — every room live on one screen. Built and hosted by Broadheader, not a third-party tool.</p><div class="brands builtby"><span class="brand">Broadheader</span></div></div>
   </div>
   <p class="note">One skilled box, everything else boring on purpose — that's what makes the tenth building as easy as the first.</p>
 </section>
@@ -534,6 +554,21 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 </section>
 
 <!-- 15 -->
+<section class="slide" data-t="Parking kit">
+  <div class="head"><h2>The parking kit, gate to wallet</h2>
+    <p class="sub">One lane, end to end: a tag is read, the controller checks the wallet, the barrier lifts — a camera covers guests, and our own service ties it together. Off-the-shelf hardware, our intelligence.</p></div>
+  <div class="body-c grid3" style="align-content:start;gap:14px">
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="11" rx="2"/><path d="M17.5 9.5a4 4 0 0 1 0 5M20 7.5a8 8 0 0 1 0 9"/></svg></div><div><div class="k">01 · Credential</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">UHF windscreen tag</h3></div></div><p style="font-size:13px">The car's identity. A passive sticker tag on the windscreen — nothing to charge, nothing to open.</p><div class="brands"><span class="brand">Nedap</span><span class="brand">Impinj</span><span class="brand">Zebra</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><circle cx="12" cy="11.5" r="1.6"/><path d="M8.6 11.5a3.4 3.4 0 0 1 6.8 0M6 11.5a6 6 0 0 1 12 0"/></svg></div><div><div class="k">02 · Reader</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Long-range reader</h3></div></div><p style="font-size:13px">Mounted at the lane, reads the tag from 3–6 m at speed. Hands-free — no stopping to tap.</p><div class="brands"><span class="brand">Nedap</span><span class="brand">Impinj</span><span class="brand">Kathrein</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></div><div><div class="k">03 · Controller</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Lane controller</h3></div></div><p style="font-size:13px">Takes the tag ID, asks our service if the wallet is good, then fires the relay. The one box that decides.</p><div class="brands"><span class="brand">Advantech</span><span class="brand">Nexcom</span><span class="brand">Raspberry Pi</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="3" height="10" rx="1"/><path d="M6 11h13"/><path d="M9.5 11v0M13 11v0M16.5 11v0"/></svg></div><div><div class="k">04 · Barrier</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Boom + motor</h3></div></div><p style="font-size:13px">A dry-contact relay from the controller lifts the arm. Dumb by design — it only knows open and close.</p><div class="brands"><span class="brand">FAAC</span><span class="brand">Nice</span><span class="brand">Came</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7.5" width="12" height="9" rx="2"/><circle cx="8.5" cy="12" r="2.3"/><path d="M14.5 10l5-2v8l-5-2"/></svg></div><div><div class="k">05 · Camera</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">ANPR plate camera</h3></div></div><p style="font-size:13px">Reads the plate for guests without a tag, and gives every pass a photo for enforcement.</p><div class="brands"><span class="brand">Hikvision</span><span class="brand">Dahua</span><span class="brand">Milesight</span></div></div>
+    <div class="card tint" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18M6 6.6h.01"/><path d="M8 14l2-2 2 1.5 3-3"/></svg></div><div><div class="k">06 · Software</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Parking service</h3></div></div><p style="font-size:13px">Our web service: wallet, sessions, gate rules, guest ANPR and the audit trail. The intelligence is ours.</p><div class="brands builtby"><span class="brand">Broadheader</span></div></div>
+  </div>
+  <p class="note">Everything but the last box is off-the-shelf and second-sourced — the wallet, the rules and the audit are the part we own.</p>
+</section>
+
+<!-- 16 -->
 <section class="slide" data-t="Payments · PayMongo">
   <div class="head"><h2>Payments run through PayMongo</h2>
     <p class="sub">One gateway across all three products — and the merchant account is the client's. We integrate; they own the money rails.</p></div>
@@ -542,7 +577,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
       <div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19M6 14.5h4"/></svg></div><div><div class="k">Gateway</div><h3 style="font-family:var(--disp);font-size:20px;color:var(--comb);font-weight:600;margin:2px 0 0">PayMongo</h3></div></div>
       <div style="margin:0 0 12px"><span class="pill">Client-provided</span></div>
       <p style="font-size:13.5px;line-height:1.55">The client's own PayMongo merchant account. GCash, Maya, QR Ph and cards through one integration and one settlement. API keys and payouts stay with them — Broadheader never touches the funds.</p>
-      <div class="brands" style="margin-top:14px"><span class="brand">GCash</span><span class="brand">Maya</span><span class="brand">QR Ph</span><span class="brand">Cards</span></div>
+      <div class="brands methods" style="margin-top:14px"><span class="brand">GCash</span><span class="brand">Maya</span><span class="brand">QR Ph</span><span class="brand">Cards</span></div>
     </div>
     <div class="card tint" style="display:flex;flex-direction:column">
       <div class="k">The hook</div>
