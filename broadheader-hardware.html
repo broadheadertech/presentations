@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Broadheader — Hardware & Kits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --comb:#16130E; --comb2:#241F16; --comb3:#3A3225;
+  --honey:#FBC312; --gold:#FFD75E; --honey-dk:#B28B0D; --wax:#FDF8EE; --nectar:#FFF0CC;
+  --live:#2BB673; --off:#D94F3D;
+  --body:#4A4436; --muted:#8C8471; --line:#E6DFCE;
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0B0906;font-family:var(--sans);color:var(--body);overflow:hidden}
+#stage{position:fixed;inset:0;display:grid;place-items:center}
+.slide{width:1280px;height:720px;background:#fff;position:absolute;transform-origin:center center;
+  padding:58px 66px;display:none;flex-direction:column}
+.slide.live{display:flex}
+.slide.dark{background:var(--comb)}
+.slide.cream{background:var(--wax)}
+
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--honey);margin-bottom:13px}
+h1{font-family:var(--disp);font-size:62px;font-weight:700;letter-spacing:-.03em;line-height:1;color:#fff}
+h2{font-family:var(--disp);font-size:38px;font-weight:600;letter-spacing:-.025em;line-height:1.1;color:var(--comb);margin-bottom:9px}
+.dark h2{color:#fff}
+.sub{font-size:16.5px;color:var(--muted);max-width:92ch;line-height:1.5}
+.dark .sub{color:#A89C82}
+.head{margin-bottom:28px;flex-shrink:0}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:-.02em}
+.body-c{flex:1;min-height:0;display:flex;flex-direction:column}
+
+.card{border:1px solid var(--line);border-radius:12px;padding:21px;background:#fff}
+.card.tint{background:var(--wax)}
+.card.solid{background:var(--comb);border-color:var(--comb)}
+.card.hot{background:var(--nectar);border-color:#EFD79A}
+.k{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.solid .k{color:var(--honey)}
+.big{font-family:var(--disp);font-size:48px;font-weight:700;color:var(--comb);line-height:1}
+.solid .big{color:var(--gold)}
+.lab{font-size:14px;font-weight:600;color:var(--honey);margin-top:8px}
+.desc{font-size:13.5px;color:var(--body);line-height:1.5;margin-top:7px}
+.solid .desc{color:#A89C82}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.rows{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:14px;align-items:flex-start}
+.hexdot{width:30px;height:34px;flex-shrink:0;display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--comb);
+  background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)}
+.dark .hexdot{background:var(--comb3);color:var(--gold)}
+.row h3{font-size:16.5px;font-weight:600;color:var(--comb);margin-bottom:3px}
+.dark .row h3{color:#fff}
+.row p{font-size:13.5px;color:var(--body);line-height:1.5}
+.dark .row p{color:#A89C82}
+.pill{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;background:var(--nectar);color:#8A6410}
+.pill.yes{background:#DCF3E6;color:#186B44}
+.pill.no{background:#FBE4E0;color:#8F2C1D}
+.note{font-size:13.5px;font-style:italic;color:#9A6F14;margin-top:auto;padding-top:16px;flex-shrink:0}
+.brands{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:13px}
+.brands::before{content:"Brands";flex-basis:100%;font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;line-height:1}
+.brands.builtby::before{content:"Built by"}
+.brands.methods::before{content:"Payment methods"}
+.brand{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--comb);background:var(--wax);border:1px solid var(--line);border-radius:6px;padding:3px 7px;line-height:1}
+.brand::before{content:"";width:6px;height:7px;background:var(--gold);flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.tint .brand,.solid .brand{background:#fff}
+.hw{width:38px;height:38px;border-radius:9px;flex:none;display:grid;place-items:center;background:var(--nectar);color:var(--honey-dk)}
+.hw svg{width:21px;height:21px}
+.hwhead{display:flex;align-items:flex-start;gap:11px;margin-bottom:9px}
+/* .rd — enlarged, more readable hardware cards */
+.rd.grid4{gap:16px}.rd.grid3{gap:18px}
+.rd .card h3{font-size:19px!important}
+.rd .card p{font-size:15px!important;line-height:1.5}
+.rd .k{font-size:11.5px}
+.rd .hw{width:44px;height:44px}
+.rd .hw svg{width:25px;height:25px}
+.rd .brand{font-size:11px;padding:4px 9px}
+.rd .brands::before{font-size:10px}
+/* the 4-up ISP grid is narrower — trim slightly so bigger text still fits one page */
+.rd.grid4 .card{padding:16px}
+.rd.grid4 .card h3{font-size:18px!important}
+.rd.grid4 .card p{font-size:14px!important}
+.rd.grid4 .hw{width:40px;height:40px}
+.rd.grid4 .hw svg{width:23px;height:23px}
+.rd.grid4 .brand{font-size:10px;padding:3px 7px}
+.rd.grid4 .brands{padding-top:9px}
+/* full-page line intros — big and readable */
+.l-eyb{font-family:var(--mono);font-size:13.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--honey-dk);margin-bottom:16px;display:inline-flex;align-items:center;gap:12px}
+.l-eyb::before{content:"";width:32px;height:2px;background:var(--honey);display:inline-block}
+.dark .l-eyb{color:var(--gold)}
+.l-title{font-family:var(--disp);font-size:56px;font-weight:700;letter-spacing:-.03em;line-height:1.02;color:var(--comb);margin-bottom:20px}
+.dark .l-title{color:#fff}
+.l-lead{font-size:21px;line-height:1.5;color:var(--body);margin-bottom:26px;max-width:34ch}
+.dark .l-lead{color:#A89C82}
+.l-kit{display:flex;flex-direction:column;gap:15px}
+.l-kit .row h3{font-size:18.5px}
+.l-kit .row p{font-size:15px;line-height:1.5}
+
+#rail{position:fixed;left:0;right:0;bottom:0;height:52px;background:#0B0906;display:flex;align-items:center;gap:14px;padding:0 18px;z-index:20;border-top:1px solid var(--comb2)}
+#cells{display:flex;gap:3px;flex:1}
+#cells button{width:100%;max-width:26px;height:17px;border:0;background:var(--comb3);opacity:.5;cursor:pointer;padding:0;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);transition:opacity .12s,background .12s}
+#cells button:hover{opacity:.85}
+#cells button.done{background:var(--honey);opacity:.55}
+#cells button.here{background:var(--gold);opacity:1}
+#cells button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#rail .cnt{font-family:var(--mono);font-size:12px;color:#8C8471;font-variant-numeric:tabular-nums;min-width:52px}
+#rail .ttl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--honey);white-space:nowrap}
+#rail .btns{display:flex;gap:6px}
+#rail .btns button{background:var(--comb2);border:0;color:#A89C82;width:30px;height:26px;border-radius:5px;cursor:pointer;font-size:13px;font-family:var(--mono)}
+#rail .btns button:hover{background:var(--comb3);color:#fff}
+#rail .btns button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+#ov{position:fixed;inset:0 0 52px 0;background:#0B0906;z-index:15;overflow:auto;padding:26px;display:none}
+#ov.on{display:block}
+#ovg{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:14px;max-width:1400px;margin:0 auto}
+.thumb{aspect-ratio:16/9;border-radius:7px;position:relative;cursor:pointer;border:2px solid transparent;background:#fff}
+.thumb.dk{background:var(--comb)}
+.thumb.cr{background:var(--wax)}
+.thumb.on{border-color:var(--gold)}
+.thumb .tn{position:absolute;top:7px;left:9px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.thumb.dk .tn{color:#8C8471}
+.thumb .tt{position:absolute;inset:auto 12px 12px 12px;font-family:var(--disp);font-size:13.5px;font-weight:600;color:var(--comb);line-height:1.3}
+.thumb.dk .tt{color:#fff}
+
+/* fullscreen: rail slides away, slide fills the screen */
+body.fs #rail{transform:translateY(100%);transition:transform .18s ease}
+body.fs #rail.peek{transform:translateY(0)}
+body.fs #ov{bottom:0}
+body.fs #stage{cursor:none}
+body.fs #stage.peek{cursor:default}
+body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
+
+/* ── entrance animation: content rises + fades in when a slide goes live ── */
+@keyframes bhRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.slide.live .head,
+.slide.live>.note,
+.slide.live[data-t="Title"]>div,
+.slide.live[data-t="Title"]>p,
+.slide.live .body-c>*{animation:bhRise .55s cubic-bezier(.16,1,.3,1) both}
+.slide.live .head{animation-delay:.02s}
+.slide.live .body-c>*{animation-delay:.10s}
+.slide.live .body-c>*:nth-child(2){animation-delay:.16s}
+.slide.live .body-c>*:nth-child(3){animation-delay:.22s}
+.slide.live .body-c>*:nth-child(4){animation-delay:.28s}
+.slide.live .body-c>*:nth-child(5){animation-delay:.34s}
+.slide.live .body-c>*:nth-child(6){animation-delay:.40s}
+.slide.live .body-c>*:nth-child(7){animation-delay:.46s}
+.slide.live .body-c>*:nth-child(8){animation-delay:.52s}
+.slide.live>.note{animation-delay:.30s}
+/* ── the hive comes alive: cells populate in, live cells shimmer, alerts pulse ── */
+.slide.live #idea-hive{animation:none!important}
+#idea-hive .cell{transform-box:fill-box;transform-origin:center;opacity:0;animation:cellIn .5s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+#idea-hive .c-live{animation:cellIn .5s cubic-bezier(.16,1,.3,1) both,hiveShimmer 3.6s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
+#idea-hive .c-off{animation:cellIn .5s cubic-bezier(.16,1,.3,1) both,hiveAlert 1.9s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
+@keyframes cellIn{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}
+@keyframes hiveShimmer{0%,100%{fill-opacity:1}50%{fill-opacity:.7}}
+@keyframes hiveAlert{0%,100%{fill-opacity:1;stroke-width:1.5}50%{fill-opacity:.5;stroke-width:2.6}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ─────────────────────────────────────────────────────────────
+   PHONES: the deck is authored as fixed 1280×720 landscape slides
+   scaled to fit. On a tall portrait screen that letterboxes into a
+   tiny strip. Below 640px we drop the scaling entirely and reflow
+   each slide into a full-width, vertically-scrolling single column.
+   ───────────────────────────────────────────────────────────── */
+@media(max-width:640px){
+  html,body{overflow:visible;overflow-x:hidden;height:auto}
+  #stage{position:static;display:block;place-items:initial;min-height:0;padding-bottom:52px}
+  .slide{
+    position:relative!important;width:100%!important;height:auto!important;
+    min-height:calc(100svh - 52px);transform:none!important;transform-origin:top left;
+    padding:30px 20px;
+  }
+  .slide.live{display:flex}
+  h1{font-size:clamp(38px,11vw,54px)}
+  h2{font-size:clamp(23px,6.4vw,30px)}
+  .l-title{font-size:clamp(32px,9vw,42px)}
+  .l-lead{font-size:16.5px;max-width:none}
+  .sub{font-size:14.5px;max-width:none}
+  .head{margin-bottom:18px}
+  .body-c{gap:13px}
+  /* every multi-column layout (class-based or inline) → one column */
+  .grid2,.grid3,.grid4{grid-template-columns:1fr!important}
+  .slide [style*="grid-template-columns"]{grid-template-columns:1fr!important}
+  .slide img{max-width:100%;height:auto}
+  .big{font-size:36px}
+  .note{margin-top:16px}
+  /* cover: stack the wordmark above the bee mark */
+  .slide[data-t="Title"] > div{flex-direction:column!important;align-items:flex-start!important;gap:22px!important}
+  .slide[data-t="Title"] > div > div{width:100%}
+  .slide[data-t="Title"] p{max-width:none}
+  .slide[data-t="Title"] img{width:148px}
+  /* wide network / billing diagrams: keep legible by allowing a sideways pan
+     (attribute selector, not :has(), so older mobile browsers still contain it) */
+  .body-c[style*="justify-content:center"]{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .body-c > svg{min-width:560px}
+}
+
+/* phones: reclaim rail space, enlarge tap targets, denser overview grid */
+@media(max-width:560px){
+  #rail{gap:8px;padding:0 10px}
+  #rail .ttl{display:none}
+  #rail .cnt{min-width:44px;font-size:11px}
+  #cells{gap:2px}
+  #rail .btns{gap:5px}
+  #rail .btns button{width:34px;height:32px;font-size:15px}
+  #ov{padding:16px}
+  #ovg{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+}
+@page{size:1280px 720px;margin:0}
+@media print{
+  body{background:#fff;overflow:visible}
+  #stage{position:static;display:block}
+  #rail,#ov{display:none!important}
+  .slide{display:flex!important;position:relative;transform:none!important;page-break-after:always;break-after:page}
+  .slide:last-child{page-break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+<!-- cover -->
+<section class="slide dark" data-t="Title">
+  <div style="display:flex;flex:1;flex-direction:column;justify-content:center">
+    <div class="eyebrow">Broadheader · Infrastructure</div>
+    <h1>Hardware &amp; Kits</h1>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:6px"><span style="width:44px;height:2px;background:var(--honey);display:block"></span><span style="font-family:var(--mono);font-size:19px;letter-spacing:.34em;color:var(--honey);text-transform:uppercase">Three lines</span></div>
+    <p style="font-family:var(--disp);font-size:25px;color:var(--gold);margin-top:16px;font-weight:500">Dorm internet · EV charging · Parking</p>
+    <div style="width:60px;height:3px;background:var(--honey);margin:22px 0 16px"></div>
+    <p style="font-size:15px;color:#A89C82;max-width:60ch;line-height:1.6">What each network needs, box by box — dumb, well-chosen, second-sourced hardware at the edge and a single skilled box at the core. One rule across all three lines.</p>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">Broadheader Information Technology Solutions · July 2026</p>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-t="Hardware">
+  <div class="head"><h2>Hardware, and what each box is for</h2>
+    <p class="sub">Models come after the site walk. What matters now is that each layer has exactly one job.</p></div>
+  <div class="body-c grid3">
+    <div class="card"><div class="k">The exchange</div><h3 style="font-family:var(--disp);font-size:21px;color:var(--comb);margin:8px 0 6px;font-weight:600">MikroTik gateway</h3><div class="lab">The only box that needs skill</div><p class="desc">PPPoE server, PCQ, NAT, firewall. Configured once, at your desk. Size it for <b>queued</b> throughput, not the datasheet number — enabling queues bypasses fasttrack and the honest figure is a lot lower.</p></div>
+    <div class="card"><div class="k">The wiring</div><h3 style="font-family:var(--disp);font-size:21px;color:var(--comb);margin:8px 0 6px;font-weight:600">TP-Link switches</h3><div class="lab">Deliberately boring</div><p class="desc">One port per room. No VLANs, no config. If you buy managed anyway, turn on port isolation — it stops anyone unplugging a room's router and poking at the flat segment behind it.</p></div>
+    <div class="card"><div class="k">The subscriber</div><h3 style="font-family:var(--disp);font-size:21px;color:var(--comb);margin:8px 0 6px;font-weight:600">TP-Link router, per room</h3><div class="lab">A modem the tenant owns</div><p class="desc">WAN set to PPPoE, NATs for the room, radio serves that room only. Set the channel by hand at install — 20 MHz, fixed, 2.4 GHz off on most. Forty units left on auto will fight each other.</p></div>
+  </div>
+  <p class="note">The concrete walls that make dorm WiFi hard are what make this work: each room's radio is isolated by the building itself.</p>
+</section>
+
+<!-- 12 · Line 01 -->
+<section class="slide cream" data-t="Dorm internet">
+  <div class="body-c grid2" style="grid-template-columns:1.05fr .95fr;align-items:center;gap:46px">
+    <div>
+      <div class="l-eyb">Line 01 · ISP</div>
+      <div class="l-title">Dorm internet</div>
+      <p class="l-lead">A MikroTik core, TP-Link switches and a router per room, dialling in over a fibre uplink — the build every small Philippine ISP already runs.</p>
+      <span class="pill yes">Proven</span>
+    </div>
+    <div class="l-kit">
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="6.5" rx="1.5"/><rect x="3.5" y="13" width="17" height="6.5" rx="1.5"/><path d="M7 7.7h.01M7 16.2h.01"/></svg></div><div><h3>MikroTik core</h3><p>PPPoE, queues, NAT, firewall — the one box with brains.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M7 17h.01M11 17h6"/><path d="M8.5 11.5a5 5 0 0 1 7 0M6 9a9 9 0 0 1 12 0"/></svg></div><div><h3>A router per room</h3><p>TP-Link CPE on PPPoE; the tenant owns the WiFi behind it.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="9" rx="1.5"/><path d="M8 14.5h.01M11 14.5h5"/><path d="M12 10V4M9.5 6.5 12 4l2.5 2.5"/></svg></div><div><h3>Business fibre uplink</h3><p>ONT in the rack, a static IP where you can get one.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18M6 6.6h.01"/><path d="M7 14.5l2.5-2.5 2 2 3.5-3.5"/></svg></div><div><h3>Our hive board</h3><p>Every room live on one screen — built by Broadheader.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · Line 02 -->
+<section class="slide dark" data-t="EV charging">
+  <div class="body-c grid2" style="grid-template-columns:1.05fr .95fr;align-items:center;gap:46px">
+    <div>
+      <div class="l-eyb">Line 02 · EV</div>
+      <div class="l-title">EV charging</div>
+      <p class="l-lead">Chargers that speak OCPP over WebSocket into one management server. AC for the kerb, DC for the fast lane — brand-agnostic, bought on price.</p>
+      <span class="pill">OCPP 1.6-J / 2.0.1</span>
+    </div>
+    <div class="l-kit">
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="10" height="17" rx="1.5"/><path d="M15 8h2a2 2 0 0 1 2 2v4.5a1.5 1.5 0 0 0 3 0V9l-2-2"/><path d="M10.5 7l-2 3.5h3l-2 3.5"/></svg></div><div><h3>OCPP chargers</h3><p>Any brand that speaks 1.6-J today; 2.0.1 when it lands.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6l-1 7.5 8-10.5h-6l1-7.5Z"/></svg></div><div><h3>AC + DC</h3><p>7–22 kW at the kerb, 30–180 kW on the fast lane.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="6.5" rx="1.5"/><rect x="3.5" y="13" width="17" height="6.5" rx="1.5"/><path d="M7 7.7h.01M7 16.2h.01"/></svg></div><div><h3>One CSMS</h3><p>Our server the chargers dial into; sessions to the centavo.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19M6 14.5h4"/></svg></div><div><h3>One wallet</h3><p>RFID or app auth, paid from the same prepaid balance.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · Line 03 -->
+<section class="slide cream" data-t="Parking access">
+  <div class="body-c grid2" style="grid-template-columns:1.05fr .95fr;align-items:center;gap:46px">
+    <div>
+      <div class="l-eyb">Line 03 · Parking</div>
+      <div class="l-title">Parking access</div>
+      <p class="l-lead">UHF tags at the windscreen, long-range readers at the gate, plate cameras for guests. The barrier stays dumb; the wallet decides.</p>
+      <span class="pill">One wallet</span>
+    </div>
+    <div class="l-kit">
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="11" rx="2"/><path d="M17.5 9.5a4 4 0 0 1 0 5M20 7.5a8 8 0 0 1 0 9"/></svg></div><div><h3>Tag + reader</h3><p>Hands-free UHF entry, read at the lane at speed.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="3" height="10" rx="1"/><path d="M6 11h13"/><path d="M9.5 11v0M13 11v0M16.5 11v0"/></svg></div><div><h3>Boom + controller</h3><p>A relay lifts the arm once the wallet checks out.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7.5" width="12" height="9" rx="2"/><circle cx="8.5" cy="12" r="2.3"/><path d="M14.5 10l5-2v8l-5-2"/></svg></div><div><h3>ANPR cameras</h3><p>Plate reads for guests and a photo on every pass.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19M6 14.5h4"/></svg></div><div><h3>One wallet</h3><p>The same balance that pays for charging.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-t="ISP hardware">
+  <div class="head"><h2>What we need for the ISP</h2>
+    <p class="sub">The bill of materials for one building — and it reads the same for the next ten. Sample brands per line; pick on price and stock.</p></div>
+  <div class="body-c grid4 rd" style="align-content:start;gap:14px">
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="6.5" rx="1.5"/><rect x="3.5" y="13" width="17" height="6.5" rx="1.5"/><path d="M7 7.7h.01M7 16.2h.01M11 7.7h6M11 16.2h6"/></svg></div><div><div class="k">01 · Core</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">MikroTik gateway</h3></div></div><p style="font-size:13px">RB5009 / CCR class. PPPoE server, PCQ queues, NAT, firewall. Sized for <b>queued</b> throughput.</p><div class="brands"><span class="brand">MikroTik</span><span class="brand">Ubiquiti</span><span class="brand">Cisco</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8.5" width="18" height="7" rx="1.5"/><path d="M6 15.5v2M9 15.5v2M12 15.5v2M15 15.5v2M18 15.5v2M6.5 12h.01M9.5 12h.01M12.5 12h.01"/></svg></div><div><div class="k">02 · Access</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Room switches</h3></div></div><p style="font-size:13px">One port per room. Port isolation on. No VLANs to maintain.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Cisco</span><span class="brand">D-Link</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M7 17h.01M11 17h6"/><path d="M8.5 11.5a5 5 0 0 1 7 0M6 9a9 9 0 0 1 12 0"/></svg></div><div><div class="k">03 · Edge</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Router per room</h3></div></div><p style="font-size:13px">A CPE per room, WAN set to PPPoE. The tenant owns the WiFi behind it.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Tenda</span><span class="brand">Cudy</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="9" rx="1.5"/><path d="M8 14.5h.01M11 14.5h5"/><path d="M12 10V4M9.5 6.5 12 4l2.5 2.5"/></svg></div><div><div class="k">04 · Uplink</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Fibre + ONT</h3></div></div><p style="font-size:13px">SME/business fibre, ONT in the rack. A static IP if you can get one.</p><div class="brands"><span class="brand">PLDT</span><span class="brand">Converge</span><span class="brand">Globe</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 4h9v4.5l1.5 1.5V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-9L7.5 8.5V4Z"/><path d="M9.5 8v2M12 8v2M14.5 8v2"/></svg></div><div><div class="k">05 · Cabling</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Cat6 + patch</h3></div></div><p style="font-size:13px">A drop per room to a patch panel. Labelled at both ends.</p><div class="brands"><span class="brand">CommScope</span><span class="brand">Panduit</span><span class="brand">UGREEN</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="15" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M10.5 9l-2 3.2h3l-2 3.2"/></svg></div><div><div class="k">06 · Power</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Rack + UPS</h3></div></div><p style="font-size:13px">Wall rack, UPS, surge, a proper earth. The core must ride brownouts.</p><div class="brands"><span class="brand">APC</span><span class="brand">CyberPower</span><span class="brand">Eaton</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 20 8v8l-8 4.5L4 16V8l8-4.5Z"/><path d="M4 8l8 4.5L20 8M12 12.5V21"/></svg></div><div><div class="k">07 · Spares</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">10% spare CPE</h3></div></div><p style="font-size:13px">Swap-on-fail beats truck-roll debugging. Keep a shelf stocked.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Tenda</span><span class="brand">Cudy</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18M6 6.6h.01"/><path d="M7 14.5l2.5-2.5 2 2 3.5-3.5"/></svg></div><div><div class="k">08 · Eyes</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">The hive board</h3></div></div><p style="font-size:13px">Our own web service — every room live on one screen. Built and hosted by Broadheader, not a third-party tool.</p><div class="brands builtby"><span class="brand">Broadheader</span></div></div>
+  </div>
+  <p class="note">One skilled box, everything else boring on purpose — that's what makes the tenth building as easy as the first.</p>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-t="EV &amp; parking kit">
+  <div class="head"><h2>EV charging &amp; parking, the same way</h2>
+    <p class="sub">OCPP for the chargers, UHF for the gate, and one prepaid wallet across both. Sample brands shown — buy on protocol, not on brand.</p></div>
+  <div class="body-c grid2">
+    <div class="card" style="display:flex;flex-direction:column">
+      <div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="10" height="17" rx="1.5"/><path d="M15 8h2a2 2 0 0 1 2 2v4.5a1.5 1.5 0 0 0 3 0V9l-2-2"/><path d="M10.5 7l-2 3.5h3l-2 3.5"/></svg></div><div><div class="k">Charging · OCPP</div><h3 style="font-family:var(--disp);font-size:20px;color:var(--comb);font-weight:600;margin:2px 0 0">1.6-J today, 2.0.1 ready</h3></div></div>
+      <div class="row" style="align-items:flex-start;gap:12px"><span class="pill yes" style="flex-shrink:0">1.6-J</span><p style="font-size:13.5px;line-height:1.55">Any charger that speaks OCPP 1.6-J over WebSocket and lets you set a server URL. AC 7–22 kW Type 2 for the kerb, DC 30–180 kW for the fast lane.</p></div>
+      <div class="row" style="align-items:flex-start;gap:12px;margin-top:11px"><span class="pill" style="flex-shrink:0">2.0.1</span><p style="font-size:13.5px;line-height:1.55">The roadmap: ISO 15118 Plug &amp; Charge, smart-charging profiles, device management and stronger security — same server, richer messages.</p></div>
+      <div class="brands" style="margin-top:15px"><span class="brand">Autel</span><span class="brand">Wallbox</span><span class="brand">ABB</span><span class="brand">Delta</span></div>
+      <p class="note" style="margin-top:auto">What we build: a CSMS the chargers dial into, sessions metered to the centavo, and RFID-or-app auth against the wallet.</p>
+    </div>
+    <div class="card tint" style="display:flex;flex-direction:column">
+      <div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M9.5 16.5V7.5h3.2a2.7 2.7 0 0 1 0 5.4H9.5"/></svg></div><div><div class="k">Parking · Kit</div><h3 style="font-family:var(--disp);font-size:20px;color:var(--comb);font-weight:600;margin:2px 0 0">Barrier, tag, plate</h3></div></div>
+      <div class="rows">
+        <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="11" rx="2"/><path d="M17.5 9.5a4 4 0 0 1 0 5M20 7.5a8 8 0 0 1 0 9"/></svg></div><div><h3>UHF tags &amp; readers</h3><p>Windscreen tag, long-range reader at the gate — hands-free entry, no app to open.</p></div></div>
+        <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="3" height="10" rx="1"/><path d="M6 11h13"/><path d="M9.5 11v0M13 11v0M16.5 11v0"/></svg></div><div><h3>Boom barrier &amp; controller</h3><p>A relay from the reader lifts the arm. Dumb by design, like the switches.</p></div></div>
+        <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7.5" width="12" height="9" rx="2"/><circle cx="8.5" cy="12" r="2.3"/><path d="M14.5 10l5-2v8l-5-2"/></svg></div><div><h3>ANPR plate cameras</h3><p>Guests and enforcement — read the plate, then bill or admit without a tag.</p></div></div>
+      </div>
+      <div class="brands" style="margin-top:auto;padding-top:16px"><span class="brand">Nedap</span><span class="brand">FAAC</span><span class="brand">Hikvision</span><span class="brand">Dahua</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-t="Parking kit">
+  <div class="head"><h2>The parking kit, gate to wallet</h2>
+    <p class="sub">One lane, end to end: a tag is read, the controller checks the wallet, the barrier lifts — a camera covers guests, and our own service ties it together. Off-the-shelf hardware, our intelligence.</p></div>
+  <div class="body-c grid3 rd" style="align-content:start;gap:14px">
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="11" rx="2"/><path d="M17.5 9.5a4 4 0 0 1 0 5M20 7.5a8 8 0 0 1 0 9"/></svg></div><div><div class="k">01 · Credential</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">UHF windscreen tag</h3></div></div><p style="font-size:13px">The car's identity. A passive sticker tag on the windscreen — nothing to charge, nothing to open.</p><div class="brands"><span class="brand">Nedap</span><span class="brand">Impinj</span><span class="brand">Zebra</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><circle cx="12" cy="11.5" r="1.6"/><path d="M8.6 11.5a3.4 3.4 0 0 1 6.8 0M6 11.5a6 6 0 0 1 12 0"/></svg></div><div><div class="k">02 · Reader</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Long-range reader</h3></div></div><p style="font-size:13px">Mounted at the lane, reads the tag from 3–6 m at speed. Hands-free — no stopping to tap.</p><div class="brands"><span class="brand">Nedap</span><span class="brand">Impinj</span><span class="brand">Kathrein</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></div><div><div class="k">03 · Controller</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Lane controller</h3></div></div><p style="font-size:13px">Takes the tag ID, asks our service if the wallet is good, then fires the relay. The one box that decides.</p><div class="brands"><span class="brand">Advantech</span><span class="brand">Nexcom</span><span class="brand">Raspberry Pi</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="3" height="10" rx="1"/><path d="M6 11h13"/><path d="M9.5 11v0M13 11v0M16.5 11v0"/></svg></div><div><div class="k">04 · Barrier</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Boom + motor</h3></div></div><p style="font-size:13px">A dry-contact relay from the controller lifts the arm. Dumb by design — it only knows open and close.</p><div class="brands"><span class="brand">FAAC</span><span class="brand">Nice</span><span class="brand">Came</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7.5" width="12" height="9" rx="2"/><circle cx="8.5" cy="12" r="2.3"/><path d="M14.5 10l5-2v8l-5-2"/></svg></div><div><div class="k">05 · Camera</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">ANPR plate camera</h3></div></div><p style="font-size:13px">Reads the plate for guests without a tag, and gives every pass a photo for enforcement.</p><div class="brands"><span class="brand">Hikvision</span><span class="brand">Dahua</span><span class="brand">Milesight</span></div></div>
+    <div class="card tint" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18M6 6.6h.01"/><path d="M8 14l2-2 2 1.5 3-3"/></svg></div><div><div class="k">06 · Software</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Parking service</h3></div></div><p style="font-size:13px">Our web service: wallet, sessions, gate rules, guest ANPR and the audit trail. The intelligence is ours.</p><div class="brands builtby"><span class="brand">Broadheader</span></div></div>
+  </div>
+  <p class="note">Everything but the last box is off-the-shelf and second-sourced — the wallet, the rules and the audit are the part we own.</p>
+</section>
+
+</div>
+
+<div id="ov"><div id="ovg"></div></div>
+
+<nav id="rail" aria-label="Slides">
+  <span class="ttl" id="rt">Title</span>
+  <div id="cells"></div>
+  <span class="cnt" id="rc">1 / 12</span>
+  <div class="btns">
+    <button id="bp" aria-label="Previous slide">‹</button>
+    <button id="bn" aria-label="Next slide">›</button>
+    <button id="bo" aria-label="Toggle overview">⊞</button>
+    <button id="bf" aria-label="Fill screen" aria-pressed="false">⤢</button>
+    <button id="bd" aria-label="Print or save as PDF">⤓</button>
+  </div>
+</nav>
+
+<script>
+/* ── deck ── */
+const slides=[...document.querySelectorAll('.slide')], N=slides.length;
+const rail=document.getElementById('rail'), stage=document.getElementById('stage');
+let cur=0, ovOpen=false, peekT=null, fill=false;
+
+const isFs=()=>!!document.fullscreenElement;
+
+/* Fill is a layout state we own outright — it does NOT depend on the Fullscreen
+   API, which is commonly blocked inside an iframe. Real browser fullscreen is
+   attempted on top as a bonus; if it's refused, the slide still goes edge to edge. */
+function fit(){
+  const pad=fill?0:(innerWidth<700?14:48), railH=fill?0:52;
+  const s=Math.min((innerWidth-pad)/1280,(innerHeight-railH-pad)/720);
+  slides.forEach(el=>el.style.transform=`scale(${s})`);
+}
+function go(i){
+  cur=Math.max(0,Math.min(N-1,i));
+  slides.forEach((el,j)=>el.classList.toggle('live',j===cur));
+  document.querySelectorAll('#cells button').forEach((b,j)=>{
+    b.className=j===cur?'here':(j<cur?'done':'');
+    b.setAttribute('aria-current',j===cur?'true':'false');
+  });
+  document.getElementById('rc').textContent=(cur+1)+' / '+N;
+  document.getElementById('rt').textContent=slides[cur].dataset.t;
+  document.querySelectorAll('.thumb').forEach((t,j)=>t.classList.toggle('on',j===cur));
+  scrollTo(0,0);   // reflow mode scrolls the page — start each slide at the top
+}
+function ov(on){ovOpen=on===undefined?!ovOpen:on;document.getElementById('ov').classList.toggle('on',ovOpen)}
+
+function peek(){
+  rail.classList.add('peek'); stage.classList.add('peek');
+  clearTimeout(peekT);
+  peekT=setTimeout(()=>{rail.classList.remove('peek');stage.classList.remove('peek')},2200);
+}
+function setFill(on){
+  fill=on;
+  document.body.classList.toggle('fs',fill);
+  document.getElementById('bf').setAttribute('aria-pressed',String(fill));
+  if(fill) peek(); else {clearTimeout(peekT);rail.classList.remove('peek');stage.classList.remove('peek')}
+  fit();
+}
+function toggleFs(){
+  const next=!fill;
+  setFill(next);                                   // layout changes regardless
+  if(next){
+    const el=document.documentElement;
+    const req=el.requestFullscreen||el.webkitRequestFullscreen;
+    if(req) try{ Promise.resolve(req.call(el)).catch(()=>{}) }catch(_){}
+  }else if(isFs()){
+    (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document);
+  }
+}
+document.addEventListener('fullscreenchange',()=>{ if(!isFs()&&fill) setFill(false); });
+addEventListener('mousemove',()=>{ if(fill) peek(); });
+
+// click to advance — only while filling, so it can't misfire in a window
+stage.addEventListener('click',e=>{
+  if(!fill||ovOpen) return;
+  go(e.clientX < innerWidth*0.25 ? cur-1 : cur+1);
+});
+
+// touch swipe — primary navigation on phones/tablets
+let _tx=0,_ty=0;
+stage.addEventListener('touchstart',e=>{const t=e.changedTouches[0];_tx=t.clientX;_ty=t.clientY;},{passive:true});
+stage.addEventListener('touchend',e=>{
+  if(ovOpen) return;
+  const t=e.changedTouches[0],dx=t.clientX-_tx,dy=t.clientY-_ty;
+  if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.4) go(dx<0 ? cur+1 : cur-1);
+},{passive:true});
+
+const cw=document.getElementById('cells');
+slides.forEach((el,i)=>{
+  const b=document.createElement('button');
+  b.title=(i+1)+'. '+el.dataset.t;
+  b.setAttribute('aria-label','Slide '+(i+1)+': '+el.dataset.t);
+  b.onclick=()=>{go(i);ov(false)};
+  cw.appendChild(b);
+});
+const og=document.getElementById('ovg');
+slides.forEach((el,i)=>{
+  const d=document.createElement('div');
+  d.className='thumb'+(el.classList.contains('dark')?' dk':(el.classList.contains('cream')?' cr':''));
+  d.innerHTML='<span class="tn">'+String(i+1).padStart(2,'0')+'</span><span class="tt">'+el.dataset.t+'</span>';
+  d.onclick=()=>{go(i);ov(false)};
+  og.appendChild(d);
+});
+document.getElementById('bp').onclick=()=>go(cur-1);
+document.getElementById('bn').onclick=()=>go(cur+1);
+document.getElementById('bo').onclick=()=>ov();
+document.getElementById('bf').onclick=()=>toggleFs();
+document.getElementById('bd').onclick=()=>{if(fill)setFill(false);ov(false);print()};
+
+addEventListener('keydown',e=>{
+  const k=e.key;
+  if(k==='ArrowRight'||k==='PageDown'||k===' '){e.preventDefault();go(cur+1);ov(false)}
+  else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();go(cur-1);ov(false)}
+  else if(k==='Home'){e.preventDefault();go(0)}
+  else if(k==='End'){e.preventDefault();go(N-1)}
+  else if(k==='f'||k==='F'){e.preventDefault();toggleFs()}
+  else if(k==='o'||k==='O'){e.preventDefault();ov()}
+  else if(k==='Escape'){
+    if(ovOpen){ov(false);return}
+    if(isFs()) return;          // browser owns Escape; fullscreenchange clears fill
+    if(fill) setFill(false);
+  }
+});
+addEventListener('resize',fit);
+fit();go(0);
+</script>
+</body>
+</html>
