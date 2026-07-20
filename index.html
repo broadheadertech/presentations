@@ -189,6 +189,27 @@
     color: var(--ink);
     margin-bottom: 18px;
   }
+  .keynote-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 13px 22px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: background 200ms ease, color 200ms ease, transform 200ms ease;
+  }
+  .keynote-cta:hover {
+    background: var(--accent);
+    color: var(--ink);
+    transform: translateY(-2px);
+  }
   .hero-stat {
     font-family: var(--display);
     font-style: italic;
@@ -804,6 +825,7 @@
       </div>
       <aside class="hero-side">
         <p class="hero-sub">A single point of entry for the project presentations. Open a deck, then use the arrows or keyboard to move between them without leaving the room.</p>
+        <a class="keynote-cta" href="beehive-3d.html?seq=1">▶ Start Keynote</a>
         <div class="hero-stat"><span id="heroStat">00</span><small>Decks Loaded</small></div>
       </aside>
     </div>
@@ -856,6 +878,7 @@
     },
     {
       file: 'beehive-isp.html', title: 'Beehive ISP',
+      open: 'beehive-3d.html?seq=1',
       tagline: 'Building WiFi, Run Like an ISP',
       cover: 'cover-beehive',
       series: 'Broadheader Projects',
@@ -1068,7 +1091,7 @@
   }
   function load() {
     const d = decks[current];
-    frame.src = d.file;
+    frame.src = d.open || d.file;
     vTitle.textContent = d.title;
     vCount.textContent = `${pad(current + 1)} / ${pad(decks.length)}`;
     btnPrev.disabled = current === 0;
@@ -1080,7 +1103,7 @@
   btnPrev.addEventListener('click', prev);
   btnNext.addEventListener('click', next);
   btnClose.addEventListener('click', closeViewer);
-  btnOpen.addEventListener('click', () => window.open(decks[current].file, '_blank'));
+  btnOpen.addEventListener('click', () => window.open(decks[current].open || decks[current].file, '_blank'));
 
   document.addEventListener('keydown', (e) => {
     const isOpen = viewer.classList.contains('open');

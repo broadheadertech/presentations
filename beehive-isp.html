@@ -149,7 +149,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 @keyframes bhRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 /* 3D slide transition: incoming slide swings in through depth (direction-aware via --dir).
    Uses rotate/translate properties so it composes with fit()'s transform:scale on the slide. */
-.slide.live{animation:slide3d .62s cubic-bezier(.16,1,.3,1) both}
+.slide.live{animation:slide3d .68s cubic-bezier(.3,1.34,.5,1) both}
 @keyframes slide3d{
   from{opacity:0; translate:calc(var(--dir,1) * 9%) 0 -260px; rotate:y calc(var(--dir,1) * -22deg);}
   55%{opacity:1;}
@@ -159,7 +159,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 .slide.live>.note,
 .slide.live[data-t="Title"]>div,
 .slide.live[data-t="Title"]>p,
-.slide.live .body-c>*{animation:bhRise .55s cubic-bezier(.16,1,.3,1) both}
+.slide.live .body-c>*{animation:bhRise .58s cubic-bezier(.34,1.5,.52,1) both}
 .slide.live .head{animation-delay:.02s}
 .slide.live .body-c>*{animation-delay:.10s}
 .slide.live .body-c>*:nth-child(2){animation-delay:.16s}
@@ -170,15 +170,20 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 .slide.live .body-c>*:nth-child(7){animation-delay:.46s}
 .slide.live .body-c>*:nth-child(8){animation-delay:.52s}
 .slide.live>.note{animation-delay:.30s}
-/* ── the hive comes alive: cells populate in, live cells shimmer, alerts pulse ── */
+/* ── the hive in 3D: HTML hex cells lift out of a gently swaying plane ── */
+#idea-hive{perspective:900px}
 .slide.live #idea-hive{animation:none!important}
-#idea-hive .cell{transform-box:fill-box;transform-origin:center;opacity:0;animation:cellIn .5s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
-#idea-hive .c-live{animation:cellIn .5s cubic-bezier(.16,1,.3,1) both,hiveShimmer 3.6s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
-#idea-hive .c-off{animation:cellIn .5s cubic-bezier(.16,1,.3,1) both,hiveAlert 1.9s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
-@keyframes cellIn{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}
-@keyframes hiveShimmer{0%,100%{fill-opacity:1}50%{fill-opacity:.7}}
-@keyframes hiveAlert{0%,100%{fill-opacity:1;stroke-width:1.5}50%{fill-opacity:.5;stroke-width:2.6}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.hive3d{position:relative;width:100%;transform-style:preserve-3d;animation:hiveSway 11s ease-in-out infinite}
+.hcell{position:absolute;transform-style:preserve-3d;opacity:0;
+  clip-path:polygon(100% 50%,75% 100%,25% 100%,0 50%,25% 0,75% 0);
+  animation:cell3d .55s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+.hcell.c-live{animation:cell3d .55s cubic-bezier(.16,1,.3,1) both,hiveFloat 3.8s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
+.hcell.c-off{animation:cell3d .55s cubic-bezier(.16,1,.3,1) both,hiveAlert 1.9s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
+@keyframes cell3d{from{opacity:0;transform:translateZ(-70px) scale(.5)}to{opacity:1;transform:translateZ(var(--z,0px)) scale(1)}}
+@keyframes hiveFloat{0%,100%{transform:translateZ(var(--z,0px))}50%{transform:translateZ(calc(var(--z,0px) + 13px))}}
+@keyframes hiveAlert{0%,100%{transform:translateZ(var(--z,0px));opacity:1}50%{transform:translateZ(calc(var(--z,0px) + 7px));opacity:.55}}
+@keyframes hiveSway{0%,100%{transform:rotateX(13deg) rotateY(-9deg)}50%{transform:rotateX(16deg) rotateY(7deg)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.hcell{opacity:1!important;transform:none!important}.hive3d{transform:none!important}}
 
 /* ─────────────────────────────────────────────────────────────
    PHONES: the deck is authored as fixed 1280×720 landscape slides
@@ -190,6 +195,12 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   html,body{overflow:visible;overflow-x:hidden;height:auto}
   #stage{position:static;display:block;place-items:initial;min-height:0;padding-bottom:52px;perspective:none}
   .slide.live{animation:none}
+  #idea-hive{perspective:none}
+  .hive3d{animation:none;transform:none}
+  /* 3D scroll reveals replace the one-shot entrance while scrolling on phones */
+  .slide.live .head,.slide.live .body-c>*,.slide.live>.note{animation:none}
+  .sr{opacity:0;transform:perspective(760px) translateY(34px) rotateX(15deg);transition:opacity .55s ease,transform .72s cubic-bezier(.16,1,.3,1)}
+  .sr.sr-in{opacity:1;transform:perspective(760px) translateY(0) rotateX(0deg)}
   .slide{
     position:relative!important;width:100%!important;height:auto!important;
     min-height:calc(100svh - 52px);transform:none!important;transform-origin:top left;
@@ -240,6 +251,29 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   .slide:last-child{page-break-after:auto}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+/* ── keynote sequence: dark palette aligned to the 3D scenes + zoom entrance ── */
+html.seq body,html.seq #stage{background:#0A0A0A}
+html.seq .slide,html.seq .slide.cream,html.seq .slide.dark{background:#0b0b0d}
+html.seq h2,html.seq .l-title{color:#fff!important}
+html.seq .sub,html.seq .l-lead{color:#A99E86!important}
+html.seq .card{background:#15161a!important;border-color:#2b2c31!important}
+html.seq .card.tint{background:#1a1710!important}
+html.seq .card.solid{background:#08080a!important;border-color:#26272c!important}
+html.seq .card.hot{background:#241d10!important;border-color:#4a3a12!important}
+html.seq .card h3,html.seq .row h3,html.seq .l-kit .row h3{color:#fff!important}
+html.seq .card p,html.seq .row p,html.seq .desc,html.seq .slide .card>p,html.seq .l-kit .row p{color:#C7BCA6!important}
+html.seq .k{color:#8C8471!important}
+html.seq .lab,html.seq .big,html.seq .l-eyb,html.seq .num{color:var(--gold)!important}
+html.seq .note{color:#C9A24B!important}
+html.seq .brand{background:#1b1c21;border-color:#3a3b40;color:#EDE6D6}
+html.seq .brand::before{color:#8C8471}
+html.seq .brands::before{color:#8C8471}
+html.seq .pill{background:#2a2416;color:var(--gold)}
+html.seq .pill.yes{background:#12301f;color:#7CD9A6}
+html.seq .pill.no{background:#301616;color:#E79A8E}
+html.seq .hw{background:#241d10;color:var(--gold)}
+html.seq .slide.live{animation:seqZoom .7s cubic-bezier(.16,1,.3,1) both}
+@keyframes seqZoom{from{opacity:0;scale:.82}to{opacity:1;scale:1}}
 </style>
 </head>
 <body>
@@ -597,17 +631,19 @@ function hex(cx,cy,r){
 function hive(cols,rows,r,states){
   const h=r*Math.sqrt(3), stepX=r*1.5;
   const w=stepX*(cols-1)+r*2+4, ht=h*rows+h/2+4;
-  let s=`<svg viewBox="0 0 ${w.toFixed(0)} ${ht.toFixed(0)}" style="width:100%;height:auto" role="img" aria-label="Honeycomb of devices; each cell is one account-bound device, coloured by its state.">`;
+  let s=`<div class="hive3d" style="aspect-ratio:${w.toFixed(1)}/${ht.toFixed(1)}" role="img" aria-label="Honeycomb of devices; each cell is one account-bound device, coloured by its state.">`;
   let i=0;
   for(let c=0;c<cols;c++) for(let rw=0;rw<rows;rw++){
     const cx=r+2+c*stepX, cy=h/2+2+rw*h+(c%2?h/2:0);
     const st=states[i%states.length];
-    s+=`<polygon class="cell ${st[2]}" style="--d:${(i*0.022).toFixed(3)}s" points="${hex(cx,cy,r-1.5)}" fill="${st[0]}" stroke="${st[1]}" stroke-width="1.5"/>`;
+    const z=Math.round(6*Math.sin(c*0.8)+5*Math.cos(rw*1.2))+st[3];
+    const L=((cx-r)/w*100).toFixed(2), T=((cy-h/2)/ht*100).toFixed(2), W=(2*r/w*100).toFixed(2), H=(h/ht*100).toFixed(2);
+    s+=`<div class="hcell ${st[2]}" style="left:${L}%;top:${T}%;width:${W}%;height:${H}%;--d:${(i*0.022).toFixed(3)}s;--z:${z}px;background:${st[0]}"></div>`;
     i++;
   }
-  return s+'</svg>';
+  return s+'</div>';
 }
-const LIVE=['#FDD34A','#FBC312','c-live'], VAC=['#F2EDE0','#E0D8C4','c-vac'], OFF=['#FBE4E0','#D94F3D','c-off'];
+const LIVE=['#FDD34A','#FBC312','c-live',8], VAC=['#F2EDE0','#E0D8C4','c-vac',-6], OFF=['#FBE4E0','#D94F3D','c-off',2];
 const mix=[LIVE,LIVE,LIVE,LIVE,VAC,LIVE,LIVE,OFF,LIVE,LIVE,LIVE,VAC,LIVE,LIVE,LIVE,OFF,LIVE,LIVE,VAC,LIVE];
 document.getElementById('idea-hive').innerHTML  = hive(8,5,27,mix);
 
@@ -626,6 +662,14 @@ function fit(){
   const s=Math.min((innerWidth-pad)/1280,(innerHeight-railH-pad)/720);
   slides.forEach(el=>el.style.transform=`scale(${s})`);
 }
+let _srIO=null;
+function bhReveal(){
+  if(!matchMedia('(max-width:640px)').matches) return;   // desktop is a fixed deck — no scroll reveal
+  if(!_srIO){ _srIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('sr-in'); _srIO.unobserve(e.target); } }),{threshold:.12,rootMargin:'0px 0px -6% 0px'}); }
+  document.querySelectorAll('.slide.live .head, .slide.live .body-c>*, .slide.live>.note').forEach(el=>{
+    el.classList.remove('sr-in'); el.classList.add('sr'); _srIO.observe(el);
+  });
+}
 function go(i){
   const target=Math.max(0,Math.min(N-1,i));
   const dir=target>cur?1:(target<cur?-1:1);
@@ -639,6 +683,7 @@ function go(i){
   document.getElementById('rt').textContent=slides[cur].dataset.t;
   document.querySelectorAll('.thumb').forEach((t,j)=>t.classList.toggle('on',j===cur));
   scrollTo(0,0);   // reflow mode scrolls the page — start each slide at the top
+  bhReveal();      // (re)arm 3D scroll reveals for the new slide on phones
 }
 function ov(on){ovOpen=on===undefined?!ovOpen:on;document.getElementById('ov').classList.toggle('on',ovOpen)}
 
@@ -745,6 +790,42 @@ document.querySelectorAll('.hw').forEach(box=>{
     box.classList.add('has-img'); box.appendChild(img);
   });
 });
+
+/* ── keynote sequence: interleaves cinematic scenes with specific deck pages ── */
+(function(){
+  const SEQ=[
+    {url:'beehive-3d.html'},              // 1 · Scene 1 (intro)
+    {url:'beehive-isp.html',slide:1},     // 2 · deck page 1
+    {url:'beehive-isp.html',slide:2},     // 3 · deck page 2
+    {url:'beehive-city.html'},            // 4 · Scene 2
+    {url:'beehive-isp.html',slide:4},     // 5 · deck page 4
+    {url:'beehive-journey.html'},         // 6 · Scene 3
+    {url:'beehive-isp.html',slide:5},     // 7 · deck page 5
+    {url:'beehive-isp.html',slide:9},     // 8 · deck page 9
+    {url:'beehive-isp.html',slide:10},    // 9 · deck page 10
+    {url:'beehive-isp.html',slide:11}     // 10 · deck page 11
+  ];
+  const q=new URLSearchParams(location.search), sl=parseInt(q.get('slide')), P=parseInt(q.get('seq'));
+  if(sl) go(Math.max(0,Math.min(N-1,sl-1)));
+  if(!P) return;
+  document.documentElement.classList.add('seq');
+  function seqURL(p){ const s=SEQ[p-1]; if(!s) return null; return s.url+'?seq='+p+(s.slide?('&slide='+s.slide):''); }
+  function goSeq(p){ const u=seqURL(p); if(u) location.href=u; }
+  const rail=document.getElementById('rail'); if(rail) rail.style.display='none';
+  if(typeof setFill==='function') setFill(true);   // pages go edge-to-edge in the keynote sequence
+  const nav=document.createElement('div');
+  nav.style.cssText='position:fixed;bottom:24px;right:28px;z-index:120;display:flex;gap:10px;font-family:var(--sans)';
+  nav.innerHTML='<button id="sqp">‹</button><button id="sqn">›</button>';
+  document.body.appendChild(nav);
+  nav.querySelectorAll('button').forEach(b=>{ b.style.cssText='width:46px;height:46px;border-radius:50%;border:1px solid rgba(251,195,18,.4);background:rgba(20,18,12,.6);color:#FBC312;font-size:20px;cursor:pointer'; });
+  const sp=nav.querySelector('#sqp'), sn=nav.querySelector('#sqn');
+  if(!SEQ[P-2]){ sp.disabled=true; sp.style.opacity=.25; } else sp.onclick=()=>goSeq(P-1);
+  if(!SEQ[P]){ sn.disabled=true; sn.style.opacity=.25; } else sn.onclick=()=>goSeq(P+1);
+  addEventListener('keydown',e=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){ e.stopImmediatePropagation(); e.preventDefault(); goSeq(P+1); }
+    else if(['ArrowLeft','PageUp'].includes(e.key)){ e.stopImmediatePropagation(); e.preventDefault(); goSeq(P-1); }
+  }, true);
+})();
 </script>
 </body>
 </html>

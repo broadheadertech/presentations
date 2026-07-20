@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beehive ISP — The Hive Chamber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --amber:#FFC857; --gold:#FFD76A; --mono:"IBM Plex Mono",monospace; --disp:"Space Grotesk",system-ui,sans-serif; --sans:"IBM Plex Sans",system-ui,sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:#0A0A0A}
+  #bg{position:fixed;inset:0;display:block}
+  /* vignette + subtle grain over the render */
+  #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 46%, transparent 46%, rgba(0,0,0,.55) 100%)}
+  #fx-fail{position:fixed;inset:0;display:none;place-items:center;text-align:center;padding:40px;z-index:5;font-family:var(--mono);color:#8C8471}
+
+  #ui{position:fixed;inset:0;z-index:2;pointer-events:none;color:#EFE7D6}
+  .brand{position:absolute;top:26px;left:30px;display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .brand .hx{width:22px;height:24px;background:var(--gold);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+  .cover{position:absolute;left:0;right:0;bottom:8.5vh;text-align:center;opacity:0;animation:rise 1.4s .5s cubic-bezier(.16,1,.3,1) forwards}
+  .cover .eyb{font-family:var(--mono);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .cover .wm{font-family:var(--disp);font-weight:700;font-size:clamp(34px,5vw,60px);letter-spacing:.02em;color:#fff}
+  .cover .wm span{color:var(--gold)}
+  .cover .tl{font-family:var(--disp);font-size:clamp(14px,1.7vw,19px);color:var(--gold);font-weight:500;margin-top:10px}
+  .corp{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#6E6A60}
+  @keyframes rise{to{opacity:1}}
+  @media (max-width:640px){ .brand{top:16px;left:16px} }
+  .nav{position:fixed;bottom:26px;right:30px;z-index:3;display:flex;gap:10px}
+  .nav button{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,215,106,.35);background:rgba(18,18,22,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--gold);font-family:var(--sans);font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background .2s,transform .2s,color .2s}
+  .nav button:hover{background:rgba(255,215,106,.92);color:#111;transform:translateY(-2px)}
+  .nav button[disabled]{opacity:.22;cursor:default;pointer-events:none}
+  .navhint{position:fixed;bottom:34px;right:92px;z-index:3;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6E6A60}
+  #flash{position:fixed;inset:0;z-index:8;pointer-events:none;opacity:0;transition:opacity .45s ease;background:radial-gradient(circle at 50% 46%, #FFF6E0 0%, #FFE9A8 55%, #FFC857 100%)}
+  #flash.on{opacity:1}
+</style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div id="vig"></div>
+  <div id="flash"></div>
+  <div id="fx-fail">WebGL could not start. Open in a desktop browser with hardware acceleration on.</div>
+  <div id="ui">
+    <div class="brand"><span class="hx"></span>Beehive</div>
+    <div class="cover">
+      <div class="eyb">Broadheader · Network Services</div>
+      <div class="wm">BEEHIVE <span>ISP</span></div>
+      <div class="tl">Building WiFi. Run like an ISP.</div>
+    </div>
+    <div class="corp">Broadheader Information Technology Solutions</div>
+  </div>
+  <div class="navhint">Scene 1 / 3</div>
+  <div class="nav">
+    <button id="prev" title="Previous scene">‹</button>
+    <button id="next" title="Next scene">›</button>
+  </div>
+  <script>
+  (function(){
+    var SEQ=[{url:'beehive-3d.html'},{url:'beehive-isp.html',slide:1},{url:'beehive-isp.html',slide:2},{url:'beehive-city.html'},{url:'beehive-isp.html',slide:4},{url:'beehive-journey.html'},{url:'beehive-isp.html',slide:5},{url:'beehive-isp.html',slide:9},{url:'beehive-isp.html',slide:10},{url:'beehive-isp.html',slide:11}];
+    function seqURL(pp){ var s=SEQ[pp-1]; if(!s) return ''; return s.url+'?seq='+pp+(s.slide?('&slide='+s.slide):''); }
+    var P=parseInt(new URLSearchParams(location.search).get('seq'));
+    var NEXT = P ? seqURL(P+1) : 'beehive-city.html', PREV = P ? seqURL(P-1) : '';
+    var n=document.getElementById('next'), p=document.getElementById('prev');
+    function goNext(){ if(!NEXT) return; if(window.bhFlyNext){ window.bhFlyNext(NEXT); } else { location.href=NEXT; } }
+    if(NEXT){ n.onclick=goNext; } else { n.setAttribute('disabled',''); }
+    if(PREV){ p.onclick=function(){ location.href=PREV; }; } else { p.setAttribute('disabled',''); }
+    addEventListener('keydown', function(e){
+      if((e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')&&NEXT){ e.preventDefault(); goNext(); }
+      if((e.key==='ArrowLeft'||e.key==='PageUp')&&PREV){ e.preventDefault(); location.href=PREV; }
+    });
+  })();
+  </script>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+
+const AMBER=0xFFC857, GOLD=0xFFD76A, DARK=0x111113;
+const H=26, W=45, Z0=44, Z1=-540;          // chamber half-height, half-width, near/far
+const LOGO=new THREE.Vector3(0, 7, -150);  // emblem centre
+let renderer, composer, scene, camera, logo, platform, particles, dust, t=0, trans=null;
+const mouse={x:0,y:0};
+
+try{ init(); } catch(e){ console.error(e); document.getElementById('fx-fail').style.display='grid'; }
+
+function init(){
+  const canvas=document.getElementById('bg');
+  renderer=new THREE.WebGLRenderer({canvas, antialias:true, powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x0A0A0A, 1);
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.0;
+
+  scene=new THREE.Scene();
+  scene.fog=new THREE.FogExp2(0x0A0A0A, 0.0042);
+  const pmrem=new THREE.PMREMGenerator(renderer);
+  scene.environment=pmrem.fromScene(new RoomEnvironment(), 0.04).texture;   // studio reflections on the metal
+
+  camera=new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 1400);
+  camera.position.set(0, 3, 78);
+
+  buildChamber();
+  buildFloor();
+  buildStrips();
+  buildPlatform();
+  buildLogo();
+  buildParticles();
+  lights();
+
+  composer=new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight), 0.85, 0.62, 0.34));
+  composer.addPass(new OutputPass());
+
+  addEventListener('resize', onResize);
+  addEventListener('pointermove', e=>{ mouse.x=(e.clientX/innerWidth-0.5); mouse.y=(e.clientY/innerHeight-0.5); });
+  renderer.setAnimationLoop(loop);
+}
+
+// ── honeycomb panels lining ceiling + side walls ──
+function hexPts(r){ const p=[]; for(let i=0;i<6;i++){ const a=Math.PI/6+i*Math.PI/3; p.push([Math.cos(a)*r, Math.sin(a)*r]); } return p; }
+function hexShape(r){ const s=new THREE.Shape(); hexPts(r).forEach((p,i)=> i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1])); s.closePath(); return s; }
+
+function buildChamber(){
+  const r=4.4, geo=new THREE.CylinderGeometry(r, r, 1.0, 6);
+  const mat=new THREE.MeshStandardMaterial({ color:DARK, metalness:0.9, roughness:0.42, envMapIntensity:1.1 });
+  const stepX=r*1.75, stepZ=r*Math.sqrt(3);
+  const cells=[];
+  const zcount=Math.ceil((Z0-Z1)/stepZ)+2;
+  // ceiling (y=+H, faces down) and two walls
+  for(let k=0;k<zcount;k++){
+    const z=Z0 - k*stepZ;
+    // ceiling row across X
+    for(let i=-7;i<=7;i++){ const x=i*stepX + (k%2?stepX/2:0); if(Math.abs(x)>W) continue; cells.push({p:[x,H,z], rx:0,ry:0,rz:0}); }
+    // walls across Y
+    for(let j=-3;j<=3;j++){ const y=j*stepX + (k%2?stepX/2:0); if(Math.abs(y)>H+2) continue;
+      cells.push({p:[-W,y,z], rx:0,ry:0,rz:Math.PI/2});
+      cells.push({p:[ W,y,z], rx:0,ry:0,rz:Math.PI/2}); }
+  }
+  const mesh=new THREE.InstancedMesh(geo, mat, cells.length);
+  const d=new THREE.Object3D();
+  cells.forEach((c,idx)=>{ d.position.set(c.p[0],c.p[1],c.p[2]); d.rotation.set(c.rx,c.ry,c.rz); d.updateMatrix(); mesh.setMatrixAt(idx,d.matrix);
+    // a sparse few glow gold
+    mesh.setColorAt(idx, new THREE.Color(Math.random()>0.93?GOLD:DARK)); });
+  mesh.instanceColor.needsUpdate=true;
+  scene.add(mesh);
+}
+
+// ── reflective smoked-glass floor + embedded honeycomb outline ──
+function buildFloor(){
+  const floor=new Reflector(new THREE.PlaneGeometry(320, 760), { textureWidth:1024, textureHeight:1024, color:0x0c0c0e });
+  floor.rotateX(-Math.PI/2); floor.position.y=-H; scene.add(floor);
+  // faint hex outline pattern sitting just above the mirror
+  const r=4.4, stepX=r*1.75, stepZ=r*Math.sqrt(3), g=new THREE.Group();
+  const lm=new THREE.LineBasicMaterial({color:0x2a2413, transparent:true, opacity:0.6, fog:true});
+  for(let k=0;k<Math.ceil((Z0-Z1)/stepZ)+2;k++){ const z=Z0-k*stepZ;
+    for(let i=-7;i<=7;i++){ const x=i*stepX+(k%2?stepX/2:0); if(Math.abs(x)>W) continue;
+      const pts=hexPts(r*0.94).map(p=>new THREE.Vector3(x+p[0], -H+0.05, z+p[1])); pts.push(pts[0]);
+      g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm)); } }
+  scene.add(g);
+}
+
+// ── amber leading-line strips converging to the logo ──
+function buildStrips(){
+  const em=new THREE.MeshBasicMaterial({color:AMBER, fog:true});
+  const len=Z0-Z1, cz=(Z0+Z1)/2;
+  [[-W,H],[W,H],[-W,-H],[W,-H]].forEach(([x,y])=>{
+    const bar=new THREE.Mesh(new THREE.BoxGeometry(0.32,0.32,len), em); bar.position.set(x,y,cz); scene.add(bar);
+  });
+  // twin floor rails leading to the platform
+  [[-13],[13]].forEach(([x])=>{ const bar=new THREE.Mesh(new THREE.BoxGeometry(0.4,0.05,len*0.9), em.clone()); bar.material.color.set(GOLD); bar.position.set(x,-H+0.06,cz+30); scene.add(bar); });
+}
+
+// ── illuminated circular platform under the emblem ──
+function buildPlatform(){
+  platform=new THREE.Group();
+  for(let i=0;i<4;i++){ const ring=new THREE.Mesh(new THREE.TorusGeometry(9+i*6.5, 0.28, 10, 90), new THREE.MeshBasicMaterial({color:i%2?GOLD:AMBER, fog:true}));
+    ring.rotation.x=Math.PI/2; ring.position.set(0,-H+0.12+i*0.02,LOGO.z); platform.add(ring); }
+  const disc=new THREE.Mesh(new THREE.CircleGeometry(8.5, 48), new THREE.MeshBasicMaterial({color:0xffdf8f, transparent:true, opacity:0.5, fog:true}));
+  disc.rotation.x=-Math.PI/2; disc.position.set(0,-H+0.1,LOGO.z); platform.add(disc);
+  scene.add(platform);
+}
+
+// ── the monumental Beehive emblem: black hex + polished-gold chevrons ──
+function buildLogo(){
+  logo=new THREE.Group();
+  const goldMetal=new THREE.MeshStandardMaterial({color:0xE7B84C, metalness:1, roughness:0.2, envMapIntensity:1.6});
+  const blackMetal=new THREE.MeshStandardMaterial({color:0x0d0d0e, metalness:0.85, roughness:0.5, envMapIntensity:0.8});
+  // hex frame (extruded ring)
+  const frame=hexShape(10); const hole=new THREE.Path(); hexPts(8.3).forEach((p,i)=> i?hole.lineTo(p[0],p[1]):hole.moveTo(p[0],p[1])); hole.closePath(); frame.holes.push(hole);
+  const fg=new THREE.ExtrudeGeometry(frame,{depth:1.6,bevelEnabled:true,bevelSegments:2,bevelSize:0.28,bevelThickness:0.28}); fg.center();
+  logo.add(new THREE.Mesh(fg, goldMetal));
+  // black backing plate
+  const bg=new THREE.ExtrudeGeometry(hexShape(9.6),{depth:0.7,bevelEnabled:false}); bg.center();
+  const back=new THREE.Mesh(bg, blackMetal); back.position.z=-1.3; logo.add(back);
+  // three stacked chevrons
+  const chShape=()=>{ const w=5.6,h=3.9,tk=1.5,s=new THREE.Shape();
+    s.moveTo(-w,0); s.lineTo(0,h); s.lineTo(w,0); s.lineTo(w-tk*1.5,0); s.lineTo(0,h-tk*2.0); s.lineTo(-w+tk*1.5,0); s.closePath(); return s; };
+  const cg=new THREE.ExtrudeGeometry(chShape(),{depth:1.7,bevelEnabled:true,bevelSegments:2,bevelSize:0.16,bevelThickness:0.16}); cg.center();
+  [3.6,0,-3.6].forEach(y=>{ const c=new THREE.Mesh(cg, goldMetal); c.position.set(0,y,0.3); logo.add(c); });
+  // soft glow disc behind
+  const glow=new THREE.Mesh(new THREE.CircleGeometry(15,48), new THREE.MeshBasicMaterial({color:0xffcf6a, transparent:true, opacity:0.14, fog:false})); glow.position.z=-2.4; logo.add(glow);
+  logo.position.copy(LOGO); scene.add(logo);
+}
+
+function buildParticles(){
+  const mk=(count,size,op,spread)=>{ const g=new THREE.BufferGeometry(), a=new Float32Array(count*3);
+    for(let i=0;i<count;i++){ a[i*3]=(Math.random()-0.5)*spread; a[i*3+1]=(Math.random()-0.5)*H*1.9; a[i*3+2]=Z0-Math.random()*(Z0-Z1); }
+    g.setAttribute('position', new THREE.BufferAttribute(a,3));
+    return new THREE.Points(g, new THREE.PointsMaterial({color:GOLD, size, transparent:true, opacity:op, blending:THREE.AdditiveBlending, depthWrite:false, fog:true})); };
+  particles=mk(1300, 0.55, 0.9, 150); scene.add(particles);
+  dust=mk(900, 0.3, 0.5, 190); scene.add(dust);
+}
+
+function lights(){
+  scene.add(new THREE.AmbientLight(0x20222a, 1.4));
+  const key=new THREE.SpotLight(0xFFE7B0, 900, 260, 0.7, 0.5, 1.4); key.position.set(0, H+18, LOGO.z+40); key.target.position.copy(LOGO); scene.add(key, key.target);
+  const a=new THREE.PointLight(AMBER, 700, 320); a.position.set(-30, -6, LOGO.z+70); scene.add(a);
+  const b=new THREE.PointLight(0xBFD0FF, 260, 340); b.position.set(34, 14, LOGO.z-60); scene.add(b);
+  const fill=new THREE.PointLight(0xFFCF80, 500, 200); fill.position.copy(LOGO); fill.position.z+=24; scene.add(fill);
+}
+
+function onResize(){ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); composer.setSize(innerWidth,innerHeight); }
+
+// ── "fly into the emblem" hand-off to the next scene ──
+window.bhFlyNext=function(dest){ if(trans) return; trans={dest, s:0, from:camera.position.clone(), done:false}; };
+function updateTransition(){
+  trans.s+=0.016;
+  const e=Math.min(1, trans.s/1.05), ease=e*e;                 // accelerate into the light
+  const target=new THREE.Vector3(LOGO.x, LOGO.y, LOGO.z+9);
+  camera.position.lerpVectors(trans.from, target, ease);
+  camera.lookAt(LOGO.x, LOGO.y, LOGO.z);
+  if(logo) logo.scale.setScalar(1+ease*0.7);
+  renderer.toneMappingExposure=1.0+ease*1.7;
+  if(trans.s>0.6) document.getElementById('flash').classList.add('on');
+  if(trans.s>1.15 && !trans.done){ trans.done=true; location.href=trans.dest; }
+}
+
+function loop(){
+  t+=0.016;
+  if(trans){ updateTransition(); composer.render(); return; }
+  // living hero camera: gentle breathing dolly + orbit + mouse parallax, always framing the emblem
+  const ox=Math.sin(t*0.13)*5 + mouse.x*10;
+  const oy=Math.sin(t*0.1)*2.2 - mouse.y*6;
+  camera.position.set(ox, 3+oy, 78 + Math.sin(t*0.08)*6);
+  camera.lookAt(LOGO.x, LOGO.y-1, LOGO.z);
+
+  if(logo){ logo.rotation.y=Math.sin(t*0.18)*0.16; logo.position.y=LOGO.y+Math.sin(t*0.5)*0.55; }
+  if(platform){ platform.children.forEach((c,i)=>{ if(c.material) c.material.opacity!==undefined; c.rotation.z += (i%2?0.0016:-0.0016); }); }
+  if(particles){ particles.rotation.y=t*0.006; particles.position.y=Math.sin(t*0.3)*1.5; }
+  if(dust){ dust.rotation.y=-t*0.004; }
+  composer.render();
+}
+</script>
+</body>
+</html>
