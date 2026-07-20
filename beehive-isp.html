@@ -126,6 +126,14 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
 .slide.live .body-c>*:nth-child(7){animation-delay:.46s}
 .slide.live .body-c>*:nth-child(8){animation-delay:.52s}
 .slide.live>.note{animation-delay:.30s}
+/* ── the hive comes alive: cells populate in, live cells shimmer, alerts pulse ── */
+.slide.live #idea-hive{animation:none!important}
+#idea-hive .cell{transform-box:fill-box;transform-origin:center;opacity:0;animation:cellIn .5s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+#idea-hive .c-live{animation:cellIn .5s cubic-bezier(.16,1,.3,1) both,hiveShimmer 3.6s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
+#idea-hive .c-off{animation:cellIn .5s cubic-bezier(.16,1,.3,1) both,hiveAlert 1.9s ease-in-out infinite;animation-delay:var(--d,0s),calc(var(--d,0s) + .55s)}
+@keyframes cellIn{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:scale(1)}}
+@keyframes hiveShimmer{0%,100%{fill-opacity:1}50%{fill-opacity:.7}}
+@keyframes hiveAlert{0%,100%{fill-opacity:1;stroke-width:1.5}50%{fill-opacity:.5;stroke-width:2.6}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* ─────────────────────────────────────────────────────────────
@@ -641,12 +649,12 @@ function hive(cols,rows,r,states){
   for(let c=0;c<cols;c++) for(let rw=0;rw<rows;rw++){
     const cx=r+2+c*stepX, cy=h/2+2+rw*h+(c%2?h/2:0);
     const st=states[i%states.length];
-    s+=`<polygon points="${hex(cx,cy,r-1.5)}" fill="${st[0]}" stroke="${st[1]}" stroke-width="1.5"/>`;
+    s+=`<polygon class="cell ${st[2]}" style="--d:${(i*0.022).toFixed(3)}s" points="${hex(cx,cy,r-1.5)}" fill="${st[0]}" stroke="${st[1]}" stroke-width="1.5"/>`;
     i++;
   }
   return s+'</svg>';
 }
-const LIVE=['#FDD34A','#FBC312'], VAC=['#F2EDE0','#E0D8C4'], OFF=['#FBE4E0','#D94F3D'];
+const LIVE=['#FDD34A','#FBC312','c-live'], VAC=['#F2EDE0','#E0D8C4','c-vac'], OFF=['#FBE4E0','#D94F3D','c-off'];
 const mix=[LIVE,LIVE,LIVE,LIVE,VAC,LIVE,LIVE,OFF,LIVE,LIVE,LIVE,VAC,LIVE,LIVE,LIVE,OFF,LIVE,LIVE,VAC,LIVE];
 document.getElementById('idea-hive').innerHTML  = hive(8,5,27,mix);
 
