@@ -280,6 +280,10 @@ html .grid4 .card:nth-child(8){border-color:#6a521a!important}
 html .grid4 .card:nth-child(8) .builtby .brand{background:#3a2c0e!important;border-color:#6a521a!important;color:#FFD75E!important}
 /* the cover already shows the real bee logo — don't double it with the watermark */
 html .slide[data-t="Title"]::after{display:none}
+/* product photos (drop img/<name>) render as clean contained swatches on a light tile, not tiny crops */
+html .hw.has-img{width:50px!important;height:50px!important;background:#f2efe8!important;padding:4px!important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.14),0 0 0 1px #3a2f1244!important;border-radius:9px!important}
+html .hw.has-img .flowimg{width:100%!important;height:100%!important;object-fit:contain!important;border-radius:5px!important}
 </style>
 </head>
 <body>

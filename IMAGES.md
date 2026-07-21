@@ -48,7 +48,9 @@ Small mark or wordmark, transparent background. Shown ~12px tall beside the bran
 
 ## Flow / hardware thumbnails  ->  `img/<slug>.jpg` (or .png / .webp / .svg)
 
-Square-ish product photo or screenshot; it fills the rounded thumbnail (object-fit: cover).
+Product photo or screenshot. Shown contained (whole product visible) on a light tile, ~50px.
+Best results: square-ish, product on a white or transparent background (a catalog / media-kit shot).
+Drop the file and it replaces that card's icon automatically — no markup changes.
 
 - `img/1-6-j-today-2-0-1-ready.jpg`  &nbsp; (1.6-J today, 2.0.1 ready)
 - `img/access-points.jpg`  &nbsp; (Access points)
