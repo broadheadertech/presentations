@@ -231,6 +231,55 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   .slide:last-child{page-break-after:auto}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+/* ── elevated dark cinematic theme + atmosphere (matches the Beehive keynote) ── */
+html body,html #stage{background:#0A0A0A}
+html .slide,html .slide.cream,html .slide.dark{background:#0b0b0d!important}
+html h1,html h2,html .l-title{color:#fff!important}
+html .sub,html .l-lead{color:#A99E86!important}
+html .eyebrow,html .l-eyb{color:var(--gold)!important}
+html .card{background:#15161a!important;border-color:#2b2c31!important}
+html .card.tint{background:#1a1710!important}
+html .card.solid{background:#08080a!important;border-color:#26272c!important}
+html .card.hot{background:#241d10!important;border-color:#4a3a12!important}
+html .card h3,html .row h3,html .l-kit .row h3{color:#fff!important}
+html .card p,html .row p,html .desc,html .slide .card>p,html .l-kit .row p{color:#C7BCA6!important}
+html .k{color:#8C8471!important}
+html .lab,html .big,html .num{color:var(--gold)!important}
+html .note{color:#C9A24B!important}
+html .hexdot{background:#241d10!important;color:var(--gold)!important}
+html .hw{background:#241d10!important;color:var(--gold)!important}
+html .brand{background:#1b1c21!important;border-color:#3a3b40!important;color:#EDE6D6!important}
+html .brand::before{background:var(--gold)!important}
+html .brands::before{color:#8C8471!important}
+html .pill{background:#2a2416!important;color:var(--gold)!important}
+html .pill.yes{background:#12301f!important;color:#7CD9A6!important}
+html .pill.no{background:#301616!important;color:#E79A8E!important}
+/* atmosphere: glow + honeycomb + bee watermark */
+html .slide::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 78% 28%, rgba(242,169,0,.11), transparent 55%),
+    radial-gradient(85% 60% at 48% 118%, rgba(255,199,87,.05), transparent 60%),
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='28'%20height='49'%20viewBox='0%200%2028%2049'%3E%3Cg%20fill='%23FFC857'%20fill-opacity='0.03'%20fill-rule='evenodd'%3E%3Cpath%20d='M13.99%209.25l13%207.5v15l-13%207.5L1%2031.75v-15l12.99-7.5zM3%2017.402l10.99%206.35%2010.99-6.35v-9.4L13.99%201.65%203%208.002v9.4z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:auto,auto,48px 84px}
+html .slide::after{content:"";position:absolute;z-index:0;pointer-events:none;right:-60px;top:50%;
+  width:500px;height:500px;transform:translateY(-50%);opacity:.05;
+  background:url("beehive-bee.png") center/contain no-repeat}
+html .slide.live>*{position:relative;z-index:1}
+html .slide.live{justify-content:center}
+/* cards size to their content and float centered, instead of stretching tall with empty bottoms */
+html .slide.live .grid2,html .slide.live .grid3,html .slide.live .grid4{align-content:center}
+/* ISP BOM hierarchy: the skilled pair (01 gateway · 02 RADIUS) and the board we build (08) stand out;
+   the commodity boxes stay muted — "boring on purpose" */
+html .grid4 .card:nth-child(1),html .grid4 .card:nth-child(2),html .grid4 .card:nth-child(8){
+  background:linear-gradient(180deg,#201b10,#15120b)!important;border-color:#4a3a12!important;
+  box-shadow:0 0 26px -8px rgba(242,169,0,.30),inset 0 1px 0 rgba(255,199,87,.10)}
+html .grid4 .card:nth-child(1) .hw,html .grid4 .card:nth-child(2) .hw,html .grid4 .card:nth-child(8) .hw{
+  background:#3a2c0e!important;color:#FFD75E!important;box-shadow:0 0 0 1px rgba(255,199,87,.22)}
+html .grid4 .card:nth-child(1) .k,html .grid4 .card:nth-child(2) .k,html .grid4 .card:nth-child(8) .k{color:#FFC857!important}
+html .grid4 .card:nth-child(8){border-color:#6a521a!important}
+html .grid4 .card:nth-child(8) .builtby .brand{background:#3a2c0e!important;border-color:#6a521a!important;color:#FFD75E!important}
+/* the cover already shows the real bee logo — don't double it with the watermark */
+html .slide[data-t="Title"]::after{display:none}
 </style>
 </head>
 <body>
@@ -263,7 +312,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   <p class="note">The concrete walls that used to isolate each room now work against you — plan for coverage, turn on client isolation, and let RADIUS keep subscribers apart.</p>
 </section>
 
-<!-- 12 · Line 01 -->
+<!-- Line 01 · ISP -->
 <section class="slide cream" data-t="Dorm internet">
   <div class="body-c grid2" style="grid-template-columns:1.05fr .95fr;align-items:center;gap:46px">
     <div>
@@ -281,7 +330,24 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   </div>
 </section>
 
-<!-- 13 · Line 02 -->
+<!-- Line 01 · ISP — hardware -->
+<section class="slide" data-t="ISP hardware">
+  <div class="head"><h2>What we need for the ISP</h2>
+    <p class="sub">The bill of materials for one building — and it reads the same for the next ten. Sample brands per line; pick on price and stock.</p></div>
+  <div class="body-c grid4 rd" style="align-content:start;gap:14px">
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="6.5" rx="1.5"/><rect x="3.5" y="13" width="17" height="6.5" rx="1.5"/><path d="M7 7.7h.01M7 16.2h.01M11 7.7h6M11 16.2h6"/></svg></div><div><div class="k">01 · Core</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">MikroTik gateway</h3></div></div><p style="font-size:13px">NAT, firewall, hotspot and PCQ queues. The one box that needs skill.</p><div class="brands"><span class="brand">MikroTik</span><span class="brand">Ubiquiti</span><span class="brand">Cisco</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.2"/></svg></div><div><div class="k">02 · Auth</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">RADIUS + portal</h3></div></div><p style="font-size:13px">Accounts, plans, expiry and the device limit — the brain the gateway asks.</p><div class="brands"><span class="brand">FreeRADIUS</span><span class="brand">daloRADIUS</span><span class="brand">RADIUSdesk</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a9 9 0 0 1 14 0M8 15.3a5 5 0 0 1 8 0"/><circle cx="12" cy="18.5" r="1.1" fill="currentColor" stroke="none"/></svg></div><div><div class="k">03 · Reach</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Access points</h3></div></div><p style="font-size:13px">Wired-backhaul APs, one roaming SSID, client isolation on.</p><div class="brands"><span class="brand">Omada</span><span class="brand">UniFi</span><span class="brand">Cambium</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8.5" width="18" height="7" rx="1.5"/><path d="M6 15.5v2M9 15.5v2M12 15.5v2M15 15.5v2M18 15.5v2M6.5 12h.01M9.5 12h.01M12.5 12h.01"/></svg></div><div><div class="k">04 · Backhaul</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">PoE switches</h3></div></div><p style="font-size:13px">Powers and feeds each AP over Cat6. No VLAN gymnastics.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Cisco</span><span class="brand">D-Link</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="9" rx="1.5"/><path d="M8 14.5h.01M11 14.5h5"/><path d="M12 10V4M9.5 6.5 12 4l2.5 2.5"/></svg></div><div><div class="k">05 · Uplink</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Fibre + ONT</h3></div></div><p style="font-size:13px">SME/business fibre, ONT in the rack. A static IP if you can get one.</p><div class="brands"><span class="brand">PLDT</span><span class="brand">Converge</span><span class="brand">Globe</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="15" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M10.5 9l-2 3.2h3l-2 3.2"/></svg></div><div><div class="k">06 · Power</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Rack + UPS</h3></div></div><p style="font-size:13px">Wall rack, UPS, surge, a proper earth. The core must ride brownouts.</p><div class="brands"><span class="brand">APC</span><span class="brand">CyberPower</span><span class="brand">Eaton</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 20 8v8l-8 4.5L4 16V8l8-4.5Z"/><path d="M4 8l8 4.5L20 8M12 12.5V21"/></svg></div><div><div class="k">07 · Spares</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Spare AP + PoE</h3></div></div><p style="font-size:13px">Swap-on-fail beats truck-roll debugging. Keep a shelf stocked.</p><div class="brands"><span class="brand">Omada</span><span class="brand">UniFi</span><span class="brand">Cambium</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18M6 6.6h.01"/><path d="M7 14.5l2.5-2.5 2 2 3.5-3.5"/></svg></div><div><div class="k">08 · Eyes</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">The hive board</h3></div></div><p style="font-size:13px">Our own web service — every account, device and AP on one screen.</p><div class="brands builtby"><span class="brand">Broadheader</span></div></div>
+  </div>
+  <p class="note">One skilled pairing — the gateway and its RADIUS — everything else boring on purpose. That's what makes the tenth building as easy as the first.</p>
+</section>
+
+<!-- Line 02 · EV charging -->
 <section class="slide dark" data-t="EV charging">
   <div class="body-c grid2" style="grid-template-columns:1.05fr .95fr;align-items:center;gap:46px">
     <div>
@@ -299,42 +365,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   </div>
 </section>
 
-<!-- 14 · Line 03 -->
-<section class="slide cream" data-t="Parking access">
-  <div class="body-c grid2" style="grid-template-columns:1.05fr .95fr;align-items:center;gap:46px">
-    <div>
-      <div class="l-eyb">Line 03 · Parking</div>
-      <div class="l-title">Parking access</div>
-      <p class="l-lead">UHF tags at the windscreen, long-range readers at the gate, plate cameras for guests. The barrier stays dumb; the wallet decides.</p>
-      <span class="pill">One wallet</span>
-    </div>
-    <div class="l-kit">
-      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="11" rx="2"/><path d="M17.5 9.5a4 4 0 0 1 0 5M20 7.5a8 8 0 0 1 0 9"/></svg></div><div><h3>Tag + reader</h3><p>Hands-free UHF entry, read at the lane at speed.</p></div></div>
-      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="3" height="10" rx="1"/><path d="M6 11h13"/><path d="M9.5 11v0M13 11v0M16.5 11v0"/></svg></div><div><h3>Boom + controller</h3><p>A relay lifts the arm once the wallet checks out.</p></div></div>
-      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7.5" width="12" height="9" rx="2"/><circle cx="8.5" cy="12" r="2.3"/><path d="M14.5 10l5-2v8l-5-2"/></svg></div><div><h3>ANPR cameras</h3><p>Plate reads for guests and a photo on every pass.</p></div></div>
-      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19M6 14.5h4"/></svg></div><div><h3>One wallet</h3><p>The same balance that pays for charging.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- 13 -->
-<section class="slide" data-t="ISP hardware">
-  <div class="head"><h2>What we need for the ISP</h2>
-    <p class="sub">The bill of materials for one building — and it reads the same for the next ten. Sample brands per line; pick on price and stock.</p></div>
-  <div class="body-c grid4 rd" style="align-content:start;gap:14px">
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="6.5" rx="1.5"/><rect x="3.5" y="13" width="17" height="6.5" rx="1.5"/><path d="M7 7.7h.01M7 16.2h.01M11 7.7h6M11 16.2h6"/></svg></div><div><div class="k">01 · Core</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">MikroTik gateway</h3></div></div><p style="font-size:13px">NAT, firewall, hotspot and PCQ queues. The one box that needs skill.</p><div class="brands"><span class="brand">MikroTik</span><span class="brand">Ubiquiti</span><span class="brand">Cisco</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.2"/></svg></div><div><div class="k">02 · Auth</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">RADIUS + portal</h3></div></div><p style="font-size:13px">Accounts, plans, expiry and the device limit — the brain the gateway asks.</p><div class="brands"><span class="brand">FreeRADIUS</span><span class="brand">daloRADIUS</span><span class="brand">RADIUSdesk</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a9 9 0 0 1 14 0M8 15.3a5 5 0 0 1 8 0"/><circle cx="12" cy="18.5" r="1.1" fill="currentColor" stroke="none"/></svg></div><div><div class="k">03 · Reach</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Access points</h3></div></div><p style="font-size:13px">Wired-backhaul APs, one roaming SSID, client isolation on.</p><div class="brands"><span class="brand">Omada</span><span class="brand">UniFi</span><span class="brand">Cambium</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8.5" width="18" height="7" rx="1.5"/><path d="M6 15.5v2M9 15.5v2M12 15.5v2M15 15.5v2M18 15.5v2M6.5 12h.01M9.5 12h.01M12.5 12h.01"/></svg></div><div><div class="k">04 · Backhaul</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">PoE switches</h3></div></div><p style="font-size:13px">Powers and feeds each AP over Cat6. No VLAN gymnastics.</p><div class="brands"><span class="brand">TP-Link</span><span class="brand">Cisco</span><span class="brand">D-Link</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="9" rx="1.5"/><path d="M8 14.5h.01M11 14.5h5"/><path d="M12 10V4M9.5 6.5 12 4l2.5 2.5"/></svg></div><div><div class="k">05 · Uplink</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Fibre + ONT</h3></div></div><p style="font-size:13px">SME/business fibre, ONT in the rack. A static IP if you can get one.</p><div class="brands"><span class="brand">PLDT</span><span class="brand">Converge</span><span class="brand">Globe</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="15" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M10.5 9l-2 3.2h3l-2 3.2"/></svg></div><div><div class="k">06 · Power</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Rack + UPS</h3></div></div><p style="font-size:13px">Wall rack, UPS, surge, a proper earth. The core must ride brownouts.</p><div class="brands"><span class="brand">APC</span><span class="brand">CyberPower</span><span class="brand">Eaton</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 20 8v8l-8 4.5L4 16V8l8-4.5Z"/><path d="M4 8l8 4.5L20 8M12 12.5V21"/></svg></div><div><div class="k">07 · Spares</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">Spare AP + PoE</h3></div></div><p style="font-size:13px">Swap-on-fail beats truck-roll debugging. Keep a shelf stocked.</p><div class="brands"><span class="brand">Omada</span><span class="brand">UniFi</span><span class="brand">Cambium</span></div></div>
-    <div class="card" style="display:flex;flex-direction:column"><div class="hwhead"><div class="hw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18M6 6.6h.01"/><path d="M7 14.5l2.5-2.5 2 2 3.5-3.5"/></svg></div><div><div class="k">08 · Eyes</div><h3 style="font-family:var(--disp);font-size:16.5px;color:var(--comb);margin:2px 0 0;font-weight:600">The hive board</h3></div></div><p style="font-size:13px">Our own web service — every account, device and AP on one screen.</p><div class="brands builtby"><span class="brand">Broadheader</span></div></div>
-  </div>
-  <p class="note">One skilled pairing — the gateway and its RADIUS — everything else boring on purpose. That's what makes the tenth building as easy as the first.</p>
-</section>
-
-<!-- 14 -->
+<!-- Line 02 · EV charging — kit -->
 <section class="slide" data-t="EV &amp; parking kit">
   <div class="head"><h2>EV charging &amp; parking, the same way</h2>
     <p class="sub">OCPP for the chargers, UHF for the gate, and one prepaid wallet across both. Sample brands shown — buy on protocol, not on brand.</p></div>
@@ -358,7 +389,25 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   </div>
 </section>
 
-<!-- 15 -->
+<!-- Line 03 · Parking -->
+<section class="slide cream" data-t="Parking access">
+  <div class="body-c grid2" style="grid-template-columns:1.05fr .95fr;align-items:center;gap:46px">
+    <div>
+      <div class="l-eyb">Line 03 · Parking</div>
+      <div class="l-title">Parking access</div>
+      <p class="l-lead">UHF tags at the windscreen, long-range readers at the gate, plate cameras for guests. The barrier stays dumb; the wallet decides.</p>
+      <span class="pill">One wallet</span>
+    </div>
+    <div class="l-kit">
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="11" rx="2"/><path d="M17.5 9.5a4 4 0 0 1 0 5M20 7.5a8 8 0 0 1 0 9"/></svg></div><div><h3>Tag + reader</h3><p>Hands-free UHF entry, read at the lane at speed.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="3" height="10" rx="1"/><path d="M6 11h13"/><path d="M9.5 11v0M13 11v0M16.5 11v0"/></svg></div><div><h3>Boom + controller</h3><p>A relay lifts the arm once the wallet checks out.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7.5" width="12" height="9" rx="2"/><circle cx="8.5" cy="12" r="2.3"/><path d="M14.5 10l5-2v8l-5-2"/></svg></div><div><h3>ANPR cameras</h3><p>Plate reads for guests and a photo on every pass.</p></div></div>
+      <div class="row"><div class="hexdot"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 9.5h19M6 14.5h4"/></svg></div><div><h3>One wallet</h3><p>The same balance that pays for charging.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Line 03 · Parking — kit -->
 <section class="slide" data-t="Parking kit">
   <div class="head"><h2>The parking kit, gate to wallet</h2>
     <p class="sub">One lane, end to end: a tag is read, the controller checks the wallet, the barrier lifts — a camera covers guests, and our own service ties it together. Off-the-shelf hardware, our intelligence.</p></div>
@@ -372,6 +421,7 @@ body.fs #rail .btns #bf{background:var(--honey);color:var(--comb)}
   </div>
   <p class="note">Everything but the last box is off-the-shelf and second-sourced — the wallet, the rules and the audit are the part we own.</p>
 </section>
+
 
 </div>
 
@@ -499,6 +549,7 @@ addEventListener('keydown',e=>{
 });
 addEventListener('resize',fit);
 fit();go(0);
+{ const _s=parseInt(new URLSearchParams(location.search).get('slide')); if(_s) go(Math.max(0,Math.min(N-1,_s-1))); }
 
 /* ── optional drop-in images: logos + flow photos, graceful fallback ── */
 function bhSlug(s){return (s||'').trim().toLowerCase().replace(/&amp;|&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}

@@ -272,6 +272,29 @@ html.seq .pill{background:#2a2416;color:var(--gold)}
 html.seq .pill.yes{background:#12301f;color:#7CD9A6}
 html.seq .pill.no{background:#301616;color:#E79A8E}
 html.seq .hw{background:#241d10;color:var(--gold)}
+/* atmosphere: tie the deck pages to the 3D scenes (glow + honeycomb + bee watermark) */
+html.seq .slide::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 78% 28%, rgba(242,169,0,.11), transparent 55%),
+    radial-gradient(85% 60% at 48% 118%, rgba(255,199,87,.05), transparent 60%),
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='28'%20height='49'%20viewBox='0%200%2028%2049'%3E%3Cg%20fill='%23FFC857'%20fill-opacity='0.03'%20fill-rule='evenodd'%3E%3Cpath%20d='M13.99%209.25l13%207.5v15l-13%207.5L1%2031.75v-15l12.99-7.5zM3%2017.402l10.99%206.35%2010.99-6.35v-9.4L13.99%201.65%203%208.002v9.4z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:auto,auto,48px 84px}
+html.seq .slide::after{content:"";position:absolute;z-index:0;pointer-events:none;right:-60px;top:50%;
+  width:500px;height:500px;transform:translateY(-50%);opacity:.05;
+  background:url("beehive-bee.png") center/contain no-repeat}
+html.seq .slide.live>*{position:relative;z-index:1}
+html.seq .slide.live{justify-content:center}
+/* cards size to their content and float centered, instead of stretching tall with empty bottoms */
+html.seq .slide.live .grid2,html.seq .slide.live .grid3,html.seq .slide.live .grid4{align-content:center}
+/* the cover already shows the real bee logo — don't double it with the watermark */
+html.seq .slide[data-t="Title"]::after{display:none}
+/* dark-theme the inline network diagram on page 4 */
+html.seq .slide svg rect[fill="#FDF8EE"]{fill:#15161a}
+html.seq .slide svg rect[stroke="#E6DFCE"]{stroke:#2b2c31}
+html.seq .slide svg rect[fill="#16130E"]{fill:#0a0a0c;stroke:#3a2f12}
+html.seq .slide svg rect[fill="#FFF0CC"]{fill:#241d10;stroke:#4a3a12}
+html.seq .slide svg text[fill="#16130E"]{fill:#EDE6D6}
+html.seq .slide svg text[fill="#9A6F14"]{fill:#FFD75E}
 html.seq .slide.live{animation:seqZoom .7s cubic-bezier(.16,1,.3,1) both}
 @keyframes seqZoom{from{opacity:0;scale:.82}to{opacity:1;scale:1}}
 </style>
