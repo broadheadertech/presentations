@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beehive — Scene 06 · Enterprise Hardware Lineup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0A0A; --amber:#FFC857; --gold:#FFD76A; --honey:#FBC312;
+  --txt:#EFE7D6; --txt-dim:#B9AF97; --txt-mute:#7C7364;
+  --edge:rgba(255,200,87,.34); --edge-soft:rgba(255,200,87,.12);
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--sans);color:var(--txt)}
+
+#stage{position:fixed;inset:0;display:grid;place-items:center;
+  background:radial-gradient(120% 90% at 50% -6%, #17130b 0%, #0b0a07 46%, #050403 100%)}
+#scene{position:relative;width:1280px;height:720px;transform-origin:center center;overflow:hidden;
+  background:
+   radial-gradient(60% 46% at 50% 26%, rgba(255,200,87,.10), transparent 62%),
+   radial-gradient(120% 120% at 50% 122%, rgba(255,183,60,.13), transparent 55%),
+   linear-gradient(180deg,#0b0a07 0%, #090806 55%, #060504 100%)}
+
+/* ── environment ── */
+.env{position:absolute;inset:0;overflow:hidden}
+#floor{position:absolute;left:-30%;right:-30%;bottom:-10%;height:56%;
+  transform:perspective(680px) rotateX(68deg);transform-origin:50% 100%;
+  background:
+   repeating-linear-gradient(90deg, transparent 0 84px, rgba(255,200,87,.085) 84px 85px),
+   repeating-linear-gradient(0deg, transparent 0 84px, rgba(255,200,87,.05) 84px 85px);
+  -webkit-mask-image:radial-gradient(66% 92% at 50% 6%, #000 0%, transparent 82%);
+  mask-image:radial-gradient(66% 92% at 50% 6%, #000 0%, transparent 82%)}
+#floorglow{position:absolute;left:0;right:0;bottom:-6%;height:42%;pointer-events:none;
+  background:radial-gradient(48% 120% at 50% 100%, rgba(255,183,60,.20), transparent 70%)}
+.column{position:absolute;top:-6%;bottom:-6%;width:150px;opacity:.42;background-size:36px 32px;
+  background-image:
+   linear-gradient(30deg,#14110b 12%, transparent 12.5% 87%, #14110b 87.5%),
+   linear-gradient(150deg,#14110b 12%, transparent 12.5% 87%, #14110b 87.5%),
+   linear-gradient(30deg, transparent 62%, rgba(255,200,87,.09) 63% 65%, transparent 66%);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 16%,#000 84%,transparent);
+  mask-image:linear-gradient(180deg,transparent,#000 16%,#000 84%,transparent)}
+.column.l{left:-30px;transform:skewY(6deg)} .column.r{right:-30px;transform:skewY(-6deg)}
+#ceiling{position:absolute;left:-10%;right:-10%;top:-16%;height:32%;opacity:.42;
+  transform:perspective(560px) rotateX(-58deg);transform-origin:50% 0;
+  background:repeating-linear-gradient(90deg, transparent 0 74px, rgba(180,190,210,.05) 74px 75px),
+            repeating-linear-gradient(0deg, transparent 0 48px, rgba(180,190,210,.045) 48px 49px);
+  -webkit-mask-image:radial-gradient(80% 100% at 50% 100%, #000, transparent 76%);
+  mask-image:radial-gradient(80% 100% at 50% 100%, #000, transparent 76%)}
+/* light streak on the floor linking all pedestals */
+#streak{position:absolute;left:8%;right:8%;bottom:150px;height:2px;z-index:1;
+  background:linear-gradient(90deg, transparent, rgba(255,215,106,.55) 12%, rgba(255,215,106,.55) 88%, transparent);
+  box-shadow:0 0 16px rgba(255,200,87,.5)}
+#streak::after{content:"";position:absolute;top:-2px;left:0;width:60px;height:6px;border-radius:6px;filter:blur(1px);
+  background:linear-gradient(90deg,transparent,#FFE9A8,transparent);animation:slide 4.6s linear infinite}
+@keyframes slide{from{transform:translateX(0);opacity:0}8%{opacity:1}92%{opacity:1}to{transform:translateX(1050px);opacity:0}}
+#fog{position:absolute;inset:0;pointer-events:none;background:radial-gradient(58% 42% at 50% 58%, rgba(255,200,87,.045), transparent 70%)}
+#particles{position:absolute;inset:0;pointer-events:none;z-index:2}
+#vig{position:absolute;inset:0;pointer-events:none;z-index:6;
+  background:radial-gradient(ellipse 76% 74% at 50% 42%, transparent 54%, rgba(0,0,0,.6) 100%)}
+
+/* ── UI header ── */
+.ui{position:absolute;inset:0;z-index:5;padding:32px 46px 26px;display:flex;flex-direction:column}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:700;font-size:16px;color:#fff}
+.brand .hx{width:20px;height:22px;background:var(--gold);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);box-shadow:0 0 16px rgba(255,215,106,.6)}
+.scenetag{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--txt-mute);text-align:right;line-height:1.7}
+.scenetag b{color:var(--amber);font-weight:600}
+.head{text-align:center;margin-top:4px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--amber);margin-bottom:9px}
+h1{font-family:var(--disp);font-weight:700;font-size:34px;letter-spacing:-.02em;line-height:1.03;color:#fff}
+h1 span{color:var(--gold)}
+.subtitle{margin-top:8px;font-size:13px;color:var(--txt-dim);max-width:74ch;margin:8px auto 0;line-height:1.5}
+
+/* ── the 5-pedestal lineup ── */
+.lineup{flex:1;min-height:0;display:flex;align-items:flex-end;justify-content:center;gap:22px;padding:0 6px 8px}
+.ped{position:relative;flex:1;max-width:216px;display:flex;flex-direction:column;align-items:center;
+  opacity:0;transform:translateY(20px);animation:rise .9s cubic-bezier(.16,1,.3,1) forwards}
+.ped:nth-child(1){animation-delay:.10s} .ped:nth-child(2){animation-delay:.22s}
+.ped:nth-child(3){animation-delay:.34s} .ped:nth-child(4){animation-delay:.46s} .ped:nth-child(5){animation-delay:.58s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+.label{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:.14em;color:#fff;text-transform:uppercase}
+.kind{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-top:4px}
+.tick{width:1px;height:18px;margin:9px 0 3px;background:linear-gradient(180deg,var(--edge),transparent)}
+
+.dev{position:relative;width:100%;height:120px;display:grid;place-items:center;margin-bottom:2px}
+.dev::before{content:"";position:absolute;inset:auto 0 -6px;height:70px;
+  background:radial-gradient(60% 100% at 50% 0%, rgba(255,200,87,.16), transparent 70%);filter:blur(2px)}
+.dev svg{width:150px;height:auto;position:relative;filter:drop-shadow(0 10px 16px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(255,200,87,.14));
+  animation:float 5.5s ease-in-out infinite}
+.ped:nth-child(2) .dev svg{animation-delay:-.8s} .ped:nth-child(3) .dev svg{animation-delay:-1.6s}
+.ped:nth-child(4) .dev svg{animation-delay:-2.4s} .ped:nth-child(5) .dev svg{animation-delay:-3.2s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* pedestal plinth */
+.plinth{position:relative;width:100%;height:78px}
+.plinth .top{position:absolute;left:8%;right:8%;top:0;height:16px;border-radius:50%/60%;
+  background:linear-gradient(180deg,#2a2620,#14120d);
+  box-shadow:inset 0 1px 0 rgba(255,215,106,.35), 0 0 22px rgba(255,200,87,.14)}
+.plinth .body{position:absolute;left:15%;right:15%;top:9px;bottom:8px;border-radius:6px 6px 4px 4px;
+  background:linear-gradient(180deg,#211d17 0%, #0f0d0a 100%);
+  border:1px solid rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.4), 0 14px 30px -12px rgba(0,0,0,.8)}
+.plinth .body::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.75}
+.plinth .body::after{content:"";position:absolute;left:12%;right:12%;bottom:6px;height:1px;background:rgba(255,200,87,.18)}
+.plinth .base{position:absolute;left:10%;right:10%;bottom:0;height:5px;border-radius:50%;
+  background:radial-gradient(50% 100% at 50% 0%, rgba(255,200,87,.30), transparent 75%)}
+
+/* device SVG palette */
+.body-fill{fill:#D9DCE2} .body-fill2{fill:#B9BEC7} .body-dk{fill:#3A3E46} .body-dk2{fill:#23262C}
+.stroke{stroke:#8b8f98;stroke-width:1.4;fill:none} .amberled{fill:var(--gold)} .greenled{fill:#57D08A} .blueled{fill:#5AA8FF}
+.port{fill:#15171b}
+
+.foot{position:absolute;left:0;right:0;bottom:12px;z-index:5;text-align:center;
+  font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--txt-mute)}
+@media (max-width:560px){ .subtitle{display:none} }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="scene">
+    <div class="env">
+      <div id="ceiling"></div>
+      <div class="column l"></div>
+      <div class="column r"></div>
+      <div id="floor"></div>
+      <div id="floorglow"></div>
+      <div id="streak"></div>
+      <div id="fog"></div>
+    </div>
+    <canvas id="particles"></canvas>
+
+    <div class="ui">
+      <div class="topbar">
+        <div class="brand"><span class="hx"></span>Beehive</div>
+        <div class="scenetag"><b>Scene 06</b><br>Enterprise Hardware Lineup</div>
+      </div>
+      <div class="head">
+        <div class="eyebrow">Built on Proven, Second-Sourced Enterprise Gear</div>
+        <h1>The <span>Core Hardware</span> Lineup</h1>
+        <p class="subtitle">Router, access, switching and fibre — off-the-shelf enterprise hardware, unified by one Beehive platform.</p>
+      </div>
+
+      <div class="lineup">
+
+        <!-- 1 · MIKROTIK ROUTER -->
+        <div class="ped">
+          <div class="label">MikroTik</div><div class="kind">Enterprise Router</div><div class="tick"></div>
+          <div class="dev">
+            <svg viewBox="0 0 200 130">
+              <rect x="86" y="6" width="3" height="40" rx="1.5" class="body-fill2"/>
+              <rect x="110" y="2" width="3" height="44" rx="1.5" class="body-fill2"/>
+              <rect x="134" y="8" width="3" height="38" rx="1.5" class="body-fill2"/>
+              <rect x="30" y="46" width="140" height="60" rx="9" class="body-fill"/>
+              <rect x="30" y="46" width="140" height="60" rx="9" class="stroke"/>
+              <rect x="30" y="46" width="140" height="16" rx="9" class="body-fill2"/>
+              <rect x="44" y="78" width="16" height="16" rx="2" class="port"/>
+              <rect x="66" y="78" width="16" height="16" rx="2" class="port"/>
+              <rect x="88" y="78" width="16" height="16" rx="2" class="port"/>
+              <rect x="110" y="78" width="16" height="16" rx="2" class="port"/>
+              <rect x="132" y="78" width="16" height="16" rx="2" class="port"/>
+              <circle cx="154" cy="72" r="2.4" class="amberled"/>
+              <circle cx="46" cy="55" r="2" class="greenled"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 2 · UBIQUITI UNIFI AP -->
+        <div class="ped">
+          <div class="label">Ubiquiti</div><div class="kind">UniFi Access Point</div><div class="tick"></div>
+          <div class="dev">
+            <svg viewBox="0 0 200 130">
+              <ellipse cx="100" cy="70" rx="66" ry="46" class="body-fill"/>
+              <ellipse cx="100" cy="70" rx="66" ry="46" class="stroke"/>
+              <ellipse cx="100" cy="66" rx="66" ry="46" fill="#EDEFF3"/>
+              <ellipse cx="100" cy="66" rx="66" ry="46" class="stroke"/>
+              <ellipse cx="100" cy="66" rx="30" ry="21" fill="#F7F8FA"/>
+              <ellipse cx="100" cy="66" rx="30" ry="21" stroke="#c9ccd3" stroke-width="1.2" fill="none"/>
+              <circle cx="100" cy="66" r="4" class="blueled"/>
+              <ellipse cx="100" cy="66" r="4" rx="10" ry="7" fill="none" stroke="rgba(90,168,255,.4)" stroke-width="1.2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 3 · TP-LINK OMADA -->
+        <div class="ped">
+          <div class="label">TP-Link</div><div class="kind">Omada Gateway</div><div class="tick"></div>
+          <div class="dev">
+            <svg viewBox="0 0 200 130">
+              <rect x="70" y="6" width="3" height="40" rx="1.5" class="body-fill2"/>
+              <rect x="128" y="6" width="3" height="40" rx="1.5" class="body-fill2"/>
+              <rect x="40" y="46" width="120" height="58" rx="10" class="body-fill"/>
+              <rect x="40" y="46" width="120" height="58" rx="10" class="stroke"/>
+              <rect x="40" y="46" width="120" height="15" rx="10" class="body-fill2"/>
+              <circle cx="58" cy="78" r="3" class="greenled"/>
+              <circle cx="74" cy="78" r="3" class="greenled"/>
+              <circle cx="90" cy="78" r="3" class="amberled"/>
+              <circle cx="106" cy="78" r="3" class="body-dk"/>
+              <rect x="120" y="72" width="30" height="14" rx="2" class="port"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 4 · D-LINK SWITCH -->
+        <div class="ped">
+          <div class="label">D-Link</div><div class="kind">Managed Switch</div><div class="tick"></div>
+          <div class="dev">
+            <svg viewBox="0 0 200 130">
+              <rect x="14" y="48" width="172" height="42" rx="6" class="body-fill"/>
+              <rect x="14" y="48" width="172" height="42" rx="6" class="stroke"/>
+              <rect x="14" y="48" width="172" height="12" rx="6" class="body-fill2"/>
+              <g class="port">
+                <rect x="26" y="64" width="9" height="8" rx="1"/><rect x="37" y="64" width="9" height="8" rx="1"/>
+                <rect x="48" y="64" width="9" height="8" rx="1"/><rect x="59" y="64" width="9" height="8" rx="1"/>
+                <rect x="70" y="64" width="9" height="8" rx="1"/><rect x="81" y="64" width="9" height="8" rx="1"/>
+                <rect x="92" y="64" width="9" height="8" rx="1"/><rect x="103" y="64" width="9" height="8" rx="1"/>
+                <rect x="114" y="64" width="9" height="8" rx="1"/><rect x="125" y="64" width="9" height="8" rx="1"/>
+                <rect x="136" y="64" width="9" height="8" rx="1"/><rect x="147" y="64" width="9" height="8" rx="1"/>
+                <rect x="26" y="76" width="9" height="8" rx="1"/><rect x="37" y="76" width="9" height="8" rx="1"/>
+                <rect x="48" y="76" width="9" height="8" rx="1"/><rect x="59" y="76" width="9" height="8" rx="1"/>
+                <rect x="70" y="76" width="9" height="8" rx="1"/><rect x="81" y="76" width="9" height="8" rx="1"/>
+                <rect x="92" y="76" width="9" height="8" rx="1"/><rect x="103" y="76" width="9" height="8" rx="1"/>
+                <rect x="114" y="76" width="9" height="8" rx="1"/><rect x="125" y="76" width="9" height="8" rx="1"/>
+                <rect x="136" y="76" width="9" height="8" rx="1"/><rect x="147" y="76" width="9" height="8" rx="1"/>
+              </g>
+              <rect x="162" y="64" width="14" height="20" rx="2" class="port"/>
+              <circle cx="20" cy="56" r="1.8" class="amberled"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 5 · GPON OLT/ONT -->
+        <div class="ped">
+          <div class="label">GPON</div><div class="kind">OLT · ONT Fibre</div><div class="tick"></div>
+          <div class="dev">
+            <svg viewBox="0 0 200 130">
+              <rect x="46" y="34" width="108" height="72" rx="9" fill="#F4F6F9"/>
+              <rect x="46" y="34" width="108" height="72" rx="9" class="stroke"/>
+              <rect x="46" y="34" width="108" height="16" rx="9" fill="#E7EAEF"/>
+              <rect x="58" y="60" width="36" height="12" rx="2" class="port"/>
+              <rect x="58" y="78" width="36" height="12" rx="2" class="port"/>
+              <circle cx="112" cy="60" r="3" class="greenled"/>
+              <circle cx="124" cy="60" r="3" class="greenled"/>
+              <circle cx="112" cy="72" r="3" class="amberled"/>
+              <circle cx="124" cy="72" r="3" class="body-dk"/>
+              <path d="M154 70 q22 0 22 -14" fill="none" stroke="var(--gold)" stroke-width="2.2"/>
+              <circle cx="176" cy="56" r="2.6" class="amberled"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:22px;padding:0 6px 6px">
+        <div class="plinth-row" style="display:flex;justify-content:center;gap:22px;width:100%">
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">Broadheader Information Technology Solutions · Beehive Ecosystem</div>
+    <div id="vig"></div>
+  </div>
+</div>
+
+<script>
+/* inject the plinths under each device (kept in JS so the lineup stays one flex row) */
+(function(){
+  document.querySelectorAll('.ped').forEach(function(p){
+    var pl=document.createElement('div'); pl.className='plinth';
+    pl.innerHTML='<div class="top"></div><div class="body"></div><div class="base"></div>';
+    p.appendChild(pl);
+  });
+})();
+
+/* fit the 1280×720 stage into the viewport */
+(function(){
+  var scene=document.getElementById('scene');
+  function fit(){ var s=Math.min(innerWidth/1280, innerHeight/720); scene.style.transform='scale('+s+')'; }
+  addEventListener('resize',fit); fit();
+})();
+
+/* floating golden particles */
+(function(){
+  var c=document.getElementById('particles'), x=c.getContext('2d'), W=1280,H=720,N=64,p=[];
+  c.width=W; c.height=H;
+  function r(a,b){return a+(b-a)*Math.random();}
+  for(var i=0;i<N;i++)p.push({x:r(0,W),y:r(0,H),r:r(.5,2),vy:r(-.16,-.5),vx:r(-.1,.1),a:r(.14,.66)});
+  (function t(){
+    x.clearRect(0,0,W,H);
+    for(var i=0;i<N;i++){var d=p[i]; d.y+=d.vy; d.x+=d.vx;
+      if(d.y<-6){d.y=H+6;d.x=r(0,W);} if(d.x<-6)d.x=W+6; if(d.x>W+6)d.x=-6;
+      var g=x.createRadialGradient(d.x,d.y,0,d.x,d.y,d.r*4);
+      g.addColorStop(0,'rgba(255,215,106,'+d.a+')'); g.addColorStop(1,'rgba(255,200,87,0)');
+      x.fillStyle=g; x.beginPath(); x.arc(d.x,d.y,d.r*4,0,6.283); x.fill();
+    }
+    requestAnimationFrame(t);
+  })();
+})();
+</script>
+</body>
+</html>
