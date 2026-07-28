@@ -288,18 +288,17 @@
     background: var(--paper-soft);
     cursor: pointer;
     display: grid;
-    grid-template-rows: auto 1fr auto auto;
+    /* head / cover / palette stay at their natural size; the foot takes the
+       slack so every card's title row lands on the same baseline */
+    grid-template-rows: auto auto auto 1fr;
     min-height: 460px;
     overflow: hidden;
     transition: background 200ms ease;
   }
-  /* The 5th (odd) card spans both columns so there's no orphan slot */
+  /* A trailing odd card spans both columns so there's never an orphan slot */
   @media (min-width: 641px) {
-    .card:nth-child(5):last-child { grid-column: 1 / -1; }
-    .card:nth-child(5):last-child .card-cover { aspect-ratio: 21 / 9; }
-    /* A series with a single deck spans the full row (no orphan slot) */
-    .card:first-child:last-child { grid-column: 1 / -1; }
-    .card:first-child:last-child .card-cover { aspect-ratio: 21 / 9; }
+    .card:nth-child(odd):last-child { grid-column: 1 / -1; }
+    .card:nth-child(odd):last-child .card-cover { aspect-ratio: 21 / 9; }
   }
   .card:hover { background: var(--ink); }
 
@@ -307,7 +306,7 @@
   .card-head {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: baseline;
     padding: 22px 22px 0;
     font-family: var(--mono);
     font-size: 10px;
@@ -329,6 +328,7 @@
   .card:hover .card-head .num { color: var(--accent); }
   .card-head .tag {
     text-align: right;
+    line-height: 1;
   }
 
   /* Brand cover band — live iframe preview of each deck's cover */
@@ -360,7 +360,6 @@
     align-items: center;
     gap: 14px;
     padding: 16px 22px 0;
-    margin: 0 0 -4px;
   }
   .card-palette .palette-label {
     font-family: var(--mono);
@@ -487,9 +486,9 @@
   .card-foot {
     padding: 22px;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
-    gap: 12px;
+    gap: 16px;
     transition: color 200ms ease;
   }
   .card:hover .card-foot { color: var(--paper); }
@@ -502,6 +501,30 @@
     letter-spacing: -0.02em;
     margin-bottom: 8px;
   }
+
+  /* Right-hand action cluster — "Full HTML" opt-out of the in-page viewer */
+  .card-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-full {
+    appearance: none;
+    background: transparent;
+    border: 1px solid var(--hair-bold);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
+  .card:hover .card-full { border-color: rgba(255,255,255,0.32); color: var(--paper); }
+  .card-full:hover { background: var(--accent); color: var(--ink); border-color: var(--accent); }
   .card-foot .sub {
     font-family: var(--mono);
     font-size: 10px;
@@ -604,6 +627,21 @@
     color: #F7F8FA;
   }
 
+  .cover-somago {
+    background:
+      radial-gradient(ellipse at 76% 24%, rgba(254,34,33,0.30) 0%, transparent 56%),
+      radial-gradient(ellipse at 16% 84%, rgba(19,74,88,0.32) 0%, transparent 58%),
+      linear-gradient(140deg, #FAF8F3 0%, #E7E2D7 100%);
+    color: #12100E;
+  }
+  .cover-salama {
+    background:
+      radial-gradient(ellipse at 78% 24%, rgba(254,34,33,0.42) 0%, transparent 56%),
+      radial-gradient(ellipse at 18% 84%, rgba(201,146,47,0.26) 0%, transparent 56%),
+      linear-gradient(140deg, #140709 0%, #241014 100%);
+    color: #FBEDEA;
+  }
+
   /* ─── FOOTER ─── */
   footer {
     border-top: 1px solid var(--ink);
@@ -698,6 +736,7 @@
     width: auto;
   }
   .viewer-title {
+    min-width: 0;
     text-align: center;
     font-family: var(--display);
     font-style: italic;
@@ -709,6 +748,11 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
+  }
+  .viewer-title #vTitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .viewer-title .count {
     font-family: var(--mono);
@@ -723,6 +767,8 @@
   .viewer-actions {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
     gap: 8px;
   }
 
@@ -780,7 +826,8 @@
     }
     .viewer-title .count { font-size: 9px; }
     .btn { padding: 7px 10px; font-size: 9px; letter-spacing: 0.16em; }
-    #btnOpen { display: none; }
+    /* Fullscreen API is unreliable on mobile — keep the standalone-page escape hatch instead */
+    #btnFull { display: none; }
   }
 
   /* Phone-only deck adjustments */
@@ -796,6 +843,9 @@
   }
 
   @media (max-width: 420px) {
+    /* Stack the title above the actions so neither gets squeezed */
+    .card-foot { grid-template-columns: 1fr; gap: 14px; }
+    .card-actions { justify-content: space-between; }
     .hero { padding: 40px 18px 36px; }
     .deck { padding: 32px 18px 80px; }
     .top { padding: 10px 14px; }
@@ -845,7 +895,7 @@
   <footer>
     <span>© Broadheader · 2026</span>
     <div class="rule"></div>
-    <span>Use <kbd>←</kbd> <kbd>→</kbd> in viewer · <kbd>Esc</kbd> closes</span>
+    <span>Use <kbd>←</kbd> <kbd>→</kbd> in viewer · <kbd>F</kbd> fullscreen · <kbd>Esc</kbd> closes</span>
   </footer>
 
   <div class="hint" id="hint">
@@ -867,7 +917,8 @@
       <div class="viewer-actions">
         <button class="btn" id="btnPrev">← Prev</button>
         <button class="btn" id="btnNext">Next →</button>
-        <button class="btn" id="btnOpen" title="Open this deck in a new tab">↗ Open</button>
+        <button class="btn" id="btnFull" title="Present this deck fullscreen (F)">⛶ Fullscreen</button>
+        <button class="btn" id="btnOpen" title="Open this deck as a standalone full HTML page">↗ Full HTML</button>
         <button class="btn close" id="btnClose">Close ✕</button>
       </div>
     </div>
@@ -897,6 +948,20 @@
       cover: 'cover-beehive',
       series: 'Broadheader Projects',
       palette: ['#16130E', '#FBC312', '#FFD75E', '#B28B0D', '#FDF8EE'],
+    },
+    {
+      file: 'angeles-city-build-sell.html', title: 'Angeles City Build & Sell',
+      tagline: 'Somago · Land Acquisition → Build → Sell',
+      cover: 'cover-somago',
+      series: 'Broadheader Projects',
+      palette: ['#FAF8F3', '#134A58', '#1B6070', '#FE2221', '#12100E'],
+    },
+    {
+      file: 'salama-course-marketplace.html', title: 'Salama',
+      tagline: 'Course Marketplace — Product Prototype',
+      cover: 'cover-salama',
+      series: 'Broadheader Projects',
+      palette: ['#140709', '#FE2221', '#C9922F', '#FBFAF7', '#12141C'],
     },
     {
       file: 'broadheader-hardware.html', title: 'Hardware & Kits',
@@ -1069,9 +1134,17 @@
             <div class="title">${d.title}</div>
             <div class="sub">${d.tagline}</div>
           </div>
-          <div class="card-arrow" aria-hidden="true">→</div>
+          <div class="card-actions">
+            <button class="card-full" type="button" title="Open ${d.title} as a standalone full HTML page">↗ Full HTML</button>
+            <div class="card-arrow" aria-hidden="true">→</div>
+          </div>
         </div>
       `;
+      // "Full HTML" bypasses the in-page viewer and opens the deck on its own
+      card.querySelector('.card-full').addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open(d.open || d.file, '_blank', 'noopener');
+      });
       card.addEventListener('click', () => openViewer(i));
       grid.appendChild(card);
     });
@@ -1087,6 +1160,7 @@
   const btnNext = document.getElementById('btnNext');
   const btnClose = document.getElementById('btnClose');
   const btnOpen = document.getElementById('btnOpen');
+  const btnFull = document.getElementById('btnFull');
 
   let current = 0;
 
@@ -1117,14 +1191,23 @@
   btnPrev.addEventListener('click', prev);
   btnNext.addEventListener('click', next);
   btnClose.addEventListener('click', closeViewer);
-  btnOpen.addEventListener('click', () => window.open(decks[current].open || decks[current].file, '_blank'));
+  btnOpen.addEventListener('click', () => window.open(decks[current].open || decks[current].file, '_blank', 'noopener'));
+
+  // Present the current deck edge-to-edge (chrome hidden) — Esc / F exits
+  function toggleFullscreen() {
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    (viewer.requestFullscreen ? viewer.requestFullscreen() : Promise.reject())
+      .catch(() => window.open(decks[current].open || decks[current].file, '_blank', 'noopener'));
+  }
+  btnFull.addEventListener('click', toggleFullscreen);
 
   document.addEventListener('keydown', (e) => {
     const isOpen = viewer.classList.contains('open');
     if (isOpen) {
-      if (e.key === 'Escape')          { closeViewer(); }
+      if (e.key === 'Escape')          { if (!document.fullscreenElement) closeViewer(); }
       else if (e.key === 'ArrowRight') { next(); }
       else if (e.key === 'ArrowLeft')  { prev(); }
+      else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
     } else {
       const n = parseInt(e.key, 10);
       if (!isNaN(n) && n >= 1 && n <= decks.length) openViewer(n - 1);
