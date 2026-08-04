@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laundry Vendo — Connection Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ---- iWash brand ---- */
+  --iw-cyan:#03A2CB;
+  --iw-cyan-lt:#4FC8E8;
+  --iw-green:#7CA325;
+  --iw-deep:#0A5D75;
+
+  --ground:#132430;
+  --ground-2:#0C1922;
+  --rule:#25455A;
+  --ink:#E6EDF3;
+  --ink-dim:#8FA9B8;
+  --ink-faint:#5A7688;
+
+  /* the palette IS the wiring legend */
+  --mains:#E0523B;
+  --signal:#4FA8D8;
+  --data:#52C48A;
+  --sense:#B98BD9;
+  --barrier:#F2B441;
+
+  --display:'Barlow Condensed',Oswald,'Arial Narrow',sans-serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--ground-2)}
+body{font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased}
+canvas{display:block;position:fixed;inset:0}
+
+/* ---------- masthead ---------- */
+.masthead{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;gap:15px;
+  padding:12px 24px 12px;
+  border-bottom:1px solid var(--rule);
+  background:linear-gradient(to bottom,rgba(12,25,34,.96),rgba(12,25,34,.72) 70%,rgba(12,25,34,0));
+  pointer-events:none;
+}
+.badge{flex:none;display:block;height:40px;width:auto}
+.masthead h1{
+  font-family:var(--display);font-weight:600;font-size:20px;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--iw-cyan-lt);
+}
+.masthead .sep{color:var(--ink-faint)}
+.masthead .sub{
+  font-family:var(--mono);font-size:11px;color:var(--ink-dim);
+  letter-spacing:.06em;
+}
+.rev{
+  margin-left:auto;font-family:var(--mono);font-size:10px;
+  color:var(--ink-faint);letter-spacing:.1em;text-align:right;line-height:1.6;
+}
+
+/* ---------- step rail ---------- */
+.rail{
+  position:fixed;left:0;top:64px;bottom:0;width:266px;z-index:15;
+  /* bottom padding reserves the legend's footprint so steps never scroll under it */
+  padding:22px 0 190px 24px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--rule) transparent;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 190px),transparent calc(100% - 150px));
+          mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 190px),transparent calc(100% - 150px));
+}
+.rail::-webkit-scrollbar{width:4px}
+.rail::-webkit-scrollbar-thumb{background:var(--rule)}
+.rail-hd{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  color:var(--ink-faint);text-transform:uppercase;margin-bottom:14px;
+}
+.step{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:9px 14px 9px 0;cursor:pointer;
+  border-left:2px solid transparent;padding-left:14px;margin-left:-16px;
+  transition:border-color .2s,opacity .2s;opacity:.5;
+}
+.step:hover{opacity:.82}
+.step.on{opacity:1;border-left-color:var(--accent,var(--ink))}
+.step .n{
+  font-family:var(--mono);font-size:10px;color:var(--ink-faint);
+  padding-top:3px;min-width:18px;
+}
+.step.on .n{color:var(--accent,var(--ink))}
+.step .t{
+  font-family:var(--display);font-size:16px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;line-height:1.25;
+}
+.step .d{font-size:11.5px;color:var(--ink-dim);margin-top:3px;line-height:1.45}
+
+/* ---------- legend ---------- */
+.legend{
+  position:fixed;left:24px;bottom:22px;z-index:18;
+  display:flex;flex-direction:column;gap:7px;
+  padding:14px 16px;background:#111820;
+  border:1px solid var(--rule);
+  box-shadow:0 -14px 26px rgba(17,24,32,.85);
+}
+.legend h3{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
+  color:var(--ink-faint);text-transform:uppercase;margin-bottom:3px;
+}
+.lg{display:flex;align-items:center;gap:9px;font-size:11.5px}
+.lg i{width:16px;height:3px;border-radius:2px;flex:none}
+.lg b{font-weight:500;font-size:11.5px}
+.lg span{color:var(--ink-faint);font-family:var(--mono);font-size:10px;margin-left:auto;padding-left:14px}
+
+/* ---------- detail panel ---------- */
+.detail{
+  position:fixed;right:24px;bottom:22px;width:352px;z-index:16;
+  max-height:calc(100vh - 130px);overflow-y:auto;
+  padding:20px 22px;background:#111820;
+  border:1px solid var(--rule);border-top:2px solid var(--accent,var(--rule));
+  scrollbar-width:thin;scrollbar-color:var(--rule) transparent;
+}
+.detail::-webkit-scrollbar{width:4px}
+.detail::-webkit-scrollbar-thumb{background:var(--rule)}
+.detail .eyebrow{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
+  color:var(--accent,var(--ink-dim));text-transform:uppercase;margin-bottom:8px;
+}
+.detail h2{
+  font-family:var(--display);font-size:25px;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;line-height:1.1;margin-bottom:10px;
+}
+.detail p{font-size:13px;line-height:1.62;color:var(--ink-dim)}
+.detail p+p{margin-top:9px}
+.detail .warn{
+  margin-top:13px;padding:10px 12px;
+  border-left:2px solid var(--barrier);background:rgba(242,180,65,.07);
+  font-size:12px;line-height:1.55;color:#F0DDB4;
+}
+.detail .warn b{color:var(--barrier);font-weight:600}
+.spec{
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);
+  display:grid;grid-template-columns:auto 1fr;gap:5px 16px;
+  font-family:var(--mono);font-size:10.5px;
+}
+.spec dt{color:var(--ink-faint)}
+.spec dd{color:var(--ink)}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;right:24px;top:78px;z-index:17;display:flex;gap:6px;
+}
+.nav button{
+  width:34px;height:34px;border:1px solid var(--rule);background:rgba(17,24,32,.86);
+  color:var(--ink-dim);font-size:14px;cursor:pointer;font-family:var(--mono);
+  transition:all .16s;
+}
+.nav button:hover:not(:disabled){border-color:var(--ink-dim);color:var(--ink)}
+.nav button:disabled{opacity:.28;cursor:default}
+.nav button:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+/* ---------- 3d labels ---------- */
+#labels{position:fixed;inset:0;z-index:12;pointer-events:none}
+.lbl{
+  position:absolute;transform:translate(0,-50%);
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  white-space:nowrap;opacity:0;transition:opacity .35s;
+}
+.lbl.on{opacity:1}
+.lbl .bar{display:inline-block;width:22px;height:1px;vertical-align:middle;margin-right:7px}
+.lbl.flip{direction:rtl}
+.lbl.flip>*{direction:ltr}
+.lbl.flip .bar{margin-right:0;margin-left:7px}
+.lbl .txt{padding:2px 7px;background:rgba(17,24,32,.88);border:1px solid var(--rule)}
+.lbl .txt b{display:block;font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+
+.hint{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:16;
+  font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.08em;
+}
+
+@media (max-width:1100px){
+  .rail{display:none} .legend{display:none}
+  .detail{right:16px;left:16px;width:auto;bottom:16px}
+  .hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <img class="badge" src="data:image/png;base64,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" alt="iWash">
+  <h1>Vendo</h1><span class="sep">/</span>
+  <span class="sub">CONTROLLER CONNECTION REFERENCE</span>
+  <div class="rev">DRAWING 01 · REV A<br>PLUG-THROUGH RETROFIT</div>
+</div>
+
+<nav class="nav">
+  <button id="prev" aria-label="Previous step">&larr;</button>
+  <button id="next" aria-label="Next step">&rarr;</button>
+</nav>
+
+<aside class="rail">
+  <div class="rail-hd">Install sequence</div>
+  <div id="steps"></div>
+</aside>
+
+<div class="legend">
+  <h3>Conductor key</h3>
+  <div class="lg"><i style="background:var(--mains)"></i><b>Mains</b><span>230 V</span></div>
+  <div class="lg"><i style="background:var(--sense)"></i><b>Sensing</b><span>CT / UART</span></div>
+  <div class="lg"><i style="background:var(--signal)"></i><b>Vend signal</b><span>&lt;24 V SELV</span></div>
+  <div class="lg"><i style="background:var(--data)"></i><b>Data</b><span>2.4 GHz</span></div>
+</div>
+
+<section class="detail" id="detail"></section>
+<div id="labels"></div>
+<div class="hint">DRAG TO ORBIT · SCROLL TO ZOOM · ← → TO STEP</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* iWash logo, embedded from the source PNG (trimmed, alpha preserved) */
+const IWASH_LOGO = 'data:image/png;base64,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';
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C = {
+  // conductor key -- SAFETY LEGEND, deliberately not rebranded
+  mains:0xE0523B, signal:0x4FA8D8, data:0x52C48A,
+  sense:0xB98BD9, barrier:0xF2B441,
+  // iWash brand, applied to the product itself
+  iwCyan:0x03A2CB, iwGreen:0x7CA325, iwDeep:0x0A5D75,
+  shell:0x2E4C5E, shellLt:0x44677C, dark:0x152430, metal:0x8FA9B8
+};
+
+/* ==================================================================
+   SCENE
+   ================================================================== */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x132430);
+scene.fog = new THREE.Fog(0x132430, 12, 26);
+
+const camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+document.body.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight(0xB8D6E4, 0.55));
+const key = new THREE.DirectionalLight(0xffffff, 0.85);
+key.position.set(5,9,6); scene.add(key);
+const fill = new THREE.DirectionalLight(0x03A2CB, 0.42);
+fill.position.set(-6,3,-4); scene.add(fill);
+const rim = new THREE.DirectionalLight(0x7CA325, 0.16);
+rim.position.set(3,1,-6); scene.add(rim);
+
+// floor grid
+const grid = new THREE.GridHelper(30, 30, 0x2A5468, 0x1E3A49);
+grid.position.y = 0.001; scene.add(grid);
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(30,30),
+  new THREE.MeshStandardMaterial({color:0x102029, roughness:.95})
+);
+floor.rotation.x = -Math.PI/2; scene.add(floor);
+
+// back wall
+const wall = new THREE.Mesh(
+  new THREE.PlaneGeometry(20,8),
+  new THREE.MeshStandardMaterial({color:0x18303D, roughness:1})
+);
+wall.position.set(0,4,-3.4); scene.add(wall);
+
+const mat = (c,o) => new THREE.MeshStandardMaterial(Object.assign({
+  color:c, roughness:.62, metalness:.12
+}, o||{}));
+
+/* iWash logo texture, loaded from the embedded PNG */
+let _logoTex = null;
+function makeBadgeTexture(){
+  if(_logoTex) return _logoTex;
+  _logoTex = new THREE.TextureLoader().load(IWASH_LOGO);
+  _logoTex.anisotropy = 8;
+  _logoTex.minFilter = THREE.LinearFilter;
+  return _logoTex;
+}
+
+/* the machine's QR sticker -- real logo composited over a generated card */
+function makeStickerTexture(){
+  const S = 4, W = 148, H = 200;
+  const cv = document.createElement('canvas');
+  cv.width = W*S; cv.height = H*S;
+  const g = cv.getContext('2d');
+  g.scale(S,S);
+
+  g.fillStyle = '#FFFFFF'; g.fillRect(0,0,W,H);
+  g.fillStyle = '#03A2CB'; g.fillRect(0,0,W,46);
+  g.fillStyle = '#7CA325'; g.fillRect(0,46,W,4);
+
+  // machine number
+  g.fillStyle = '#0A5D75'; g.fillRect(0,50,W,32);
+  g.fillStyle = '#FFFFFF';
+  g.textAlign = 'center';
+  g.font = '700 28px "Barlow Condensed","Arial Narrow",sans-serif';
+  g.fillText('WASHER 04', W/2, 74);
+
+  // QR -- representative pattern, NOT a scannable code
+  const qx = 34, qy = 90, qs = 78, m = 25, c = qs/m;
+  g.fillStyle = '#0A5D75';
+  function finder(fx,fy){
+    g.fillStyle='#0A5D75'; g.fillRect(qx+fx*c, qy+fy*c, c*7, c*7);
+    g.fillStyle='#FFF';    g.fillRect(qx+(fx+1)*c, qy+(fy+1)*c, c*5, c*5);
+    g.fillStyle='#0A5D75'; g.fillRect(qx+(fx+2)*c, qy+(fy+2)*c, c*3, c*3);
+  }
+  let seed = 7;
+  for(let y=0;y<m;y++) for(let x=0;x<m;x++){
+    if((x<8&&y<8)||(x>16&&y<8)||(x<8&&y>16)) continue;
+    seed = (seed*1103515245 + 12345) & 0x7fffffff;
+    if((seed>>16)&1){ g.fillStyle='#0A5D75'; g.fillRect(qx+x*c, qy+y*c, c, c); }
+  }
+  finder(0,0); finder(18,0); finder(0,18);
+
+  g.fillStyle = '#0A5D75';
+  g.font = '700 14px "Barlow Condensed","Arial Narrow",sans-serif';
+  g.fillText('SCAN TO WASH', W/2, 184);
+  g.fillStyle = '#6B8494';
+  g.font = '400 9px Inter, system-ui, sans-serif';
+  g.fillText('GCash  ·  Maya  ·  QR Ph', W/2, 195);
+
+  const tex = new THREE.CanvasTexture(cv);
+  tex.anisotropy = 8;
+
+  // composite the real logo into the header band once it decodes
+  const img = new Image();
+  img.onload = function(){
+    const lw = 74, lh = lw * (img.height/img.width);
+    g.drawImage(img, (W-lw)/2, (46-lh)/2, lw, lh);
+    tex.needsUpdate = true;
+  };
+  img.src = IWASH_LOGO;
+
+  return tex;
+}
+
+/* ---------- wall outlet ---------- */
+const outlet = new THREE.Group();
+outlet.position.set(-4.0, 1.35, -3.32);
+(function(){
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(.5,.72,.06), mat(0xD8DEE4,{roughness:.5}));
+  outlet.add(plate);
+  [-.16,.16].forEach(y=>{
+    [-.09,.09].forEach(x=>{
+      const s = new THREE.Mesh(new THREE.BoxGeometry(.035,.09,.02), mat(0x22303C));
+      s.position.set(x,y,.04); outlet.add(s);
+    });
+  });
+  const b = new THREE.Mesh(new THREE.BoxGeometry(.62,.84,.03), mat(0x2A3745));
+  b.position.z=-.04; outlet.add(b);
+})();
+scene.add(outlet);
+
+/* ---------- washing machine ---------- */
+const machine = new THREE.Group();
+machine.position.set(2.6, 0, -1.4);
+(function(){
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.9,1.85,1.85), mat(0xC9D2DA,{roughness:.45}));
+  body.position.y = .925; machine.add(body);
+
+  // recessed door
+  const well = new THREE.Mesh(new THREE.CylinderGeometry(.56,.56,.1,40), mat(0x33424F));
+  well.rotation.x = Math.PI/2; well.position.set(0,.95,.93); machine.add(well);
+  const glass = new THREE.Mesh(new THREE.CylinderGeometry(.46,.46,.12,40),
+    new THREE.MeshStandardMaterial({color:0x16212B, roughness:.12, metalness:.5,
+      transparent:true, opacity:.88}));
+  glass.rotation.x = Math.PI/2; glass.position.set(0,.95,.99); machine.add(glass);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(.55,.05,12,40), mat(C.metal,{metalness:.6,roughness:.3}));
+  rim.position.set(0,.95,.96); machine.add(rim);
+
+  // control panel
+  const panel = new THREE.Mesh(new THREE.BoxGeometry(1.9,.34,.06), mat(0x2B3844));
+  panel.position.set(0,1.66,.93); machine.add(panel);
+  for(let i=0;i<5;i++){
+    const led = new THREE.Mesh(new THREE.SphereGeometry(.026,10,10),
+      new THREE.MeshBasicMaterial({color:0x4E6070}));
+    led.position.set(-.6+i*.22,1.68,.97); machine.add(led);
+  }
+  const knob = new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.07,20), mat(0xE6EDF3));
+  knob.rotation.x=Math.PI/2; knob.position.set(.66,1.66,.98); machine.add(knob);
+
+  // START key -- the vend injection point
+  const start = new THREE.Mesh(new THREE.BoxGeometry(.13,.13,.035),
+    new THREE.MeshStandardMaterial({color:C.signal, emissive:C.signal, emissiveIntensity:.25}));
+  start.position.set(-.86,1.66,.98); start.name='startKey'; machine.add(start);
+
+  // ---- branded QR sticker: the customer-facing surface ----
+  const sticker = new THREE.Mesh(
+    new THREE.PlaneGeometry(.46,.62),
+    new THREE.MeshBasicMaterial({map:makeStickerTexture()})
+  );
+  sticker.position.set(.62,1.28,.94); sticker.name='sticker'; machine.add(sticker);
+
+  const feet=[[-.78,-.78],[.78,-.78],[-.78,.78],[.78,.78]];
+  feet.forEach(([x,z])=>{
+    const f=new THREE.Mesh(new THREE.CylinderGeometry(.09,.11,.06,14), mat(0x2B3844));
+    f.position.set(x,.03,z); machine.add(f);
+  });
+})();
+scene.add(machine);
+
+/* ---------- controller box ---------- */
+const box = new THREE.Group();
+box.position.set(-.55, 1.15, -2.15);
+const boxLid = new THREE.Group();
+const boxGuts = new THREE.Group();
+(function(){
+  const W=1.15,H=.78,D=.42;
+  const shell = new THREE.Mesh(new THREE.BoxGeometry(W,H,D), mat(C.shell,{roughness:.55}));
+  boxLid.add(shell);
+  const lip = new THREE.Mesh(new THREE.BoxGeometry(W+.05,H+.05,.04), mat(C.shellLt));
+  lip.position.z = D/2; boxLid.add(lip);
+
+  // OLED window
+  const oled = new THREE.Mesh(new THREE.BoxGeometry(.3,.17,.02),
+    new THREE.MeshStandardMaterial({color:0x0C1218, emissive:0x1E5A73, emissiveIntensity:.7}));
+  oled.position.set(-.26,.16,D/2+.03); boxLid.add(oled);
+
+  // ---- iWash badge decal on the lid ----
+  const badge = new THREE.Mesh(
+    new THREE.PlaneGeometry(.40,.291),
+    new THREE.MeshBasicMaterial({map:makeBadgeTexture(), transparent:true})
+  );
+  badge.position.set(-.02,-.14,D/2+.035);
+  badge.name='badge'; boxLid.add(badge);
+
+  // status LEDs
+  [[C.data,'net'],[C.signal,'vend'],[0x52C48A,'pwr']].forEach((d,i)=>{
+    const l = new THREE.Mesh(new THREE.SphereGeometry(.028,10,10),
+      new THREE.MeshBasicMaterial({color:d[0]}));
+    l.position.set(.12+i*.11,.16,D/2+.03); boxLid.add(l);
+  });
+
+  // IEC inlet (mains in) + outlet (mains out)
+  const inlet = new THREE.Mesh(new THREE.BoxGeometry(.16,.14,.1), mat(0x1E2830));
+  inlet.position.set(-W/2+.02,-.2,-.05); inlet.name='inlet'; boxLid.add(inlet);
+  const outp = new THREE.Mesh(new THREE.BoxGeometry(.16,.14,.1), mat(0x1E2830));
+  outp.position.set(W/2-.02,-.2,-.05); outp.name='outlet'; boxLid.add(outp);
+
+  // cable glands
+  [[-.2,-H/2],[.16,-H/2]].forEach(([x,y])=>{
+    const g = new THREE.Mesh(new THREE.CylinderGeometry(.045,.055,.1,14), mat(C.metal,{metalness:.5}));
+    g.position.set(x,y,-.02); boxLid.add(g);
+  });
+
+  /* ---- internals (revealed on the isolation step) ---- */
+  // logic side
+  const pcb = new THREE.Mesh(new THREE.BoxGeometry(.42,.5,.02), mat(0x1F4A3C,{roughness:.8}));
+  pcb.position.set(-.28,.02,0); boxGuts.add(pcb);
+  const esp = new THREE.Mesh(new THREE.BoxGeometry(.16,.24,.04), mat(0x2B3844));
+  esp.position.set(-.28,.05,.03); boxGuts.add(esp);
+  const espCan = new THREE.Mesh(new THREE.BoxGeometry(.13,.13,.02), mat(0xC7D3DE,{metalness:.7,roughness:.3}));
+  espCan.position.set(-.28,.09,.06); boxGuts.add(espCan);
+
+  // mains side
+  const psu = new THREE.Mesh(new THREE.BoxGeometry(.24,.2,.14), mat(0x111820));
+  psu.position.set(.24,.16,0); boxGuts.add(psu);
+  const pzem = new THREE.Mesh(new THREE.BoxGeometry(.3,.16,.03), mat(0x6B2530,{roughness:.8}));
+  pzem.position.set(.24,-.14,0); boxGuts.add(pzem);
+  const tb = new THREE.Mesh(new THREE.BoxGeometry(.3,.09,.09), mat(0x2A5F8A));
+  tb.position.set(.24,-.3,0); boxGuts.add(tb);
+
+  // ---- SIGNATURE: the isolation barrier ----
+  const bar = new THREE.Mesh(new THREE.PlaneGeometry(.34,H-.06),
+    new THREE.MeshBasicMaterial({color:C.barrier, transparent:true, opacity:.16,
+      side:THREE.DoubleSide}));
+  bar.rotation.y = Math.PI/2; bar.position.set(-.02,0,0);
+  bar.name='barrier'; boxGuts.add(bar);
+  const edgeGeo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(-.02,-H/2+.03,-.17), new THREE.Vector3(-.02,H/2-.03,-.17),
+    new THREE.Vector3(-.02,H/2-.03,.17), new THREE.Vector3(-.02,-H/2+.03,.17),
+    new THREE.Vector3(-.02,-H/2+.03,-.17)
+  ]);
+  const edge = new THREE.Line(edgeGeo, new THREE.LineBasicMaterial({color:C.barrier}));
+  edge.name='barrierEdge'; boxGuts.add(edge);
+
+  boxGuts.visible = false;
+  box.add(boxLid); box.add(boxGuts);
+})();
+scene.add(box);
+
+/* ---------- router / cloud / phone ---------- */
+const net = new THREE.Group();
+(function(){
+  const ap = new THREE.Mesh(new THREE.BoxGeometry(.42,.08,.42), mat(0x2B3844));
+  ap.position.set(-3.4,2.9,-2.9); net.add(ap);
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(.03,10,10),
+    new THREE.MeshBasicMaterial({color:C.data}));
+  dot.position.set(-3.4,2.96,-2.72); net.add(dot);
+
+  const cloud = new THREE.Group();
+  [[0,0,.36],[.32,.06,.26],[-.3,.04,.24],[.14,.2,.22]].forEach(([x,y,r])=>{
+    const s=new THREE.Mesh(new THREE.SphereGeometry(r,16,16),
+      new THREE.MeshStandardMaterial({color:0x2F4356, roughness:.9, transparent:true, opacity:.85}));
+    s.position.set(x,y,0); cloud.add(s);
+  });
+  cloud.position.set(-.4,4.3,-2.6); net.add(cloud);
+
+  const phone = new THREE.Mesh(new THREE.BoxGeometry(.3,.58,.03), mat(0x151E27));
+  phone.position.set(2.5,3.5,-1.2); net.add(phone);
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(.25,.5),
+    new THREE.MeshBasicMaterial({color:C.data, transparent:true, opacity:.5}));
+  scr.position.set(2.5,3.5,-1.18); net.add(scr);
+})();
+net.visible = false; scene.add(net);
+
+/* ==================================================================
+   CABLES
+   ================================================================== */
+const cables = {};
+function cable(name, pts, color, radius, dashed){
+  const curve = new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)));
+  const geo = new THREE.TubeGeometry(curve, 64, radius||.035, 8, false);
+  const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+    color:color, roughness:.7, emissive:color, emissiveIntensity:.12
+  }));
+  m.visible = false; scene.add(m);
+  cables[name] = {mesh:m, curve:curve, color:color, flows:[], dashed:!!dashed};
+  return cables[name];
+}
+
+cable('mainsIn', [
+  [-4.0,1.35,-3.22],[-3.6,1.1,-2.9],[-2.6,.55,-2.5],
+  [-1.8,.7,-2.2],[-1.28,.95,-2.2]
+], C.mains, .038);
+
+cable('mainsOut', [
+  [.08,.95,-2.2],[.7,.7,-2.1],[1.5,.5,-1.9],
+  [2.2,.42,-2.1],[2.6,.5,-2.3]
+], C.mains, .038);
+
+cable('vend', [
+  [-.4,.78,-2.0],[.2,.95,-1.55],[1.0,1.35,-1.1],
+  [1.5,1.62,-.6],[1.74,1.66,-.42]
+], C.signal, .019);
+
+cable('uart', [
+  [-.3,1.0,-2.15],[.0,1.0,-2.15]
+], C.sense, .014);
+
+/* CT clamp on the outgoing live conductor */
+const ct = new THREE.Group();
+(function(){
+  const t = new THREE.Mesh(new THREE.TorusGeometry(.1,.038,12,28), mat(C.sense,{emissive:C.sense,emissiveIntensity:.3}));
+  ct.add(t);
+  const jaw = new THREE.Mesh(new THREE.BoxGeometry(.05,.16,.09), mat(0x3E2F52));
+  jaw.position.set(.13,0,0); ct.add(jaw);
+  ct.position.set(1.5,.5,-1.9);
+  ct.rotation.set(0,.45,Math.PI/2);
+})();
+ct.visible=false; scene.add(ct);
+
+/* flow particles */
+function makeFlow(key, n, color){
+  const c = cables[key]; if(!c) return;
+  for(let i=0;i<n;i++){
+    const s = new THREE.Mesh(new THREE.SphereGeometry(.032,8,8),
+      new THREE.MeshBasicMaterial({color:color||c.color}));
+    s.userData.t = i/n; s.visible=false; scene.add(s);
+    c.flows.push(s);
+  }
+}
+if(!REDUCED){
+  makeFlow('mainsIn',5); makeFlow('mainsOut',5);
+  makeFlow('vend',3); makeFlow('uart',2,C.sense);
+}
+
+/* RF arcs */
+const rf = [];
+(function(){
+  const arcs = [
+    [[-.55,1.5,-2.15],[-1.9,2.6,-2.6],[-3.4,2.9,-2.86]],
+    [[-3.4,3.0,-2.9],[-2.0,4.0,-2.8],[-.6,4.25,-2.6]],
+    [[-.2,4.3,-2.6],[1.2,4.2,-1.9],[2.45,3.6,-1.25]]
+  ];
+  arcs.forEach(pts=>{
+    const cv = new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)));
+    const g = new THREE.TubeGeometry(cv,48,.012,6,false);
+    const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({
+      color:C.data, transparent:true, opacity:.5}));
+    m.visible=false; scene.add(m); rf.push({mesh:m,curve:cv,flows:[]});
+    if(!REDUCED) for(let i=0;i<3;i++){
+      const s=new THREE.Mesh(new THREE.SphereGeometry(.026,8,8),
+        new THREE.MeshBasicMaterial({color:C.data}));
+      s.userData.t=i/3; s.visible=false; scene.add(s);
+      rf[rf.length-1].flows.push(s);
+    }
+  });
+})();
+
+/* ==================================================================
+   LABELS
+   ================================================================== */
+const LABELS = [
+  {id:'outlet', p:[-4.0,1.9,-3.2], t:'Wall socket', s:'230 V · 60 Hz · RCD protected', c:'mains', steps:[0,1]},
+  {id:'inlet',  p:[-1.35,.75,-2.2], t:'Inlet', s:'IEC C14 · L / N / PE', c:'mains', steps:[1]},
+  {id:'psu',    p:[.42,1.55,-2.0], t:'PSU + PZEM', s:'mains side of the barrier', c:'mains', steps:[2]},
+  {id:'outp',   p:[.4,.72,-2.15], t:'Outlet', s:'machine plugs in here', c:'mains', steps:[3]},
+  {id:'mplug',  p:[2.6,.28,-2.5], t:'Machine plug', s:'unmodified · warranty intact', c:'mains', steps:[3]},
+  {id:'ct',     p:[1.5,.9,-1.9], t:'CT clamp', s:'LIVE conductor only', c:'sense', steps:[4]},
+  {id:'esp',    p:[-.95,1.45,-2.0], t:'ESP32', s:'logic side · 3.3 V', c:'signal', steps:[5,6]},
+  {id:'bar',    p:[-.55,.55,-2.0], t:'Isolation barrier', s:'≥ 8 mm creepage', c:'barrier', steps:[5]},
+  {id:'start',  p:[1.9,1.95,-.4], t:'START key', s:'SSR parallels the switch', c:'signal', steps:[6]},
+  {id:'ap',     p:[-3.4,3.25,-2.9], t:'Access point', s:'shop Wi-Fi · UPS backed', c:'data', steps:[7]},
+  {id:'cloud',  p:[-.4,5.0,-2.6], t:'Broker + backend', s:'MQTT / TLS', c:'data', steps:[7]},
+  {id:'phone',  p:[2.5,4.1,-1.2], t:'Customer', s:'scan · pay · start', c:'data', steps:[7]},
+  {id:'stick',  p:[3.5,1.75,-.5], t:'QR sticker', s:'the only customer surface', c:'data', steps:[7]}
+];
+const labelBox = document.getElementById('labels');
+LABELS.forEach(l=>{
+  const el = document.createElement('div');
+  el.className='lbl';
+  el.innerHTML = '<span class="bar" style="background:var(--'+l.c+')"></span>'+
+    '<span class="txt" style="border-color:var(--'+l.c+')"><b>'+l.t+'</b>'+l.s+'</span>';
+  l.el = el; l.v = new THREE.Vector3(...l.p);
+  labelBox.appendChild(el);
+});
+
+/* ==================================================================
+   STEPS
+   ================================================================== */
+const STEPS = [
+  {
+    t:'The three domains', d:'What actually crosses between box and machine',
+    accent:'--ink', cam:[6.2,4.4,5.6], tgt:[0,1.2,-1.8],
+    eyebrow:'Overview', h:'Three separate worlds',
+    body:['Only three things travel between your box and the washing machine, and they never share a conductor: <b>mains power</b> passing straight through, a <b>low-voltage vend signal</b>, and <b>sensing</b> that stays inside the box.',
+          'Everything else — payment, the app, the backend — is radio. Nothing else is physically wired.'],
+    show:{}, specs:[['Domains','3'],['Wired to machine','2'],['Machine mods','0']]
+  },
+  {
+    t:'Mains in', d:'Wall socket to box inlet',
+    accent:'--mains', cam:[-4.6,3.4,4.4], tgt:[-2.2,1.1,-2.4],
+    eyebrow:'Step 01 · Mains', h:'Power arrives',
+    body:['A standard moulded cord from the wall socket to an IEC inlet on the box. Line, neutral, and earth. Fused at 1 A on the live side immediately after the inlet, with a MOV across L–N for surge.',
+          'The box is the first thing on the circuit. Nothing downstream is energised until it decides so.'],
+    show:{mainsIn:1}, specs:[['Conductors','L / N / PE'],['Fuse','1 A slow-blow'],['Surge','14D471K MOV']],
+    warn:'The laundry circuit must have <b>RCD / RCBO protection</b> upstream. Wet floors, public access, unattended operation. Have a licensed electrician verify before install.'
+  },
+  {
+    t:'Through the box', d:'Where mains stops and logic begins',
+    accent:'--mains', cam:[-1.4,2.9,3.4], tgt:[-.4,1.15,-2.1],
+    eyebrow:'Step 02 · Mains', h:'Tapped, not consumed',
+    body:['Inside, the mains run splits three ways: straight through to the outlet, into the HLK-PM12 to make 12 V for the logic side, and across the PZEM\'s voltage sense input.',
+          'All three of those live on the <b>right</b> of the barrier. The ESP32 never sees mains — it sees 3.3 V and optocoupler outputs, nothing else.'],
+    show:{mainsIn:1, guts:1}, specs:[['PSU','HLK-PM12 → 12 V'],['Logic rail','5 V → 3.3 V'],['Metering','PZEM-004T v3']]
+  },
+  {
+    t:'Mains out', d:'Box outlet to machine plug',
+    accent:'--mains', cam:[3.4,2.8,4.6], tgt:[1.4,.8,-2.0],
+    eyebrow:'Step 03 · Mains', h:'Plug-through',
+    body:['The machine\'s own plug goes into a socket on your box. You never open the machine\'s mains wiring, never cut its cord, never touch its terminal block.',
+          'Install is a five-minute job, the warranty survives, and swapping a failed box means unplugging two things.'],
+    show:{mainsIn:1, mainsOut:1}, specs:[['Rating','16 A'],['Machine rewiring','none'],['Swap time','< 5 min']]
+  },
+  {
+    t:'Sensing', d:'Reading the cycle without touching it',
+    accent:'--sense', cam:[2.6,2.2,3.6], tgt:[1.4,.7,-1.9],
+    eyebrow:'Step 04 · Sensing', h:'The CT clamp',
+    body:['A split-core CT clamps around the outgoing conductor and reports current to the PZEM, which speaks Modbus to the ESP32 over an opto-isolated UART.',
+          'This is your entire cycle-state signal. Fill, wash, spin, and done are all just shapes in the power curve.'],
+    show:{mainsIn:1, mainsOut:1, ct:1, uart:1, guts:1},
+    specs:[['CT','100 A split-core'],['Bus','Modbus-RTU 9600'],['Isolation','opto, on-module']],
+    warn:'Clamp the <b>live conductor only</b>. Around both live and neutral the currents cancel and you read zero — the single most common wiring mistake on this build.'
+  },
+  {
+    t:'Isolation barrier', d:'The line that must never be crossed',
+    accent:'--barrier', cam:[-.4,1.9,2.4], tgt:[-.5,1.15,-2.1],
+    eyebrow:'Step 05 · Safety', h:'≥ 8 mm of nothing',
+    body:['One plane divides the box. Mains, PSU primary, and PZEM on one side. ESP32, OLED, RTC, and every signal you can touch on the other.',
+          'Nothing crosses it as copper. Power crosses through the PSU transformer, data crosses through optocouplers, the vend signal crosses through a PhotoMOS relay. No trace, no wire, no exception.'],
+    show:{guts:1, barrier:1}, specs:[['Creepage','≥ 8 mm'],['Crossings','opto / transformer only'],['Coating','conformal, logic side']],
+    warn:'Lint is conductive when damp, and a laundromat is saturated with it. This barrier is the difference between a product and an incident.'
+  },
+  {
+    t:'Vend signal', d:'How the box starts the machine',
+    accent:'--signal', cam:[3.0,3.4,3.8], tgt:[1.0,1.4,-1.2],
+    eyebrow:'Step 06 · Signal', h:'Impersonating a coin',
+    body:['A two-wire pair from a PhotoMOS SSR to the machine — either its coin input, or straight across the START key on the membrane panel.',
+          'The SSR closes for roughly 150 ms. The control board sees a contact closure and cannot tell it apart from a coin drop. <b>No coin exists anywhere in this system.</b>'],
+    show:{mainsIn:1, mainsOut:1, vend:1},
+    specs:[['Device','CPC1017N PhotoMOS'],['Pulse','~150 ms'],['Voltage','SELV, &lt; 24 V'],['Mains contact','none']]
+  },
+  {
+    t:'Data path', d:'Box to broker to customer',
+    accent:'--data', cam:[-1.0,5.0,7.4], tgt:[0,2.6,-2.0],
+    eyebrow:'Step 07 · Data', h:'Nothing here is wired',
+    body:['The box holds a persistent MQTT session over the shop Wi-Fi. Vend commands come down signed and time-boxed; telemetry and state changes go up.',
+          'Keep the AP, router, and local broker on a UPS. Cashless means a network outage is a revenue outage, so the site has to keep vending through a dead ISP link.'],
+    show:{net:1, rf:1}, specs:[['Transport','MQTT / TLS'],['QoS','1 on commands'],['Offline','local broker + queue']]
+  },
+  {
+    t:'Bench phase', d:'What is actually connected today',
+    accent:'--signal', cam:[-.6,2.2,2.8], tgt:[-.5,1.15,-2.1],
+    eyebrow:'Phase 1', h:'None of the red',
+    body:['On the bench, every mains path above is absent. The box runs from USB, the vend output drives an LED instead of an SSR, and the PZEM is a Python emulator on a USB-TTL adapter.',
+          'The firmware cannot tell the difference — same pins, same driver, same timing. Prove the state machine first; add mains only once exactly-once vending survives being power-cycled mid-pulse.'],
+    show:{guts:1}, specs:[['Power','USB 5 V'],['Vend out','LED on GPIO25'],['Sensing','virtual PZEM'],['Mains','none']]
+  }
+];
+
+/* ==================================================================
+   NAV + RENDER
+   ================================================================== */
+let cur = 0;
+const camPos = new THREE.Vector3(), camTgt = new THREE.Vector3();
+const wantPos = new THREE.Vector3(), wantTgt = new THREE.Vector3();
+let orbitYaw=0, orbitPitch=0, zoom=1, userOrbit=false;
+
+const railEl = document.getElementById('steps');
+STEPS.forEach((s,i)=>{
+  const d = document.createElement('div');
+  d.className='step'; d.style.setProperty('--accent','var('+s.accent+')');
+  d.innerHTML = '<span class="n">'+String(i).padStart(2,'0')+'</span>'+
+    '<span><span class="t">'+s.t+'</span><span class="d">'+s.d+'</span></span>';
+  d.onclick = ()=>go(i);
+  railEl.appendChild(d);
+});
+
+function go(i){
+  cur = Math.max(0, Math.min(STEPS.length-1, i));
+  const s = STEPS[cur];
+  userOrbit=false; orbitYaw=0; orbitPitch=0; zoom=1;
+
+  wantPos.set(...s.cam); wantTgt.set(...s.tgt);
+  if(REDUCED){ camPos.copy(wantPos); camTgt.copy(wantTgt); }
+
+  const sh = s.show;
+  Object.keys(cables).forEach(k=>{
+    const on = !!sh[k]; cables[k].mesh.visible = on;
+    cables[k].flows.forEach(f=>f.visible = on);
+  });
+  ct.visible = !!sh.ct;
+  net.visible = !!sh.net;
+  rf.forEach(r=>{ r.mesh.visible = !!sh.rf; r.flows.forEach(f=>f.visible=!!sh.rf); });
+
+  boxGuts.visible = !!sh.guts;
+  boxLid.children.forEach(c=>{
+    if(!c.material) return;
+    if(c.name === 'badge'){
+      // logo decal keeps its alpha at all times; only its opacity fades
+      c.material.transparent = true;
+      c.material.opacity = sh.guts ? .22 : 1;
+      c.material.depthWrite = false;
+      return;
+    }
+    c.material.transparent = !!sh.guts;
+    c.material.opacity = sh.guts ? .17 : 1;
+    c.material.depthWrite = !sh.guts;
+  });
+  const bar = boxGuts.getObjectByName('barrier');
+  const bare = boxGuts.getObjectByName('barrierEdge');
+  if(bar){ bar.material.opacity = sh.barrier ? .38 : .1; }
+  if(bare){ bare.material.opacity = sh.barrier ? 1 : .3; bare.material.transparent = true; }
+
+  LABELS.forEach(l=> l.el.classList.toggle('on', l.steps.indexOf(cur)>=0));
+
+  const dt = document.getElementById('detail');
+  dt.style.setProperty('--accent','var('+s.accent+')');
+  dt.innerHTML =
+    '<div class="eyebrow">'+s.eyebrow+'</div><h2>'+s.h+'</h2>'+
+    s.body.map(p=>'<p>'+p+'</p>').join('')+
+    (s.warn?'<div class="warn">'+s.warn+'</div>':'')+
+    (s.specs?'<dl class="spec">'+s.specs.map(x=>'<dt>'+x[0]+'</dt><dd>'+x[1]+'</dd>').join('')+'</dl>':'');
+
+  [...railEl.children].forEach((c,i2)=>c.classList.toggle('on', i2===cur));
+  document.getElementById('prev').disabled = cur===0;
+  document.getElementById('next').disabled = cur===STEPS.length-1;
+}
+document.getElementById('prev').onclick = ()=>go(cur-1);
+document.getElementById('next').onclick = ()=>go(cur+1);
+addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); go(cur+1); }
+  if(e.key==='ArrowLeft') { e.preventDefault(); go(cur-1); }
+});
+
+/* --- hand-rolled orbit --- */
+let dragging=false, lx=0, ly=0;
+renderer.domElement.addEventListener('pointerdown', e=>{dragging=true;lx=e.clientX;ly=e.clientY;});
+addEventListener('pointerup', ()=>dragging=false);
+addEventListener('pointermove', e=>{
+  if(!dragging) return;
+  userOrbit=true;
+  orbitYaw   -= (e.clientX-lx)*0.006;
+  orbitPitch  = Math.max(-.9, Math.min(1.2, orbitPitch + (e.clientY-ly)*0.005));
+  lx=e.clientX; ly=e.clientY;
+});
+renderer.domElement.addEventListener('wheel', e=>{
+  e.preventDefault(); userOrbit=true;
+  zoom = Math.max(.45, Math.min(2.2, zoom + e.deltaY*0.0012));
+},{passive:false});
+
+const ndc = new THREE.Vector3();
+function tick(t){
+  requestAnimationFrame(tick);
+
+  const k = REDUCED ? 1 : .055;
+  camTgt.lerp(wantTgt, k);
+
+  const base = wantPos.clone().sub(wantTgt);
+  if(userOrbit){
+    const r = base.length()*zoom;
+    const yaw0 = Math.atan2(base.x, base.z);
+    const pit0 = Math.asin(base.y/base.length());
+    const yaw = yaw0 + orbitYaw, pit = Math.max(-.5,Math.min(1.25,pit0 + orbitPitch));
+    base.set(Math.sin(yaw)*Math.cos(pit)*r, Math.sin(pit)*r, Math.cos(yaw)*Math.cos(pit)*r);
+  }
+  camPos.lerp(camTgt.clone().add(base), k);
+  camera.position.copy(camPos);
+  camera.lookAt(camTgt);
+
+  if(!REDUCED){
+    const sp = (t||0)*0.00016;
+    Object.keys(cables).forEach(key=>{
+      const c = cables[key];
+      c.flows.forEach(f=>{
+        if(!f.visible) return;
+        const u = (f.userData.t + sp) % 1;
+        f.position.copy(c.curve.getPointAt(u));
+      });
+    });
+    rf.forEach(r=>r.flows.forEach(f=>{
+      if(!f.visible) return;
+      const u = (f.userData.t + sp*1.6) % 1;
+      f.position.copy(r.curve.getPointAt(u));
+    }));
+    const bar = boxGuts.getObjectByName('barrier');
+    if(bar && bar.visible && STEPS[cur].show.barrier){
+      bar.material.opacity = .28 + Math.sin((t||0)*0.0022)*.12;
+    }
+  }
+
+  // panel footprints the labels must stay clear of
+  const wide = innerWidth > 1100;
+  const zones = [
+    {x0:0, y0:0, x1:innerWidth, y1:64},                              // masthead
+    {x0:innerWidth-420, y0:70, x1:innerWidth, y1:120},               // nav buttons
+    {x0:innerWidth-400, y0:innerHeight-300, x1:innerWidth, y1:innerHeight}  // detail
+  ];
+  if(wide){
+    zones.push({x0:0, y0:64, x1:280, y1:innerHeight});               // rail + legend
+  }
+  const blocked = (x,y)=> zones.some(z=> x>z.x0 && x<z.x1 && y>z.y0 && y<z.y1);
+
+  LABELS.forEach(l=>{
+    if(!l.el.classList.contains('on')) return;
+    ndc.copy(l.v).project(camera);
+    if(ndc.z>1){ l.el.style.display='none'; return; }
+
+    const x = (ndc.x*.5+.5)*innerWidth, y = (-ndc.y*.5+.5)*innerHeight;
+    const w = l.el.offsetWidth || 150, h = l.el.offsetHeight || 34;
+
+    // flip to the left of the anchor if the label would overhang the right edge
+    const flip = x + w + 16 > innerWidth;
+    const lx = flip ? x - w : x;
+    l.el.classList.toggle('flip', flip);
+
+    // hide if either end of the label lands on a panel, or it runs off-screen
+    const hide = blocked(lx, y) || blocked(lx+w, y) ||
+                 blocked(lx, y-h/2) || blocked(lx+w, y+h/2) ||
+                 lx < 4 || y < 4 || y > innerHeight-4;
+
+    l.el.style.left = lx+'px';
+    l.el.style.top  = y+'px';
+    l.el.style.display = hide ? 'none' : 'block';
+  });
+
+  renderer.render(scene, camera);
+}
+
+addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+camPos.set(...STEPS[0].cam); camTgt.set(...STEPS[0].tgt);
+go(0);
+tick(0);
+})();
+</script>
+</body>
+</html>

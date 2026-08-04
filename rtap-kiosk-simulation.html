@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>RTAP — Self-Service Kiosk · 3D Product Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{ --red:#E5121F; --red2:#FF3340; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; overflow:hidden; background:#08080b; color:#fff;
+    font-family:"Hanken Grotesk",system-ui,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  #scene{ position:fixed; inset:0; width:100%; height:100%; display:block; }
+
+  /* ---- glass chrome ---- */
+  .glass{ background:rgba(16,16,22,.55); backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%); border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.08); }
+
+  /* floating instruction bubble tracked above the kiosk */
+  #bubble{ position:fixed; left:0; top:0; max-width:340px; padding:16px 20px; border-radius:18px;
+    transform:translate(-50%,-120%); opacity:0; transition:opacity .5s ease; pointer-events:none;
+    border-left:3px solid var(--red); z-index:6; will-change:transform; }
+  #bubble.show{ opacity:1; }
+  #bubble .eyebrow{ font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--red2); margin-bottom:6px; }
+  #bubble .msg{ font-size:15px; line-height:1.4; font-weight:600; }
+  #bubble::after{ content:""; position:absolute; left:34px; bottom:-9px; width:18px; height:18px;
+    background:inherit; border-right:1px solid rgba(255,255,255,.14); border-bottom:1px solid rgba(255,255,255,.14);
+    transform:rotate(45deg); backdrop-filter:blur(16px); }
+
+  /* cinematic caption */
+  #caption{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(12px);
+    padding:11px 22px; border-radius:100px; font-size:14px; font-weight:600; letter-spacing:.01em;
+    opacity:0; transition:opacity .5s ease, transform .5s ease; z-index:6; white-space:nowrap; }
+  #caption.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* brand tag */
+  #brand{ position:fixed; top:22px; left:24px; z-index:6; display:flex; align-items:center; gap:10px; }
+  #brand svg{ width:26px; height:26px; }
+  #brand .wm{ font-family:"Archivo Expanded",sans-serif; font-weight:900; font-size:20px; letter-spacing:.02em; }
+  #brand .tag{ font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.16em;
+    color:rgba(255,255,255,.5); text-transform:uppercase; margin-left:2px; }
+
+  /* controls */
+  #controls{ position:fixed; bottom:26px; right:24px; z-index:7; display:flex; gap:10px; opacity:0;
+    transition:opacity .5s ease; pointer-events:none; }
+  #controls.show{ opacity:1; pointer-events:auto; }
+  .btn{ font:inherit; font-weight:700; font-size:13px; color:#fff; padding:11px 20px; border-radius:100px;
+    cursor:pointer; border:1px solid rgba(255,255,255,.18); background:rgba(20,20,26,.6);
+    backdrop-filter:blur(14px); transition:transform .15s ease, background .2s ease; }
+  .btn:hover{ transform:translateY(-2px); background:rgba(30,30,38,.8); }
+  .btn.primary{ background:linear-gradient(120deg,var(--red2),var(--red)); border:0;
+    box-shadow:0 12px 30px -10px rgba(229,18,31,.7); }
+
+  /* loader */
+  #loader{ position:fixed; inset:0; z-index:20; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:22px; background:radial-gradient(900px 600px at 50% 40%,#15151c,#08080b);
+    transition:opacity .8s ease; }
+  #loader.hide{ opacity:0; pointer-events:none; }
+  .ring{ width:52px; height:52px; border-radius:50%; border:3px solid rgba(255,255,255,.12);
+    border-top-color:var(--red); animation:spin 1s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  #loader .lt{ font-family:"Archivo Expanded",sans-serif; font-weight:800; letter-spacing:.04em; }
+  #loader .ls{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:rgba(255,255,255,.55); }
+
+  #hint{ position:fixed; bottom:26px; left:24px; z-index:6; font-family:"IBM Plex Mono",monospace;
+    font-size:11px; color:rgba(255,255,255,.4); }
+
+  @media (max-width:640px){
+    #bubble{ max-width:230px; padding:12px 15px; } #bubble .msg{ font-size:13px; }
+    #caption{ font-size:12px; white-space:normal; max-width:86vw; text-align:center; }
+    #hint{ display:none; }
+  }
+</style>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <div id="brand">
+    <svg viewBox="6 10 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="26" y="22" width="13" height="74" rx="6.5" fill="#E5121F"/>
+      <path fill="none" stroke="#E5121F" stroke-linecap="round" stroke-width="11" d="M56.9 58.4 A18 18 0 0 0 40.6 42.1"/>
+      <path fill="none" stroke="#E5121F" stroke-linecap="round" stroke-width="10" style="opacity:.78" d="M68.9 57.4 A30 30 0 0 0 41.6 30.1"/>
+      <path fill="none" stroke="#E5121F" stroke-linecap="round" stroke-width="9" style="opacity:.55" d="M80.8 56.3 A42 42 0 0 0 42.7 18.2"/>
+    </svg>
+    <span class="wm">RTAP</span><span class="tag">Kiosk Demo</span>
+  </div>
+
+  <div id="bubble" class="glass"><div class="eyebrow">RTAP Kiosk</div><div class="msg"></div></div>
+  <div id="caption" class="glass"></div>
+  <div id="controls"><button class="btn primary" id="replay">↻ Replay demo</button></div>
+  <div id="hint">Cinematic auto-play · drag to look after it ends</div>
+
+  <div id="loader">
+    <div class="ring"></div>
+    <div class="lt">RTAP</div>
+    <div class="ls" id="lstat">Preparing the scene…</div>
+  </div>
+
+  <!-- GSAP (global) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+  import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+  import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+  import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+  import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+  const lstat = (t)=>{ const e=document.getElementById('lstat'); if(e) e.textContent=t; };
+  window.addEventListener('error', (e)=>{ lstat('Load error — check your connection and reopen. ('+(e.message||'')+')'); });
+
+  // ---------- config / palette ----------
+  const RED = 0xE5121F, REDH = '#E5121F', REDB = '#FF3340';
+  const FACE_OFFSET = 0;                  // flip to Math.PI if the loaded human faces away
+  const KIOSK = { x:0, z:0 };             // kiosk faces +Z (toward camera)
+  const STAND = { x:0.55, z:1.35 };       // where the person stands to use it
+  const EXIT  = { x:5.6,  z:2.6 };        // walk-off point
+  const START = { x:5.2,  z:1.9 };        // entrance
+
+  // ---------- renderer ----------
+  const canvas = document.getElementById('scene');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0c0c11);
+  scene.fog = new THREE.Fog(0x0c0c11, 14, 30);
+
+  const camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 100);
+  const camPos = new THREE.Vector3(6.5, 2.6, 7.2);
+  const camTarget = new THREE.Vector3(0, 1.15, 0);
+  camera.position.copy(camPos);
+
+  // image-based lighting for premium PBR reflections
+  try {
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  } catch(err){ /* fall back to analytic lights only */ }
+
+  // ---------- postprocessing (bloom) ----------
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.42, 0.5, 0.9);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+
+  // ---------- lights (cinematic) ----------
+  scene.add(new THREE.HemisphereLight(0xdfe7ff, 0x20242e, 0.5));
+  const key = new THREE.DirectionalLight(0xffffff, 2.0);
+  key.position.set(4.5, 8.5, 6);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.near = 1; key.shadow.camera.far = 30;
+  key.shadow.camera.left = -8; key.shadow.camera.right = 8;
+  key.shadow.camera.top = 8; key.shadow.camera.bottom = -8;
+  key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0x9fbaff, 0.4); fill.position.set(-6, 4, 4); scene.add(fill);
+  const rim = new THREE.PointLight(RED, 10, 12, 2); rim.position.set(-1.6, 2.4, -1.4); scene.add(rim);
+  const spot = new THREE.SpotLight(0xffffff, 22, 12, Math.PI/7, 0.5, 1.4);
+  spot.position.set(0.4, 5.2, 2.6); spot.target.position.set(0, 1, 0.2);
+  scene.add(spot); scene.add(spot.target);
+
+  // ---------- room ----------
+  const world = new THREE.Group(); scene.add(world);
+  const floorMat = new THREE.MeshStandardMaterial({ color:0x15161c, roughness:0.28, metalness:0.35 });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), floorMat);
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; world.add(floor);
+  // faint floor grid
+  const grid = new THREE.GridHelper(40, 80, 0x2a2c36, 0x1b1d25);
+  grid.position.y = 0.002; grid.material.opacity = 0.35; grid.material.transparent = true; world.add(grid);
+
+  const wallMat = new THREE.MeshStandardMaterial({ color:0x1b1d26, roughness:0.9, metalness:0.0 });
+  const backWall = new THREE.Mesh(new THREE.PlaneGeometry(40, 10), wallMat);
+  backWall.position.set(0, 5, -2.9); backWall.receiveShadow = true; world.add(backWall);
+  const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(40, 10), wallMat);
+  leftWall.rotation.y = Math.PI/2; leftWall.position.set(-7, 5, 0); leftWall.receiveShadow = true; world.add(leftWall);
+
+  // ceiling light strips (emissive → bloom)
+  const stripMat = new THREE.MeshStandardMaterial({ color:0xffffff, emissive:0xffffff, emissiveIntensity:2.4, toneMapped:false });
+  for(let i=-2;i<=2;i++){
+    const s = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.06, 7), stripMat);
+    s.position.set(i*2.2, 4.2, 0); world.add(s);
+  }
+  // soft accent glow panel behind kiosk
+  const glowMat = new THREE.MeshStandardMaterial({ color:0x2a0810, emissive:RED, emissiveIntensity:0.5, roughness:1 });
+  const glow = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 3.2), glowMat);
+  glow.position.set(0, 1.7, -2.87); world.add(glow);
+
+  // contact-shadow helper (radial gradient blob)
+  function shadowBlob(r){
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const g = c.getContext('2d'); const rad = g.createRadialGradient(128,128,10,128,128,128);
+    rad.addColorStop(0,'rgba(0,0,0,.55)'); rad.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle = rad; g.fillRect(0,0,256,256);
+    const tex = new THREE.CanvasTexture(c);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(r, r),
+      new THREE.MeshBasicMaterial({ map:tex, transparent:true, depthWrite:false }));
+    m.rotation.x = -Math.PI/2; m.position.y = 0.012; return m;
+  }
+  const kioskShadow = shadowBlob(2.2); kioskShadow.position.set(0, 0.012, 0.1); world.add(kioskShadow);
+  const actorShadow = shadowBlob(1.3); world.add(actorShadow);
+
+  // ---------- kiosk screen (CanvasTexture UI) ----------
+  const SCR_W = 720, SCR_H = 1120;
+  const scr = document.createElement('canvas'); scr.width = SCR_W; scr.height = SCR_H;
+  const sx = scr.getContext('2d');
+  const scrTex = new THREE.CanvasTexture(scr); scrTex.colorSpace = THREE.SRGBColorSpace;
+  scrTex.anisotropy = 4;
+
+  const rr = (x,y,w,h,r)=>{ sx.beginPath(); sx.roundRect(x,y,w,h,r); };
+  function drawLogo(cx, cy, s){
+    sx.save(); sx.translate(cx, cy); sx.scale(s, s); sx.lineCap='round';
+    sx.fillStyle = REDH; sx.beginPath(); sx.roundRect(-4, -22, 13, 74, 6.5); sx.fill();
+    // reposition: draw rail then arcs relative
+    sx.restore();
+    sx.save(); sx.translate(cx, cy); sx.scale(s, s); sx.lineCap='round';
+    sx.strokeStyle = REDB;
+    const arcs = [[18,11,1],[30,10,.78],[42,9,.55]];
+    for(const [rad,w,op] of arcs){ sx.globalAlpha=op; sx.lineWidth=w; sx.beginPath();
+      sx.arc(0, 20, rad, -Math.PI*0.5, -Math.PI*0.02); sx.stroke(); }
+    sx.globalAlpha=1; sx.restore();
+  }
+  function bg(){
+    sx.fillStyle = '#0b0b10'; sx.fillRect(0,0,SCR_W,SCR_H);
+    const g = sx.createRadialGradient(SCR_W*0.8, 120, 40, SCR_W*0.8, 120, 720);
+    g.addColorStop(0,'rgba(229,18,31,.28)'); g.addColorStop(1,'rgba(229,18,31,0)');
+    sx.fillStyle = g; sx.fillRect(0,0,SCR_W,SCR_H);
+  }
+  function header(sub){
+    sx.textAlign='left';
+    sx.fillStyle='#fff'; sx.font='900 46px "Archivo Expanded",Arial'; sx.fillText('RTAP', 54, 96);
+    sx.fillStyle=REDB; sx.font='500 20px "IBM Plex Mono",monospace';
+    sx.fillText(sub||'', 56, 132);
+  }
+  function card(x,y,w,h,title,desc,active){
+    sx.save();
+    rr(x,y,w,h,26);
+    sx.fillStyle = active ? 'rgba(229,18,31,.16)' : 'rgba(255,255,255,.05)';
+    sx.fill();
+    sx.lineWidth = active?4:2; sx.strokeStyle = active ? REDB : 'rgba(255,255,255,.14)'; sx.stroke();
+    sx.textAlign='left';
+    sx.fillStyle='#fff'; sx.font='700 34px "Hanken Grotesk",Arial'; sx.fillText(title, x+34, y+ (desc? h/2-4 : h/2+12));
+    if(desc){ sx.fillStyle='rgba(255,255,255,.6)'; sx.font='500 20px "Hanken Grotesk",Arial'; sx.fillText(desc, x+34, y+h/2+30); }
+    sx.restore();
+  }
+  const S = { state:'welcome', amount:0, targetChoice:'', targetProvider:'', proceed:false, spin:0, animating:false, check:0 };
+  function renderScreen(){
+    bg();
+    if(S.state==='welcome'){
+      drawLogo(SCR_W/2 - 20, 300, 3.1);
+      sx.textAlign='center';
+      sx.fillStyle='#fff'; sx.font='800 60px "Archivo Expanded",Arial'; sx.fillText('Welcome', SCR_W/2, 560);
+      sx.fillStyle='rgba(255,255,255,.65)'; sx.font='500 26px "Hanken Grotesk",Arial';
+      sx.fillText('Tap anywhere to begin', SCR_W/2, 606);
+      const p = 0.5+0.5*Math.sin(performance.now()/500);
+      rr(SCR_W/2-150, 760, 300, 76, 38); sx.fillStyle=`rgba(229,18,31,${0.5+0.4*p})`; sx.fill();
+      sx.fillStyle='#fff'; sx.font='700 26px "Hanken Grotesk",Arial'; sx.fillText('Get Started', SCR_W/2, 808);
+    }
+    else if(S.state==='options'){
+      header('// Select a transaction');
+      const opts=[['Deposit to Bank','To BDO, BPI, LandBank & more','bank'],
+                  ['Deposit to E-Wallet','GCash, Maya, GoTyme','ewallet'],
+                  ['Buy E-Load','Prepaid airtime & data','eload']];
+      let y=210; for(const [t,d,k] of opts){ card(54, y, SCR_W-108, 190, t, d, S.targetChoice===k); y+=222; }
+    }
+    else if(S.state==='providers'){
+      header('// Select provider');
+      const provs=[['GCash','gcash'],['Maya','maya'],['BDO','bdo'],['BPI','bpi'],['LandBank','landbank'],['GoTyme','gotyme']];
+      const cols=2, cw=(SCR_W-108-30)/2, ch=170; let i=0;
+      for(const [t,k] of provs){ const cx=54+(i%cols)*(cw+30); const cy=210+Math.floor(i/cols)*(ch+26);
+        card(cx, cy, cw, ch, t, '', S.targetProvider===k); i++; }
+    }
+    else if(S.state==='insert'){
+      header('// Insert bills & coins');
+      sx.textAlign='center';
+      sx.fillStyle='rgba(255,255,255,.6)'; sx.font='500 24px "Hanken Grotesk",Arial';
+      sx.fillText('Amount inserted', SCR_W/2, 300);
+      sx.fillStyle='#fff'; sx.font='800 96px "Archivo Expanded",Arial';
+      sx.fillText('₱'+S.amount.toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2}), SCR_W/2, 400);
+      // slot hints
+      rr(120, 470, SCR_W-240, 96, 20); sx.fillStyle='rgba(255,255,255,.05)'; sx.fill();
+      sx.strokeStyle='rgba(255,255,255,.14)'; sx.lineWidth=2; sx.stroke();
+      sx.fillStyle='rgba(255,255,255,.75)'; sx.font='600 24px "Hanken Grotesk",Arial'; sx.fillText('▸ Bill acceptor', SCR_W/2, 528);
+      rr(120, 584, SCR_W-240, 96, 20); sx.fillStyle='rgba(255,255,255,.05)'; sx.fill(); sx.stroke();
+      sx.fillStyle='rgba(255,255,255,.75)'; sx.fillText('◉ Coin slot', SCR_W/2, 642);
+      // proceed
+      const on = S.proceed; const p=0.5+0.5*Math.sin(performance.now()/300);
+      rr(120, 770, SCR_W-240, 108, 30);
+      if(on){ sx.fillStyle=`rgba(16,201,102,${0.75+0.25*p})`; sx.fill();
+        sx.shadowColor='rgba(16,201,102,.9)'; sx.shadowBlur=40*p; sx.fill(); sx.shadowBlur=0; }
+      else { sx.fillStyle='rgba(255,255,255,.08)'; sx.fill(); }
+      sx.fillStyle = on?'#04120a':'rgba(255,255,255,.35)'; sx.font='800 34px "Archivo Expanded",Arial';
+      sx.fillText('PROCEED', SCR_W/2, 838);
+    }
+    else if(S.state==='processing'){
+      sx.textAlign='center';
+      sx.save(); sx.translate(SCR_W/2, 440); sx.rotate(S.spin);
+      for(let i=0;i<12;i++){ sx.rotate(Math.PI/6); sx.globalAlpha=i/12;
+        rr(-6, -78, 12, 30, 6); sx.fillStyle=REDB; sx.fill(); }
+      sx.restore(); sx.globalAlpha=1;
+      sx.fillStyle='#fff'; sx.font='800 44px "Archivo Expanded",Arial'; sx.fillText('Processing', SCR_W/2, 640);
+      sx.fillStyle='rgba(255,255,255,.6)'; sx.font='500 24px "Hanken Grotesk",Arial'; sx.fillText('Routing via licensed partner…', SCR_W/2, 686);
+    }
+    else if(S.state==='success'){
+      sx.textAlign='center';
+      const r=90*Math.min(1,S.check);
+      sx.beginPath(); sx.arc(SCR_W/2, 380, r, 0, Math.PI*2);
+      sx.fillStyle='rgba(16,201,102,.18)'; sx.fill();
+      sx.lineWidth=8; sx.strokeStyle='#12C96A'; sx.stroke();
+      if(S.check>0.6){ sx.strokeStyle='#12C96A'; sx.lineWidth=12; sx.lineCap='round'; sx.beginPath();
+        sx.moveTo(SCR_W/2-40, 380); sx.lineTo(SCR_W/2-8, 414); sx.lineTo(SCR_W/2+46, 348); sx.stroke(); }
+      sx.fillStyle='#fff'; sx.font='800 52px "Archivo Expanded",Arial'; sx.fillText('Transaction Successful', SCR_W/2, 560);
+      sx.fillStyle='rgba(255,255,255,.65)'; sx.font='500 26px "Hanken Grotesk",Arial';
+      sx.fillText('Thank you for using our kiosk.', SCR_W/2, 606);
+      sx.fillStyle=REDB; sx.font='500 20px "IBM Plex Mono",monospace'; sx.fillText('REF · RT-8842-PH', SCR_W/2, 660);
+    }
+    scrTex.needsUpdate = true;
+  }
+
+  // ---------- build kiosk ----------
+  const kiosk = new THREE.Group(); kiosk.position.set(KIOSK.x, 0, KIOSK.z); world.add(kiosk);
+  const matBody = new THREE.MeshStandardMaterial({ color:0x121218, roughness:0.4, metalness:0.6 });
+  const matDark = new THREE.MeshStandardMaterial({ color:0x0a0a0d, roughness:0.5, metalness:0.4 });
+  const matRed  = new THREE.MeshStandardMaterial({ color:RED, roughness:0.35, metalness:0.3, emissive:RED, emissiveIntensity:0.25 });
+  function boxMesh(w,h,d,m,x,y,z){ const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d), m);
+    b.position.set(x,y,z); b.castShadow=true; b.receiveShadow=true; kiosk.add(b); return b; }
+  boxMesh(0.66, 0.12, 0.5, matDark, 0, 0.06, 0);                 // base
+  boxMesh(0.2, 0.5, 0.2, matDark, 0, 0.35, -0.02);               // neck
+  const body = boxMesh(0.64, 1.55, 0.34, matBody, 0, 1.05, 0);   // main body
+  boxMesh(0.64, 0.05, 0.34, matRed, 0, 1.84, 0);                 // red top accent
+  // screen bezel + screen
+  boxMesh(0.58, 0.98, 0.06, matDark, 0, 1.36, 0.16);
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.778),
+    new THREE.MeshBasicMaterial({ map:scrTex, toneMapped:false }));
+  screen.position.set(0, 1.36, 0.196); kiosk.add(screen);
+  // slots
+  const billSlot = boxMesh(0.28, 0.03, 0.02, matDark, 0, 0.96, 0.175);
+  const coinSlot = new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.02,20), matDark);
+  coinSlot.rotation.x = Math.PI/2; coinSlot.position.set(0.17, 0.86, 0.178); kiosk.add(coinSlot);
+  // small emissive logo mark on the body top
+  const markCv = document.createElement('canvas'); markCv.width=markCv.height=128;
+  const mg = markCv.getContext('2d'); mg.strokeStyle='#fff'; mg.fillStyle='#fff'; mg.lineCap='round';
+  mg.beginPath(); mg.roundRect(40,26,16,80,8); mg.fill();
+  mg.lineWidth=12; [[22,1],[36,.7],[50,.45]].forEach(([r,o])=>{ mg.globalAlpha=o; mg.beginPath(); mg.arc(48,66,r,-1.5,-0.05); mg.stroke(); });
+  const markTex = new THREE.CanvasTexture(markCv);
+  const mark = new THREE.Mesh(new THREE.PlaneGeometry(0.12,0.12),
+    new THREE.MeshBasicMaterial({ map:markTex, transparent:true, toneMapped:false }));
+  mark.position.set(0,1.72,0.172); kiosk.add(mark);
+
+  // bill acceptor world position (front of slot)
+  const billTarget = new THREE.Vector3(0, 0.96, 0.30);
+  const coinTarget = new THREE.Vector3(0.17, 0.86, 0.30);
+
+  // ---------- bills & coins ----------
+  const spawned = [];
+  const NOTE = { 1000:'#2f6fd1', 500:'#e0a500', 200:'#2fae5a', 100:'#7c56c9', 50:'#d0443c' };
+  function billTexture(v){
+    const c=document.createElement('canvas'); c.width=420; c.height=200; const g=c.getContext('2d');
+    g.fillStyle=NOTE[v]||'#3f7fbf'; g.fillRect(0,0,420,200);
+    g.strokeStyle='rgba(255,255,255,.5)'; g.lineWidth=6; g.strokeRect(12,12,396,176);
+    g.fillStyle='rgba(255,255,255,.14)'; g.beginPath(); g.arc(330,100,58,0,Math.PI*2); g.fill();
+    g.fillStyle='#fff'; g.textAlign='left'; g.font='900 84px Arial'; g.fillText('₱'+v, 30, 128);
+    g.font='600 20px monospace'; g.fillText('RTAP · DEMO NOTE', 30, 170);
+    const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+  }
+  function spawnBill(v, onIn){
+      const geo=new THREE.BoxGeometry(0.155, 0.001, 0.074);
+      const mat=new THREE.MeshStandardMaterial({ map:billTexture(v), roughness:0.7, metalness:0 });
+      const b=new THREE.Mesh(geo, mat); b.castShadow=true;
+      b.position.set(0.36, 1.12, 0.72); b.rotation.set(0, 0, 0);
+      scene.add(b); spawned.push(b);
+      const tl=gsap.timeline();
+      tl.to(b.position, { x:billTarget.x, y:billTarget.y+0.06, z:billTarget.z, duration:0.55, ease:'power2.in' }, 0);
+      tl.to(b.rotation, { x:-Math.PI/2*0.02, duration:0.55 }, 0);
+      tl.to(b.position, { y:billTarget.y, z:0.18, duration:0.28, ease:'power2.in',
+        onComplete:()=>{ scene.remove(b); onIn&&onIn(); } }, 0.55);
+      gsap.to(b.scale, { x:0.6, z:0.6, duration:0.2, delay:0.68 });
+  }
+  function spawnCoin(v, onIn){
+      const c=new THREE.Mesh(new THREE.CylinderGeometry(0.028,0.028,0.008,24),
+        new THREE.MeshStandardMaterial({ color:0xd9a441, roughness:0.35, metalness:0.9 }));
+      c.castShadow=true; c.position.set(coinTarget.x-0.05, 1.35, coinTarget.z);
+      scene.add(c); spawned.push(c);
+      const tl=gsap.timeline();
+      tl.to(c.position, { x:coinTarget.x, z:0.18, duration:0.5, ease:'power1.in' }, 0);
+      tl.to(c.position, { y:0.87, duration:0.5, ease:'bounce.out',
+        onComplete:()=>{ scene.remove(c); onIn&&onIn(); } }, 0);
+      gsap.to(c.rotation, { x:Math.PI*2, y:Math.PI, duration:0.5 });
+  }
+  function clearMoney(){ spawned.forEach(m=>scene.remove(m)); spawned.length=0; }
+  function bumpAmount(to){ gsap.to(S, { amount:to, duration:0.4, ease:'power1.out', onUpdate:renderScreen }); }
+
+  // ---------- actor (GLB human w/ procedural fallback) ----------
+  const actor = {
+    root:new THREE.Group(), model:null, mixer:null, actions:{}, current:null,
+    type:'proc', walking:false, phase:0, parts:{},
+    setWalking(on){
+      if(this.walking===on) return; this.walking=on;
+      if(this.type==='glb' && this.actions.walk && this.actions.idle){
+        const from = on? this.actions.idle : this.actions.walk;
+        const to   = on? this.actions.walk : this.actions.idle;
+        to.reset().play(); to.enabled=true; to.setEffectiveWeight(1);
+        from.crossFadeTo(to, 0.35, false);
+      }
+    },
+    faceTo(x,z,instant){
+      const dx=x-this.root.position.x, dz=z-this.root.position.z;
+      let ry=Math.atan2(dx,dz)+(this.type==='glb'?FACE_OFFSET:0);
+      let cur=this.root.rotation.y; let d=((ry-cur+Math.PI)%(Math.PI*2))-Math.PI;
+      const ty=cur+d;
+      if(instant) this.root.rotation.y=ty; else gsap.to(this.root.rotation,{y:ty,duration:0.5,ease:'power2.out'});
+    },
+    press(){
+      if(this.type==='proc' && this.parts.armR){
+        gsap.timeline().to(this.parts.armR.rotation,{x:-1.15,duration:0.4,ease:'power2.out'})
+          .to(this.parts.armR.rotation,{x:-0.1,duration:0.5,ease:'power2.inOut'},'+=0.25');
+      } else if(this.model){
+        gsap.timeline().to(this.model.rotation,{x:0.12,duration:0.4,ease:'power2.out'})
+          .to(this.model.rotation,{x:0,duration:0.5,ease:'power2.inOut'},'+=0.2');
+      }
+    },
+    cheer(){
+      if(this.type==='proc' && this.parts.armR){
+        gsap.to(this.parts.armR.rotation,{x:-2.4,duration:0.5,yoyo:true,repeat:1,ease:'power2.inOut'});
+        gsap.to(this.parts.armL.rotation,{x:-2.4,duration:0.5,yoyo:true,repeat:1,ease:'power2.inOut'});
+      } else {
+        gsap.to(this.root.position,{y:'+=0.12',duration:0.28,yoyo:true,repeat:1,ease:'power2.out'});
+      }
+    },
+    reach(on){
+      if(this.type==='proc' && this.parts.armR){
+        if(this._rA) this._rA.kill(); if(this._rB) this._rB.kill();
+        if(on){ this._rA=gsap.to(this.parts.armR.rotation,{x:-1.32,duration:0.5,ease:'power2.out',
+                  onComplete:()=>{ this._rB=gsap.to(this.parts.armR.rotation,{x:-1.12,duration:0.55,yoyo:true,repeat:-1,ease:'sine.inOut'}); }}); }
+        else { gsap.to(this.parts.armR.rotation,{x:-0.05,duration:0.5,ease:'power2.inOut'}); }
+      } else if(this.model){ gsap.to(this.model.rotation,{x:on?0.13:0,duration:0.5,ease:'power2.inOut'}); }
+    },
+    resetPose(){
+      if(this._rA) this._rA.kill(); if(this._rB) this._rB.kill();
+      const p=this.parts; ['armL','armR','legL','legR'].forEach(k=>{ if(p[k]) p[k].rotation.x=0; });
+      if(this.model) this.model.rotation.x=0;
+    },
+    update(dt){
+      if(this.mixer) this.mixer.update(dt);
+      else if(this.type==='proc'){
+        const p=this.parts;
+        if(this.walking){
+          this.phase += dt*8;
+          const sw=Math.sin(this.phase)*0.5;
+          if(p.legL) p.legL.rotation.x=sw; if(p.legR) p.legR.rotation.x=-sw;
+          if(p.armL) p.armL.rotation.x=-sw*0.7; if(p.armR) p.armR.rotation.x=sw*0.7;
+          if(p.torso) p.torso.position.y = p.torsoY + Math.abs(Math.sin(this.phase))*0.03;
+        } else {
+          // ease limbs back to rest
+          ['legL','legR','armL','armR'].forEach(k=>{ if(p[k]) p[k].rotation.x*=0.85; });
+        }
+      }
+    }
+  };
+  scene.add(actor.root);
+  actor.root.position.set(START.x, 0, START.z);
+
+  function buildProcedural(){
+    actor.type='proc';
+    const skin=new THREE.MeshStandardMaterial({color:0xc98d63,roughness:0.92,metalness:0});
+    const hairM=new THREE.MeshStandardMaterial({color:0x2a2320,roughness:0.9});
+    const shirt=new THREE.MeshStandardMaterial({color:0x35507e,roughness:0.62,metalness:0.05});
+    const pants=new THREE.MeshStandardMaterial({color:0x22262e,roughness:0.8});
+    const shoe=new THREE.MeshStandardMaterial({color:0x141416,roughness:0.5});
+    const g=actor.root, P=actor.parts; const HIP=0.9;
+    const torso=new THREE.Group(); torso.position.y=HIP; g.add(torso); P.torso=torso; P.torsoY=HIP;
+    const chest=new THREE.Mesh(new THREE.CapsuleGeometry(0.15,0.32,8,16),shirt); chest.position.y=0.25; torso.add(chest);
+    const sh=new THREE.Mesh(new THREE.BoxGeometry(0.36,0.12,0.17),shirt); sh.position.y=0.42; sh.geometry.translate(0,0,0); torso.add(sh);
+    const neck=new THREE.Mesh(new THREE.CylinderGeometry(0.045,0.05,0.09,12),skin); neck.position.y=0.48; torso.add(neck);
+    const head=new THREE.Mesh(new THREE.SphereGeometry(0.105,28,28),skin); head.scale.set(1,1.12,1); head.position.y=0.6; torso.add(head);
+    const hair=new THREE.Mesh(new THREE.SphereGeometry(0.112,20,20),hairM); hair.scale.set(1,0.86,1); hair.position.set(0,0.635,-0.012); torso.add(hair);
+    function arm(side){ const a=new THREE.Group(); a.position.set(side*0.19,0.4,0); torso.add(a);
+      const up=new THREE.Mesh(new THREE.CapsuleGeometry(0.05,0.42,6,12),shirt); up.position.y=-0.24; a.add(up);
+      const hand=new THREE.Mesh(new THREE.SphereGeometry(0.046,12,12),skin); hand.position.y=-0.5; a.add(hand); return a; }
+    P.armL=arm(-1); P.armR=arm(1);
+    function leg(side){ const l=new THREE.Group(); l.position.set(side*0.09,HIP,0); g.add(l);
+      const up=new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.5,6,12),pants); up.position.y=-0.44; l.add(up);
+      const ft=new THREE.Mesh(new THREE.BoxGeometry(0.11,0.07,0.24),shoe); ft.position.set(0,-0.86,0.05); l.add(ft); return l; }
+    P.legL=leg(-1); P.legR=leg(1);
+    g.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; } });
+    lstat(''); finishLoad();
+  }
+
+  const loader = new GLTFLoader();
+  const GLB_URLS=[
+    'https://raw.githubusercontent.com/mrdoob/three.js/r160/examples/models/gltf/Soldier.glb',
+    'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/models/gltf/Soldier.glb',
+    'https://raw.githack.com/mrdoob/three.js/r160/examples/models/gltf/Soldier.glb'
+  ];
+  function onGLB(gltf){
+    try{
+      const model=gltf.scene;
+      const box=new THREE.Box3().setFromObject(model); const size=new THREE.Vector3(); box.getSize(size);
+      const s=1.7/(size.y||1.7); model.scale.setScalar(s);
+      const box2=new THREE.Box3().setFromObject(model); model.position.y -= box2.min.y;
+      model.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; o.frustumCulled=false; } });
+      actor.root.add(model); actor.model=model; actor.type='glb';
+      actor.mixer=new THREE.AnimationMixer(model);
+      const find=(re)=>gltf.animations.find(a=>re.test(a.name));
+      const cIdle=find(/idle/i)||gltf.animations[0];
+      const cWalk=find(/walk/i)||gltf.animations[1]||cIdle;
+      if(cIdle){ actor.actions.idle=actor.mixer.clipAction(cIdle); actor.actions.idle.play(); }
+      if(cWalk){ actor.actions.walk=actor.mixer.clipAction(cWalk); actor.actions.walk.play(); actor.actions.walk.setEffectiveWeight(0); }
+      lstat(''); finishLoad();
+    }catch(e){ buildProcedural(); }
+  }
+  function tryLoad(i){
+    if(i>=GLB_URLS.length){ lstat('Using built-in character…'); buildProcedural(); return; }
+    lstat('Loading character…');
+    loader.load(GLB_URLS[i], onGLB,
+      (p)=>{ if(p.total) lstat('Loading character… '+Math.round(p.loaded/p.total*100)+'%'); },
+      ()=>{ tryLoad(i+1); });
+  }
+  tryLoad(0);
+  setTimeout(()=>{ if(!started) buildProcedural(); }, 13000);
+
+  // ---------- controls (enabled only after the show) ----------
+  const controls=new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping=true; controls.enabled=false; controls.target.copy(camTarget);
+  controls.minDistance=2; controls.maxDistance=16; controls.maxPolarAngle=Math.PI*0.49;
+
+  // ---------- DOM overlays ----------
+  const elBubble=document.getElementById('bubble'), elBMsg=elBubble.querySelector('.msg');
+  const elCap=document.getElementById('caption'); const elCtl=document.getElementById('controls');
+  const bubbleAnchor=new THREE.Vector3(0, 2.05, 0.08); const _v=new THREE.Vector3();
+  let bubbleVisible=false;
+  function setBubble(t){ if(t){ elBMsg.textContent=t; bubbleVisible=true; elBubble.classList.add('show'); }
+    else { bubbleVisible=false; elBubble.classList.remove('show'); } }
+  function setCaption(t){ if(t){ elCap.textContent=t; elCap.classList.add('show'); } else elCap.classList.remove('show'); }
+  function updateBubble(){
+    _v.copy(bubbleAnchor).project(camera);
+    let x=(_v.x*0.5+0.5)*innerWidth, y=(-_v.y*0.5+0.5)*innerHeight;
+    const bw=elBubble.offsetWidth||300, bh=elBubble.offsetHeight||80;
+    x=Math.max(bw*0.5+14, Math.min(innerWidth-bw*0.5-14, x));   // keep fully on-screen
+    y=Math.max(bh*1.25+16, Math.min(innerHeight-16, y));        // never clipped by the top
+    elBubble.style.transform=`translate(-50%,-120%) translate(${x}px,${y}px)`;
+    elBubble.style.opacity = (_v.z>1) ? '0' : '';               // let .show class drive the fade
+  }
+
+  // ---------- master timeline ----------
+  let master;
+  function buildTimeline(){
+    S.state='welcome'; S.amount=0; S.proceed=false; S.targetChoice=''; S.targetProvider=''; S.check=0;
+    renderScreen(); setBubble(null); setCaption(null); elCtl.classList.remove('show');
+    actor.root.position.set(START.x,0,START.z); actor.setWalking(false); actor.resetPose(); actor.faceTo(STAND.x,STAND.z-1,true);
+    clearMoney();
+    camPos.set(6.5,2.6,7.2); camTarget.set(0,1.15,0);
+
+    const camTo=(px,py,pz,tx,ty,tz,dur,at,ease='power2.inOut')=>{
+      tl.to(camPos,{x:px,y:py,z:pz,duration:dur,ease},at);
+      tl.to(camTarget,{x:tx,y:ty,z:tz,duration:dur,ease},at);
+    };
+    const tl=gsap.timeline();
+
+    // establish + walk in
+    camTo(4.6,1.9,5.6, 0.4,1.15,0.6, 4.0, 0.4);
+    tl.call(()=>{ actor.setWalking(true); actor.faceTo(STAND.x,STAND.z, true); }, null, 0.6);
+    tl.to(actor.root.position,{ x:STAND.x, z:STAND.z, duration:3.7, ease:'power1.inOut' }, 0.7);
+    tl.call(()=>{ actor.setWalking(false); actor.faceTo(KIOSK.x, KIOSK.z-1); }, null, 4.5);
+
+    // welcome + options
+    tl.call(()=>{ S.state='options'; renderScreen();
+      setBubble('Welcome! Please select the transaction you want to perform.');
+      setCaption('Step 1 — Choose a transaction'); }, null, 4.9);
+    camTo(1.7,1.55,3.15, 0.05,1.42,0, 1.6, 5.0);
+    tl.call(()=>{ S.targetChoice='ewallet'; renderScreen(); }, null, 6.3);
+
+    // providers
+    tl.call(()=>{ S.state='providers'; S.targetProvider=''; renderScreen();
+      setBubble('Select the provider you want to send to.'); setCaption('Step 2 — Select provider'); }, null, 7.0);
+    tl.call(()=>{ S.targetProvider='gcash'; renderScreen(); }, null, 7.7);
+
+    // insert cash
+    tl.call(()=>{ S.state='insert'; S.amount=0; S.proceed=false; renderScreen(); actor.reach(true);
+      setBubble('Insert Bills and Coins.'); setCaption('Step 3 — Inserting bills & coins'); }, null, 8.3);
+    camTo(2.7,1.6,3.1, 0.32,1.12,0.3, 1.5, 8.4);
+    tl.call(()=>spawnBill(1000, ()=>bumpAmount(1000)), null, 8.7);
+    tl.call(()=>spawnBill(500,  ()=>bumpAmount(1500)), null, 9.5);
+    tl.call(()=>spawnBill(200,  ()=>bumpAmount(1700)), null, 10.3);
+    tl.call(()=>spawnCoin(10,   ()=>bumpAmount(1710)), null, 11.1);
+    tl.call(()=>spawnCoin(10,   ()=>bumpAmount(1720)), null, 11.6);
+
+    // proceed
+    tl.call(()=>{ S.proceed=true; renderScreen(); actor.reach(false);
+      setBubble('Enough inserted — tap Proceed.'); setCaption('Tap Proceed to continue'); }, null, 12.4);
+    camTo(2.1,1.55,3.4, 0.15,1.2,0, 1.2, 12.5);
+    tl.call(()=>{ actor.press(); }, null, 13.7);
+
+    // processing
+    tl.call(()=>{ S.state='processing'; S.animating=true; renderScreen();
+      setBubble('Processing Transaction…'); setCaption('Please wait'); }, null, 14.3);
+    camTo(1.6,1.5,3.1, 0.02,1.4,0, 1.2, 14.4);
+
+    // success
+    tl.call(()=>{ S.state='success'; S.animating=false; renderScreen();
+      gsap.to(S,{check:1,duration:0.7,ease:'back.out(2)',onUpdate:renderScreen});
+      setBubble('Transaction Successful ✓'); setCaption('Thank you for using our kiosk.');
+      actor.cheer(); }, null, 16.9);
+
+    // step away + zoom out
+    tl.call(()=>{ actor.setWalking(true); actor.faceTo(EXIT.x,EXIT.z, false); }, null, 17.6);
+    tl.to(actor.root.position,{ x:EXIT.x, z:EXIT.z, duration:3.2, ease:'power1.in' }, 17.8);
+    tl.call(()=>{ actor.setWalking(false); }, null, 20.9);
+    camTo(7.8,3.1,8.8, 0.4,1.05,0.2, 4.2, 17.7, 'power2.inOut');
+    tl.call(()=>{ setBubble(null); setCaption('RTAP — Cash in. Digital out.'); elCtl.classList.add('show');
+      controls.target.copy(camTarget); controls.enabled=true; }, null, 22.0);
+
+    master=tl;
+  }
+
+  document.getElementById('replay').addEventListener('click', ()=>{
+    if(master) master.kill(); controls.enabled=false; buildTimeline();
+  });
+
+  // ---------- start after character resolves ----------
+  let started=false;
+  function finishLoad(){
+    if(started) return; started=true;
+    document.getElementById('loader').classList.add('hide');
+    renderScreen(); buildTimeline();
+  }
+
+  // ---------- render loop ----------
+  const clock=new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const dt=Math.min(clock.getDelta(), 0.05);
+    actor.update(dt);
+    // welcome pulse / spinner keep screen live
+    if(S.state==='welcome' || S.state==='processing' || (S.state==='insert')) { S.spin+=dt*6; renderScreen(); }
+    // follow shadow under actor
+    actorShadow.position.x=actor.root.position.x; actorShadow.position.z=actor.root.position.z;
+    if(controls.enabled) controls.update();
+    else { camera.position.copy(camPos); camera.lookAt(camTarget); }
+    updateBubble();
+    composer.render();
+  }
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(()=>renderScreen()); }
+  animate();
+
+  // ---------- resize ----------
+  addEventListener('resize', ()=>{
+    camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight); composer.setSize(innerWidth,innerHeight);
+    bloom.setSize(innerWidth,innerHeight);
+  });
+  </script>
+</body>
+</html>
