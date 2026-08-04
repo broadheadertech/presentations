@@ -538,6 +538,47 @@ html,body{height:100%;overflow:hidden}
   .s-bar .count{font-size:10px}
 }
 @media(max-width:520px){.s-bar .dots{display:none}}
+
+/* ---------- market + business model ---------- */
+.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:clamp(40px,5vw,64px)}
+@media(max-width:820px){.statrow{grid-template-columns:1fr}}
+.stat{border:1px solid var(--line-dark);border-radius:20px;padding:28px 26px;background:var(--card);position:relative;overflow:hidden}
+.stat .n{font-family:var(--display);font-weight:900;font-size:clamp(34px,4.6vw,54px);line-height:1;letter-spacing:-.03em;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .glow{position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:var(--grad);filter:blur(48px);opacity:.18}
+.stat .l{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7C7C84;margin-top:14px}
+.stat p{margin-top:12px;color:#A6A6AD;font-size:14.5px}
+
+/* fee ledger */
+.ledger{margin-top:clamp(34px,4vw,52px);border:1px solid var(--line-dark);border-radius:20px;overflow:hidden;background:var(--card)}
+.lrow{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.25fr;gap:18px;padding:20px 24px;border-top:1px solid var(--line-dark);align-items:center}
+.lrow:first-child{border-top:0}
+.lhead{background:rgba(255,255,255,.03);font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7C7C84}
+.lrow .svc{font-family:var(--display);font-weight:800;font-size:17px;color:#fff;letter-spacing:-.01em}
+.lrow .svc small{display:block;font-family:var(--body);font-weight:400;font-size:13.5px;color:#8A8A92;letter-spacing:0;margin-top:5px}
+.lrow .fig{font-family:var(--mono);font-size:15px;color:#fff}
+.lrow .fig span{display:block;font-size:11px;color:#7C7C84;letter-spacing:.12em;text-transform:uppercase;margin-top:5px}
+.lrow .split{font-family:var(--mono);font-size:12.5px;color:#A6A6AD}
+.ltot{background:linear-gradient(180deg,rgba(255,46,58,.09),rgba(229,18,31,.03))}
+.ltot .svc,.ltot .fig{color:#fff}
+@media(max-width:860px){
+  .lrow{grid-template-columns:1fr 1fr;gap:14px}
+  .lrow .svc{grid-column:1/-1}
+  .lhead{display:none}
+}
+
+/* p&l ladder */
+.ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:clamp(34px,4vw,52px)}
+@media(max-width:900px){.ladder{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.ladder{grid-template-columns:1fr}}
+.rung{border:1px solid var(--line-dark);border-radius:16px;padding:22px 20px;background:rgba(255,255,255,.02)}
+.rung.on{border-color:rgba(255,46,58,.42);background:linear-gradient(180deg,rgba(255,46,58,.08),rgba(229,18,31,.02))}
+.rung .k{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7C7C84}
+.rung .n{font-family:var(--display);font-weight:900;font-size:clamp(24px,2.8vw,32px);color:#fff;margin-top:10px;letter-spacing:-.02em}
+.rung .n em{font-style:normal;color:var(--cyan)}
+.rung p{margin-top:9px;color:#8A8A92;font-size:13.5px}
+.assume{margin-top:26px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:#7C7C84;
+  border-left:2px solid rgba(255,46,58,.4);padding:4px 0 4px 14px;max-width:900px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -706,12 +747,204 @@ html,body{height:100%;overflow:hidden}
   </div>
 </section>
 
+<!-- ====== UNTAPPED MARKET ====== -->
+<section id="market" style="background:var(--midnight-2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+      <span class="eyebrow">02 — The Untapped Market</span>
+      <h2>The last mile of digital money is still a person.</h2>
+      <p>Wallets, banks and billers all stop at the same place: the point where cash has to become digital. In the towns RBS already serves, that conversion is done informally — by whoever happens to have balance that day.</p>
+    </div>
+
+    <div class="statrow">
+      <div class="stat reveal d1">
+        <div class="glow"></div>
+        <div class="n">~1 in 3</div>
+        <div class="l">Filipino adults unbanked</div>
+        <p>Still outside the formal account system — they hold cash, and they need someone to digitise it for them.</p>
+      </div>
+      <div class="stat reveal d2">
+        <div class="glow"></div>
+        <div class="n">~1.3M</div>
+        <div class="l">Sari-sari stores nationwide</div>
+        <p>The country's real retail rail. Already trusted with daily credit — but running no licensed payment infrastructure.</p>
+      </div>
+      <div class="stat reveal d3">
+        <div class="glow"></div>
+        <div class="n">3 fees</div>
+        <div class="l">Already being paid, informally</div>
+        <p>Cash-in, e-load and bills are transacted today at unregulated rates. RTAP doesn't create the demand — it formalises it.</p>
+      </div>
+    </div>
+
+    <p class="assume reveal">Market figures are directional and drawn from public BSP financial-inclusion reporting and industry sari-sari estimates — verify and re-cite before this deck goes in front of investors.</p>
+
+    <div style="margin-top:clamp(56px,7vw,92px)" class="reveal">
+      <span class="eyebrow" style="color:var(--cyan);margin-bottom:18px;display:inline-flex">Who is standing at that counter</span>
+      <div class="triad" style="margin-top:26px">
+        <div class="tcard reveal d1">
+          <div class="glow"></div>
+          <div class="k">Segment 01</div>
+          <div class="v">Remittance receivers</div>
+          <p>Families collecting money from a relative abroad or in the city. They need cash out of a wallet — near home, in full, today.</p>
+        </div>
+        <div class="tcard reveal d2">
+          <div class="glow"></div>
+          <div class="k">Segment 02</div>
+          <div class="v">Riders &amp; online sellers</div>
+          <p>Earnings land digitally and have to become cash for fuel, stock and daily spend. Right now that means a trip to town.</p>
+        </div>
+        <div class="tcard is reveal d3">
+          <div class="glow"></div>
+          <div class="k">Segment 03</div>
+          <div class="v">Cash-first households</div>
+          <p>Paid in cash, spend in cash — but pay bills, buy load and send money in a system that assumes a funded wallet.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(48px,6vw,72px)" class="reveal d2">
+      <span class="eyebrow" style="color:var(--cyan);margin-bottom:18px;display:inline-flex">Why it stayed untapped</span>
+      <p class="bigstate" style="font-size:clamp(22px,3vw,36px);max-width:920px">
+        A bank branch can't justify the rent. A fintech can't hire the trust.
+        <span class="hl">RBS already has both</span> — the footprint and the foot traffic. RTAP is the rail that turns them into a payment network.
+      </p>
+      <div class="chips">
+        <span class="chip"><b>+</b> Footprint already paid for</span>
+        <span class="chip"><b>+</b> Daily foot traffic</span>
+        <span class="chip"><b>+</b> Existing trust</span>
+        <span class="chip"><b>+</b> Franchise-exclusive rollout</span>
+        <span class="chip"><b>+</b> One licensed rail, three services</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== BUSINESS MODEL ====== -->
+<section id="model" style="background:var(--midnight)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><rect x="4.5" y="11" width="4" height="6" rx="1"/><rect x="10" y="7" width="4" height="10" rx="1"/><rect x="15.5" y="3.5" width="4" height="13.5" rx="1"/></svg></div>
+      <span class="eyebrow">03 — Business Model</span>
+      <h2>Three fee lines.<br>One counter.</h2>
+      <p>RTAP earns on the spread of every transaction the store already handles — cash-in to e-wallets, e-loading, and bills payment. The store keeps the majority share; RTAP takes the rail's cut.</p>
+    </div>
+
+    <!-- fee ledger -->
+    <div class="ledger reveal d1">
+      <div class="lrow lhead">
+        <div>Service line</div>
+        <div>Customer pays</div>
+        <div>Fee on a sample ticket</div>
+        <div>Split — store / RTAP</div>
+      </div>
+      <div class="lrow">
+        <div class="svc">E-Wallet Cash-In<small>Cash across the counter, credited to GCash / Maya and the rest.</small></div>
+        <div class="fig">2.0%<span>of amount</span></div>
+        <div class="fig">₱24<span>on a ₱1,200 load</span></div>
+        <div class="split">60 / 40</div>
+      </div>
+      <div class="lrow">
+        <div class="svc">E-Loading<small>Prepaid airtime and data across all networks.</small></div>
+        <div class="fig">10%<span>distributor margin</span></div>
+        <div class="fig">₱8<span>on a ₱80 load</span></div>
+        <div class="split">70 / 30</div>
+      </div>
+      <div class="lrow">
+        <div class="svc">Bills Payment<small>Utilities, government, telco and lending partners.</small></div>
+        <div class="fig">₱15<span>flat convenience fee</span></div>
+        <div class="fig">₱15<span>per bill settled</span></div>
+        <div class="split">60 / 40</div>
+      </div>
+      <div class="lrow ltot">
+        <div class="svc">Blended per store<small>At the sample daily volumes below.</small></div>
+        <div class="fig">₱33,000<span>gross fees / month</span></div>
+        <div class="fig">₱20,760<span>store keeps</span></div>
+        <div class="split" style="color:#fff">₱12,240 — RTAP</div>
+      </div>
+    </div>
+
+    <p class="assume reveal">Sample volumes — one store, 30-day month: cash-in 25 txns/day at ₱1,200 average · e-load 40 txns/day at ₱80 average · bills 12 txns/day. Rates and splits are placeholders for the partner terms you actually sign.</p>
+
+    <!-- the store's case -->
+    <div style="margin-top:clamp(56px,7vw,92px)" class="reveal">
+      <span class="eyebrow" style="color:var(--cyan);margin-bottom:18px;display:inline-flex">The franchisee's case</span>
+      <div class="ladder">
+        <div class="rung reveal d1">
+          <div class="k">Invests</div>
+          <div class="n">₱180K</div>
+          <p>Kiosk, install and onboarding — the one-off cost of joining the network.</p>
+        </div>
+        <div class="rung reveal d2">
+          <div class="k">Pre-funds</div>
+          <div class="n">₱100K</div>
+          <p>Revolving eCash float, roughly three days of throughput. Working capital, not a cost — it comes back on wind-down.</p>
+        </div>
+        <div class="rung reveal d3">
+          <div class="k">Earns</div>
+          <div class="n">₱20.7K<em>/mo</em></div>
+          <p>Their share of the three fee lines, on top of the retail margin the store already makes.</p>
+        </div>
+        <div class="rung on reveal d4">
+          <div class="k">Pays back in</div>
+          <div class="n">~9 months</div>
+          <p>Kiosk cost recovered from fee income alone, before any lift in store footfall.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- network math -->
+    <div style="margin-top:clamp(56px,7vw,92px)" class="reveal">
+      <span class="eyebrow" style="color:var(--cyan);margin-bottom:18px;display:inline-flex">RTAP's side — the network compounds</span>
+      <div class="ladder">
+        <div class="rung reveal d1">
+          <div class="k">Pilot · 25 stores</div>
+          <div class="n">₱306K<em>/mo</em></div>
+          <p>Proves the volumes and the float cycle in one region.</p>
+        </div>
+        <div class="rung reveal d2">
+          <div class="k">Year 1 · 100 stores</div>
+          <div class="n">₱1.22M<em>/mo</em></div>
+          <p>₱14.7M annualised. Partner rates improve as volume clears.</p>
+        </div>
+        <div class="rung reveal d3">
+          <div class="k">Year 2 · 250 stores</div>
+          <div class="n">₱3.06M<em>/mo</em></div>
+          <p>₱36.7M annualised, on infrastructure the franchise already pays rent on.</p>
+        </div>
+        <div class="rung on reveal d4">
+          <div class="k">Why it holds</div>
+          <div class="n">Zero float risk</div>
+          <p>Owners pre-fund their own wallets. RTAP never lends, never floats, never holds customer money.</p>
+        </div>
+      </div>
+      <p class="assume reveal">Straight-line scaling of the single-store model — no ramp curve, churn or seasonality applied. Build the real forecast off pilot data before committing to these figures.</p>
+    </div>
+
+    <div class="triad" style="grid-template-columns:1fr 1fr;margin-top:clamp(48px,6vw,72px)">
+      <div class="tcard reveal d1">
+        <div class="glow"></div>
+        <div class="k">What RTAP sells</div>
+        <div class="v">Access, priced per transaction</div>
+        <p>No subscription, no rent-seeking on the store. RTAP only earns when a customer is served — which keeps the network's interest and the franchisee's interest pointed the same way.</p>
+      </div>
+      <div class="tcard is reveal d2">
+        <div class="glow"></div>
+        <div class="k">What keeps it defensible</div>
+        <div class="v">Exclusivity plus proximity</div>
+        <p>The rail is franchise-exclusive, and the counter is already where the customer lives. A competitor has to build both the footprint and the trust before the fee lines are even worth chasing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ====== LOGO SYSTEM ====== -->
 <section class="light" id="logo">
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="5.5"/><rect x="10" y="10" width="10" height="10" rx="2.5"/></svg></div>
-      <span class="eyebrow">02 — Logo System</span>
+      <span class="eyebrow">04 — Logo System</span>
       <h2>One symbol. A signal that reaches every RBS store.</h2>
       <p>The RTAP mark is a payment rail meeting a tap — a vertical spine anchored by three radiating arcs. It reads at once as an <b>R</b>, a contactless tap, and a signal of access broadcasting outward across the RBS store network.</p>
     </div>
@@ -789,7 +1022,7 @@ html,body{height:100%;overflow:hidden}
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4.2 5 6.5 7.9 6.5 11.2A6.5 6.5 0 0 1 5.5 14.2C5.5 10.9 7.8 8 12 3z"/></svg></div>
-      <span class="eyebrow">03 — Colour System</span>
+      <span class="eyebrow">05 — Colour System</span>
       <h2>Bold red. Grounded in black.</h2>
       <p>A disciplined red, white &amp; black system. Black and white carry trust and clarity; a single decisive red carries energy and action — used sparingly, never decoratively.</p>
     </div>
@@ -845,7 +1078,7 @@ html,body{height:100%;overflow:hidden}
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="sec-ico" aria-hidden="true"><span style="font-family:var(--display);font-weight:800;font-size:25px;line-height:1;letter-spacing:-.02em">Aa</span></div>
-      <span class="eyebrow">04 — Typography</span>
+      <span class="eyebrow">06 — Typography</span>
       <h2>Geometric. Confident. Built to scale down.</h2>
       <p>A widened grotesque for institutional headlines, a humanist grotesque for effortless reading, and a mono for the technical texture of a payment rail.</p>
     </div>
@@ -907,7 +1140,7 @@ html,body{height:100%;overflow:hidden}
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M9.5 20.5h5M12 16.5v4"/><circle cx="12" cy="9.5" r="2.2"/></svg></div>
-      <span class="eyebrow">06 — Self-Service Kiosk</span>
+      <span class="eyebrow">08 — Self-Service Kiosk</span>
       <h2>One standing surface.<br>Every transaction.</h2>
       <p>RTAP's customer touchpoint is a single free-standing kiosk — installed in every RBS store across the franchise. Nothing to download, no account to open. Walk up, tap, done.</p>
     </div>
@@ -984,7 +1217,7 @@ html,body{height:100%;overflow:hidden}
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="6" rx="1.6"/><rect x="14" y="14" width="7" height="6" rx="1.6"/><path d="M6.5 10v3.5a3 3 0 0 0 3 3H14"/></svg></div>
-      <span class="eyebrow">07 — How It Works</span>
+      <span class="eyebrow">09 — How It Works</span>
       <h2>Cash goes in.<br>Digital <span class="hl">comes out.</span></h2>
       <p>A walk-up bridge from physical cash to the digital economy — powered entirely by licensed partners. No app, no account, and no money ever held by RTAP.</p>
     </div>
@@ -1026,7 +1259,7 @@ html,body{height:100%;overflow:hidden}
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="sec-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.6 2.7 2.6 15.3 0 18c-2.6-2.7-2.6-15.3 0-18z"/></svg></div>
-      <span class="eyebrow">08 — Brand in the World</span>
+      <span class="eyebrow">10 — Brand in the World</span>
       <h2>From one RBS store to the whole franchise.</h2>
       <p>The system flexes from a single RBS branch to the full franchise network — always reading as the same trusted infrastructure.</p>
     </div>
