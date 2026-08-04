@@ -114,7 +114,6 @@
 
   <script type="module">
   import * as THREE from 'three';
-  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
   import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -509,38 +508,11 @@
     lstat(''); finishLoad();
   }
 
-  const loader = new GLTFLoader();
-  const GLB_URLS=[
-    'https://raw.githubusercontent.com/mrdoob/three.js/r160/examples/models/gltf/Soldier.glb',
-    'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/models/gltf/Soldier.glb',
-    'https://raw.githack.com/mrdoob/three.js/r160/examples/models/gltf/Soldier.glb'
-  ];
-  function onGLB(gltf){
-    try{
-      const model=gltf.scene;
-      const box=new THREE.Box3().setFromObject(model); const size=new THREE.Vector3(); box.getSize(size);
-      const s=1.7/(size.y||1.7); model.scale.setScalar(s);
-      const box2=new THREE.Box3().setFromObject(model); model.position.y -= box2.min.y;
-      model.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; o.frustumCulled=false; } });
-      actor.root.add(model); actor.model=model; actor.type='glb';
-      actor.mixer=new THREE.AnimationMixer(model);
-      const find=(re)=>gltf.animations.find(a=>re.test(a.name));
-      const cIdle=find(/idle/i)||gltf.animations[0];
-      const cWalk=find(/walk/i)||gltf.animations[1]||cIdle;
-      if(cIdle){ actor.actions.idle=actor.mixer.clipAction(cIdle); actor.actions.idle.play(); }
-      if(cWalk){ actor.actions.walk=actor.mixer.clipAction(cWalk); actor.actions.walk.play(); actor.actions.walk.setEffectiveWeight(0); }
-      lstat(''); finishLoad();
-    }catch(e){ buildProcedural(); }
-  }
-  function tryLoad(i){
-    if(i>=GLB_URLS.length){ lstat('Using built-in character…'); buildProcedural(); return; }
-    lstat('Loading character…');
-    loader.load(GLB_URLS[i], onGLB,
-      (p)=>{ if(p.total) lstat('Loading character… '+Math.round(p.loaded/p.total*100)+'%'); },
-      ()=>{ tryLoad(i+1); });
-  }
-  tryLoad(0);
-  setTimeout(()=>{ if(!started) buildProcedural(); }, 13000);
+  // The character is built in-scene, not downloaded. A remote sample GLB used to
+  // load here first; it was a soldier model from the three.js examples, and its
+  // scale-to-height maths read bind-pose bounds off a skinned mesh, so it came in
+  // giant and clipped through the camera. No network fetch, no wrong avatar.
+  // (Built below, once finishLoad's `started` flag is past its TDZ.)
 
   // ---------- controls (enabled only after the show) ----------
   const controls=new OrbitControls(camera, renderer.domElement);
@@ -647,6 +619,7 @@
     document.getElementById('loader').classList.add('hide');
     renderScreen(); buildTimeline();
   }
+  buildProcedural();   // builds the customer, then calls finishLoad()
 
   // ---------- render loop ----------
   const clock=new THREE.Clock();
