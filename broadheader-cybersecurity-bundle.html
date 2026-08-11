@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security, Built Into the Build — Broadheader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1621;
+  --panel:#16212E;
+  --panel-2:#1C2937;
+  --line:#2B3B4C;
+  --paper:#E9EDF2;
+  --muted:#8DA0B3;
+  --signal:#F2A03D;
+  --verify:#4FB6A5;
+  --breach:#E2533F;
+  --display:"Saira Condensed",-apple-system,"Arial Narrow",sans-serif;
+  --body:"Instrument Sans",-apple-system,Segoe UI,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--body);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(1100px 620px at 78% 8%, rgba(79,182,165,.09), transparent 62%),
+    radial-gradient(900px 520px at 4% 96%, rgba(242,160,61,.07), transparent 60%);
+}
+
+/* ---------- deck shell ---------- */
+.deck{position:relative;z-index:1;height:100%;perspective:1700px;perspective-origin:50% 46%}
+.slide{
+  position:absolute;inset:0;
+  display:flex;
+  height:100%;
+  padding:64px 6vw 104px;
+  overflow-y:auto;
+  flex-direction:column;
+  justify-content:center;
+  opacity:0;pointer-events:none;
+  transform:translate3d(0,0,-680px) rotateY(var(--enter,26deg));
+  transition:transform .6s cubic-bezier(.22,.72,.2,1),opacity .42s ease;
+  backface-visibility:hidden;
+}
+.slide.is-active{opacity:1;pointer-events:auto;transform:none;z-index:2}
+.inner{width:100%;max-width:1180px;margin:0 auto}
+
+.rail{
+  position:fixed;top:0;left:0;height:2px;background:var(--signal);
+  z-index:6;transition:width .45s cubic-bezier(.2,.7,.2,1);
+}
+.chrome{
+  position:fixed;left:0;right:0;bottom:0;z-index:5;
+  display:flex;align-items:center;gap:18px;
+  padding:14px 6vw;
+  background:linear-gradient(to top,rgba(14,22,33,.96),rgba(14,22,33,0));
+}
+.mark{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  color:var(--muted);text-transform:uppercase;white-space:nowrap;
+}
+.dots{display:flex;gap:6px;flex:1;flex-wrap:wrap}
+.dot{
+  width:16px;height:3px;border:0;padding:0;background:var(--line);
+  cursor:pointer;transition:background .2s,transform .2s;
+}
+.dot:hover{background:var(--muted)}
+.dot.on{background:var(--signal);transform:scaleY(1.8)}
+.pager{display:flex;gap:8px}
+.pager button{
+  font-family:var(--mono);font-size:12px;
+  background:var(--panel);color:var(--paper);border:1px solid var(--line);
+  width:38px;height:32px;cursor:pointer;transition:border-color .2s,background .2s;
+}
+.pager button:hover{border-color:var(--signal);background:var(--panel-2)}
+.count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+
+/* ---------- type ---------- */
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--signal);margin:0 0 18px;
+}
+h1{
+  font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(38px,7.4vw,92px);line-height:.94;letter-spacing:-.005em;
+  margin:0 0 22px;
+}
+h2{
+  font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(28px,4.6vw,54px);line-height:1;letter-spacing:.005em;
+  margin:0 0 10px;
+}
+h3{
+  font-family:var(--display);font-weight:600;text-transform:uppercase;
+  font-size:19px;letter-spacing:.05em;margin:0 0 8px;
+}
+.lede{font-size:clamp(15px,1.55vw,19px);line-height:1.55;color:#C6D2DE;max-width:70ch;margin:0 0 12px}
+p{line-height:1.6}
+.small{font-size:14px;line-height:1.6;color:var(--muted)}
+.tag{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);
+}
+.hr{height:1px;background:var(--line);margin:26px 0}
+
+/* ---------- generic blocks ---------- */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{
+  background:var(--panel);border:1px solid var(--line);
+  padding:20px 20px 22px;position:relative;
+}
+.card .tag{display:block;margin-bottom:12px}
+.card p{margin:0;font-size:14.5px;color:#BECBD8}
+.card.accent{border-top:2px solid var(--signal)}
+.card.teal{border-top:2px solid var(--verify)}
+
+ul.ticks{list-style:none;margin:0;padding:0}
+ul.ticks li{
+  position:relative;padding-left:22px;margin-bottom:9px;font-size:14.5px;line-height:1.5;color:#C6D2DE;
+}
+ul.ticks li::before{
+  content:"";position:absolute;left:0;top:8px;width:9px;height:9px;
+  border-left:1.5px solid var(--verify);border-bottom:1.5px solid var(--verify);
+  transform:rotate(-45deg);
+}
+ul.plain{list-style:none;margin:0;padding:0}
+ul.plain li{
+  font-family:var(--mono);font-size:12.5px;color:#BECBD8;
+  padding:9px 0;border-bottom:1px solid var(--line);
+}
+.kv{display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+.kv b{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);min-width:112px;font-weight:500}
+.kv span{font-size:14.5px;color:#C6D2DE;line-height:1.5}
+
+/* ---------- service header strip ---------- */
+.svc{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+.svc .no{
+  font-family:var(--display);font-weight:700;font-size:clamp(46px,7vw,88px);
+  line-height:.8;color:transparent;-webkit-text-stroke:1.5px var(--line);
+}
+.svc .role{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink);background:var(--signal);padding:5px 10px;margin-bottom:8px;
+}
+
+/* ---------- signature diagram ---------- */
+.sigwrap{background:var(--panel);border:1px solid var(--line);padding:16px 16px 8px}
+.sig{width:100%;height:auto;display:block}
+.lane-label{font-family:var(--mono);font-size:12px;fill:var(--muted);letter-spacing:.06em}
+.lane-label.hot{fill:var(--breach)}
+.gate-label{font-family:var(--display);font-size:15px;font-weight:600;letter-spacing:.08em;fill:var(--paper)}
+.gate-label.off{fill:#5A6B7C}
+.gate-rect{fill:rgba(79,182,165,.13);stroke:var(--verify);stroke-width:1.5}
+.gate-rect.off{fill:none;stroke:#3C4C5D;stroke-width:1.2;stroke-dasharray:4 5}
+.flow{stroke:var(--line);stroke-width:2;fill:none}
+.flow.hot{stroke:var(--breach);stroke-width:2.5;stroke-dasharray:9 6;animation:march 1s linear infinite}
+.stop{stroke:var(--verify);stroke-width:2}
+@keyframes march{to{stroke-dashoffset:-30}}
+.asset{fill:rgba(242,160,61,.1);stroke:var(--signal);stroke-width:1.5}
+.asset.hit{fill:rgba(226,83,63,.18);stroke:var(--breach)}
+.asset-label{font-family:var(--display);font-size:15px;font-weight:600;letter-spacing:.08em;fill:var(--signal);text-anchor:middle}
+.asset-label.hit{fill:var(--breach)}
+
+.toggles{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 10px}
+.toggles button{
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(79,182,165,.12);color:var(--paper);
+  border:1px solid var(--verify);padding:9px 14px;cursor:pointer;transition:all .2s;
+}
+.toggles button[aria-pressed="false"]{
+  background:transparent;color:#697A8B;border-color:#37485A;border-style:dashed;
+}
+.readout{
+  font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--verify);
+  border-left:2px solid var(--verify);padding-left:12px;
+}
+.readout.bad{color:var(--breach);border-color:var(--breach)}
+
+/* ---------- cycle ---------- */
+.cycle{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative}
+.cycle .step{background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--verify);padding:18px}
+.cycle .step .tag{color:var(--verify)}
+.loopnote{
+  margin-top:14px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--signal);text-align:right;
+}
+
+/* ---------- gantt ---------- */
+.gantt{border:1px solid var(--line);background:var(--panel)}
+.gantt .row{display:grid;grid-template-columns:170px 1fr;border-bottom:1px solid var(--line)}
+.gantt .row:last-child{border-bottom:0}
+.gantt .name{
+  padding:14px 14px;font-family:var(--display);font-weight:600;text-transform:uppercase;
+  font-size:14px;letter-spacing:.06em;border-right:1px solid var(--line);
+}
+.gantt .track{display:grid;grid-template-columns:repeat(12,1fr);align-items:center;padding:8px 10px}
+.gantt .bar{height:16px;background:var(--verify);grid-row:1}
+.gantt .bar.amber{background:var(--signal)}
+.gantt .bar.ghost{background:repeating-linear-gradient(90deg,var(--line) 0 6px,transparent 6px 12px);}
+.gantt .head{display:grid;grid-template-columns:170px 1fr;border-bottom:1px solid var(--line)}
+.gantt .head .name{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);font-weight:400}
+.gantt .head .track{grid-template-columns:repeat(12,1fr);padding:8px 10px}
+.gantt .head .track span{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:center}
+
+/* ---------- tiers ---------- */
+.tier{background:var(--panel);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column}
+.tier.pick{border-color:var(--signal);background:var(--panel-2)}
+.tier h3{margin-bottom:4px}
+.tier .price{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;display:block}
+.tier ul{list-style:none;margin:0;padding:0;flex:1}
+.tier li{font-size:13.5px;padding:7px 0;border-bottom:1px solid var(--line);color:#C6D2DE;display:flex;gap:9px}
+.tier li:last-child{border-bottom:0}
+.tier li i{font-family:var(--mono);font-style:normal;color:var(--verify);font-size:12px}
+.tier li.no{color:#5F7080}
+.tier li.no i{color:#42525F}
+
+/* ---------- title slide ---------- */
+.title-meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:34px;padding-top:22px;border-top:1px solid var(--line)}
+.title-meta div{min-width:120px}
+.stack{width:190px;height:150px;margin-bottom:26px;perspective:900px}
+.stack span{
+  position:relative;display:block;width:100%;height:100%;
+  transform-style:preserve-3d;transform:rotateX(60deg) rotateZ(-40deg);
+  animation:drift 12s ease-in-out infinite alternate;
+}
+.stack i{
+  position:absolute;left:0;top:14px;width:146px;height:146px;
+  border:1px solid var(--verify);background:rgba(79,182,165,.10);
+}
+.stack i:nth-child(1){transform:translateZ(0)}
+.stack i:nth-child(2){transform:translateZ(26px)}
+.stack i:nth-child(3){transform:translateZ(52px);border-color:var(--signal);background:rgba(242,160,61,.10)}
+.stack i:nth-child(4){transform:translateZ(78px);border-color:var(--signal);background:rgba(242,160,61,.07)}
+@keyframes drift{from{transform:rotateX(60deg) rotateZ(-40deg)}to{transform:rotateX(54deg) rotateZ(-26deg)}}
+
+/* ---------- 3D layered-defence scene ---------- */
+.scene{
+  display:grid;grid-template-columns:1fr 250px;gap:26px;align-items:center;
+  background:var(--panel);border:1px solid var(--line);padding:22px 24px;
+}
+.stagewrap{perspective:1300px;perspective-origin:58% 50%;height:340px;display:flex;align-items:center;justify-content:center}
+.stage{
+  position:relative;width:380px;height:250px;transform-style:preserve-3d;
+  transform:rotateX(6deg) rotateY(-31deg) translate3d(-40px,0,220px);
+}
+.plane,.prod{
+  position:absolute;left:0;top:0;width:380px;height:250px;
+  transform-style:preserve-3d;transition:border-color .3s,background .3s;
+}
+.plane{border:1.5px solid var(--verify);background:rgba(79,182,165,.06)}
+.plane.off{border:1.2px dashed #3C4C5D;background:transparent}
+.prod{border:1.5px solid var(--signal);background:rgba(242,160,61,.07);transform:translateZ(0)}
+.prod.hit{border-color:var(--breach);background:rgba(226,83,63,.15)}
+.pl{
+  position:absolute;top:-23px;left:0;white-space:nowrap;
+  font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--paper);
+}
+.plane.off .pl{color:#5A6B7C}
+.prod .pl{color:var(--signal)}
+.prod.hit .pl{color:var(--breach)}
+.slot{position:absolute;width:100px;height:88px;border:1px dashed #354556}
+.slot.solid{border:1px solid var(--verify);background:rgba(79,182,165,.20)}
+.plane.off .slot,.plane.off .slot.solid{border:1px dashed #2F3E4E;background:transparent}
+.dot{
+  position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;
+  background:var(--verify);box-shadow:0 0 14px var(--verify);
+  animation:travel 2.8s cubic-bezier(.45,.05,.75,.6) infinite;
+}
+.dot.hot{background:var(--breach);box-shadow:0 0 16px var(--breach)}
+@keyframes travel{
+  0%{transform:translate3d(var(--x),var(--y),-860px);opacity:0}
+  14%{opacity:1}
+  72%,100%{transform:translate3d(var(--x),var(--y),var(--z));opacity:1}
+}
+.routekey{align-self:center}
+.routekey div{
+  display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:#BECBD8;
+}
+.routekey div:last-child{border-bottom:0}
+.routekey em{width:8px;height:8px;border-radius:50%;background:var(--verify);flex:none}
+.routekey div.hot{color:var(--breach)}
+.routekey div.hot em{background:var(--breach)}
+
+/* ---------- motion ---------- */
+.is-active .rise{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+.is-active .rise:nth-child(1){animation-delay:.02s}
+.is-active .rise:nth-child(2){animation-delay:.08s}
+.is-active .rise:nth-child(3){animation-delay:.14s}
+.is-active .rise:nth-child(4){animation-delay:.2s}
+.is-active .rise:nth-child(5){animation-delay:.26s}
+.is-active .rise:nth-child(6){animation-delay:.32s}
+.is-active .rise:nth-child(7){animation-delay:.38s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+@media (max-width:900px){
+  .slide{padding:44px 5vw 100px;justify-content:flex-start}
+  .g3,.g4,.cycle{grid-template-columns:repeat(2,1fr)}
+  .g2{grid-template-columns:1fr}
+  .dots{display:none}
+  .scene{grid-template-columns:1fr;gap:16px;padding:16px}
+  .stagewrap{height:300px;perspective:1000px}
+  .stage{transform:rotateX(8deg) rotateY(-28deg) translate3d(-20px,0,190px) scale(.78)}
+  .slide{transform:translate3d(0,0,-420px) rotateY(var(--enter,18deg))}
+}
+@media (max-width:600px){
+  .g3,.g4,.cycle{grid-template-columns:1fr}
+  .svc .no{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .dot{transform:translate3d(var(--x),var(--y),var(--z))!important;opacity:1!important}
+}
+</style>
+</head>
+<body>
+
+<div class="rail" id="rail"></div>
+<div class="deck" id="deck">
+
+<!-- 1 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <div class="stack rise"><span><i></i><i></i><i></i><i></i></span></div>
+    <p class="eyebrow rise">Broadheader Information Technology Solutions</p>
+    <h1 class="rise">Security,<br>built into<br>the build.</h1>
+    <p class="lede rise">A four-part security program that runs alongside the project instead of after it: someone to set the direction, testing that proves what is exposed, hardening that closes it, and drills that reach the people behind the keyboards.</p>
+    <div class="title-meta rise">
+      <div><span class="tag">Direct</span><h3>vCISO</h3></div>
+      <div><span class="tag">Find</span><h3>VAPT</h3></div>
+      <div><span class="tag">Fix</span><h3>Hardening</h3></div>
+      <div><span class="tag">Drill</span><h3>Phishing Sim</h3></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <p class="eyebrow rise">The premise</p>
+    <h2 class="rise">Breaches rarely start with a genius.</h2>
+    <p class="lede rise">They start with something ordinary that nobody owned: a password reused across systems, a server left a version behind, an endpoint that trusts whatever the app sends it, an invoice email that looked right. Each has a different owner and a different fix — which is why one service never covers it.</p>
+    <div class="grid g4 rise" style="margin-top:26px">
+      <div class="card"><span class="tag">Ordinary cause 01</span><p>A credential leaks, and the same one opens three more systems.</p></div>
+      <div class="card"><span class="tag">Ordinary cause 02</span><p>A public-facing service misses a patch cycle for four months.</p></div>
+      <div class="card"><span class="tag">Ordinary cause 03</span><p>An API checks the session but never checks whose record is being asked for.</p></div>
+      <div class="card"><span class="tag">Ordinary cause 04</span><p>A finance staffer clicks, types the password, and tells no one for a week.</p></div>
+    </div>
+    <div class="hr rise"></div>
+    <p class="small rise">Under the Data Privacy Act of 2012, an organisation that holds personal data is expected to appoint a Data Protection Officer, maintain security measures proportionate to the risk, and notify the National Privacy Commission and affected individuals within 72 hours of discovering a qualifying breach. Enterprise clients, funders, and app stores increasingly ask for the evidence before they sign.</p>
+  </div>
+</section>
+
+<!-- 3 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <p class="eyebrow rise">Why it is a bundle</p>
+    <h2 class="rise">Four layers. Switch one off.</h2>
+    <p class="lede rise">Each service stops a different set of attack routes. Turn any layer off below and watch which routes reach production.</p>
+
+    <div class="scene rise" style="margin-top:18px">
+      <div class="stagewrap">
+        <div class="stage" id="stage" role="img" aria-label="Four service layers stacked in depth; six attack routes travel toward production and stop at whichever layer covers them"></div>
+      </div>
+      <div class="routekey" id="routekey"></div>
+    </div>
+
+    <div class="toggles rise" id="toggles"></div>
+    <p class="readout rise" id="readout">All six routes contained.</p>
+  </div>
+</section>
+
+<!-- 4 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <p class="eyebrow rise">The bundle</p>
+    <h2 class="rise">One program, four jobs.</h2>
+    <div class="grid g4 rise" style="margin-top:26px">
+      <div class="card accent">
+        <span class="tag">01 — Direct</span>
+        <h3>vCISO</h3>
+        <p>A security lead on retainer. Sets policy, owns the risk register, answers the client and regulator questions, and decides what gets fixed first.</p>
+      </div>
+      <div class="card accent">
+        <span class="tag">02 — Find</span>
+        <h3>VAPT</h3>
+        <p>Authorised testing of apps, mobile builds, APIs, and servers. Vulnerabilities are found, then safely exploited to prove real impact.</p>
+      </div>
+      <div class="card accent">
+        <span class="tag">03 — Fix</span>
+        <h3>Hardening</h3>
+        <p>Servers, cloud accounts, and systems brought to a defensible baseline — access, patching, logging, backups, segmentation.</p>
+      </div>
+      <div class="card accent">
+        <span class="tag">04 — Drill</span>
+        <h3>Phishing Simulation</h3>
+        <p>Realistic, consented phishing campaigns against your own staff, measured and coached — no blame, just a rate that improves.</p>
+      </div>
+    </div>
+    <div class="hr rise"></div>
+    <p class="lede rise" style="margin:0">Bought separately, each produces a report. Bought together, they produce a loop: the vCISO turns test findings into a fix queue, hardening closes it, the drill covers what tooling cannot, and the next test measures whether any of it held.</p>
+  </div>
+</section>
+
+<!-- 5 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <div class="svc rise">
+      <span class="no">01</span>
+      <div><span class="role">Direct</span><h2 style="margin:0">vCISO</h2></div>
+    </div>
+    <p class="lede rise">A Chief Information Security Officer's judgement, at a fraction of the headcount. For organisations that need someone accountable for security decisions but do not yet need a full-time executive.</p>
+    <div class="grid g2 rise" style="margin-top:22px">
+      <div class="card">
+        <span class="tag">What we do</span>
+        <ul class="ticks">
+          <li>Build and maintain the risk register — ranked, owned, dated</li>
+          <li>Write the policy set: access, data handling, incident response, vendors, BYOD</li>
+          <li>Run the Data Privacy Act programme — DPO support, privacy impact assessments, breach playbook</li>
+          <li>Review third parties and hosting providers before they touch your data</li>
+          <li>Prioritise findings from testing into a fix queue engineering can actually work</li>
+          <li>Prepare the security answers for client due-diligence and audits</li>
+        </ul>
+      </div>
+      <div>
+        <div class="card teal" style="margin-bottom:16px">
+          <span class="tag">What you receive</span>
+          <ul class="plain">
+            <li>Security policy set, version-controlled</li>
+            <li>Risk register with owners and target dates</li>
+            <li>Incident response plan + contact tree</li>
+            <li>Monthly one-page report for leadership</li>
+            <li>Quarterly roadmap review</li>
+          </ul>
+        </div>
+        <div class="kv"><b>Cadence</b><span>Monthly retainer; a fixed block of hours plus on-call for incidents</span></div>
+        <div class="kv"><b>Works with</b><span>Your engineering lead, operations, HR, and legal counsel</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <div class="svc rise">
+      <span class="no">02</span>
+      <div><span class="role">Find</span><h2 style="margin:0">VAPT</h2></div>
+    </div>
+    <p class="lede rise">Vulnerability assessment tells you what is weak. Penetration testing proves what an attacker could actually do with it. We do both, under written authorisation and an agreed scope.</p>
+    <div class="grid g3 rise" style="margin-top:22px">
+      <div class="card">
+        <span class="tag">Scope options</span>
+        <ul class="ticks">
+          <li>Web applications and admin portals</li>
+          <li>Mobile builds — Android and iOS, including local storage and traffic</li>
+          <li>REST and GraphQL APIs, including authorisation logic</li>
+          <li>Servers, containers, and cloud configuration</li>
+          <li>External perimeter and exposed services</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">How it runs</span>
+        <ul class="plain">
+          <li>1 — Scope + rules of engagement signed</li>
+          <li>2 — Reconnaissance and attack surface map</li>
+          <li>3 — Automated scanning, manually verified</li>
+          <li>4 — Manual exploitation of confirmed issues</li>
+          <li>5 — Impact chaining and privilege escalation</li>
+          <li>6 — Report, walkthrough, and fix advisory</li>
+          <li>7 — Retest after remediation</li>
+        </ul>
+      </div>
+      <div class="card teal">
+        <span class="tag">What you receive</span>
+        <ul class="ticks">
+          <li>Executive summary written for non-technical readers</li>
+          <li>Findings rated by CVSS with reproduction steps and evidence</li>
+          <li>Remediation guidance per finding, not generic advice</li>
+          <li>Retest report confirming what was actually closed</li>
+          <li>Attestation letter for clients and partners</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small rise" style="margin-top:18px">Methodology follows OWASP WSTG, ASVS, and MASVS, with NIST SP 800-115 for process. Testing is non-destructive by default: no denial-of-service, no data exfiltration beyond proof, staging environments preferred where production risk is material.</p>
+  </div>
+</section>
+
+<!-- 7 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <div class="svc rise">
+      <span class="no">03</span>
+      <div><span class="role">Fix</span><h2 style="margin:0">Security Hardening</h2></div>
+    </div>
+    <p class="lede rise">Most systems ship with defaults chosen for convenience. Hardening replaces those with a baseline chosen for exposure — then documents it so the next server is built the same way.</p>
+    <div class="grid g2 rise" style="margin-top:22px">
+      <div class="card">
+        <span class="tag">What we tighten</span>
+        <ul class="ticks">
+          <li>Access — key-based SSH, MFA everywhere, least-privilege roles, no shared accounts</li>
+          <li>Surface — close unused ports and services, segment networks, restrict admin planes</li>
+          <li>Patching — a real cadence with an emergency path for critical CVEs</li>
+          <li>Application edge — TLS configuration, security headers, WAF and rate limiting</li>
+          <li>Secrets — out of the repository, into a managed store, rotated</li>
+          <li>Database — encryption at rest, restricted network access, audited privileges</li>
+          <li>Visibility — centralised logs, alerting on the events that matter</li>
+          <li>Recovery — backups that are tested by restoring them, not by existing</li>
+        </ul>
+      </div>
+      <div>
+        <div class="card teal" style="margin-bottom:16px">
+          <span class="tag">What you receive</span>
+          <ul class="plain">
+            <li>Hardening baseline document per system type</li>
+            <li>Before / after posture scorecard</li>
+            <li>Configuration scripts where automatable</li>
+            <li>Operations runbook for your team</li>
+            <li>Backup and restore test evidence</li>
+          </ul>
+        </div>
+        <div class="kv"><b>Benchmarks</b><span>CIS Benchmarks for OS, container, and cloud baselines</span></div>
+        <div class="kv"><b>Change control</b><span>Staged first, rolled out in a maintenance window, reversible</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <div class="svc rise">
+      <span class="no">04</span>
+      <div><span class="role">Drill</span><h2 style="margin:0">Phishing Simulation</h2></div>
+    </div>
+    <p class="lede rise">Technical controls stop most mail. The rest depends on whether a person notices — and whether they feel safe reporting it. We test both, with the organisation's consent and without naming individuals.</p>
+    <div class="grid g3 rise" style="margin-top:22px">
+      <div class="card">
+        <span class="tag">Scenarios we run</span>
+        <ul class="ticks">
+          <li>Credential harvest via a cloned login page</li>
+          <li>Invoice and payment redirection to finance</li>
+          <li>Executive impersonation with an urgent request</li>
+          <li>Delivery, HR, or IT notice with an attachment</li>
+          <li>Optional SMS and voice pretexting</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">What we measure</span>
+        <ul class="plain">
+          <li>Open rate</li>
+          <li>Click rate</li>
+          <li>Credential submission rate</li>
+          <li>Report rate — the number that matters</li>
+          <li>Median time to first report</li>
+          <li>Trend by department across quarters</li>
+        </ul>
+      </div>
+      <div class="card teal">
+        <span class="tag">What you receive</span>
+        <ul class="ticks">
+          <li>Campaign report with department-level breakdown</li>
+          <li>Immediate teachable moment page for anyone who clicks</li>
+          <li>Short training modules matched to the failure type</li>
+          <li>A reporting workflow your staff can actually use</li>
+          <li>Quarterly trend line for leadership</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small rise" style="margin-top:18px">Run under a no-blame policy agreed with leadership and HR in advance. Submitted passwords are never stored — only the fact of submission. Results are reported as rates, not as a list of names.</p>
+  </div>
+</section>
+
+</div>
+
+<div class="chrome">
+  <span class="mark">Broadheader — Cybersecurity Bundle</span>
+  <div class="dots" id="dots"></div>
+  <span class="count" id="count">01 / 08</span>
+  <div class="pager">
+    <button id="prev" aria-label="Previous slide">‹</button>
+    <button id="next" aria-label="Next slide">›</button>
+  </div>
+</div>
+
+<script>
+/* ---------------- deck navigation ---------------- */
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dots = document.getElementById('dots');
+const rail = document.getElementById('rail');
+const count = document.getElementById('count');
+let i = 0;
+
+slides.forEach((_, n) => {
+  const b = document.createElement('button');
+  b.className = 'dot';
+  b.setAttribute('aria-label', 'Go to slide ' + (n + 1));
+  b.addEventListener('click', () => go(n));
+  dots.appendChild(b);
+});
+
+function go(n){
+  const prev = i;
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  const dir = i >= prev ? 1 : -1;
+  slides.forEach((s, k) => {
+    if (k === i) s.style.setProperty('--enter', dir > 0 ? '26deg' : '-26deg');
+    else if (k === prev) s.style.setProperty('--enter', dir > 0 ? '-26deg' : '26deg');
+  });
+  void slides[i].offsetWidth;
+  slides.forEach((s, k) => s.classList.toggle('is-active', k === i));
+  Array.from(dots.children).forEach((d, k) => d.classList.toggle('on', k === i));
+  rail.style.width = ((i + 1) / slides.length * 100) + '%';
+  count.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+  slides[i].scrollTop = 0;
+}
+document.getElementById('next').addEventListener('click', () => go(i + 1));
+document.getElementById('prev').addEventListener('click', () => go(i - 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+  if (e.key === 'Home') go(0);
+  if (e.key === 'End') go(slides.length - 1);
+});
+go(0);
+
+/* ---------------- 3D layered defence scene ---------------- */
+const gates = [
+  { id:'vciso',     label:'vCISO' },
+  { id:'vapt',      label:'VAPT' },
+  { id:'hardening', label:'HARDENING' },
+  { id:'phishing',  label:'PHISHING SIM' }
+];
+const routes = [
+  { label:'PHISHING EMAIL',      blockedBy:['phishing'] },
+  { label:'WEAK CREDENTIALS',    blockedBy:['vciso','hardening'] },
+  { label:'UNPATCHED SERVICES',  blockedBy:['hardening'] },
+  { label:'APP & API FLAWS',     blockedBy:['vapt'] },
+  { label:'CLOUD MISCONFIG',     blockedBy:['vapt','hardening'] },
+  { label:'NO POLICY / NO PLAN', blockedBy:['vciso'] }
+];
+const on = { vciso:true, vapt:true, hardening:true, phishing:true };
+const DEPTH = [-660, -495, -330, -165];   /* far to near */
+
+const stage = document.getElementById('stage');
+const routekey = document.getElementById('routekey');
+const togglesEl = document.getElementById('toggles');
+const readout = document.getElementById('readout');
+
+const slotX = n => 22 + (n % 3) * 118;
+const slotY = n => 40 + Math.floor(n / 3) * 105;
+const dotX  = n => (slotX(n) + 50) + 'px';
+const dotY  = n => (slotY(n) + 44) + 'px';
+
+/* service planes */
+gates.forEach((g, k) => {
+  const pane = document.createElement('div');
+  pane.className = 'plane';
+  pane.dataset.gate = g.id;
+  pane.style.transform = 'translateZ(' + DEPTH[k] + 'px)';
+
+  const lab = document.createElement('span');
+  lab.className = 'pl';
+  lab.textContent = g.label;
+  pane.appendChild(lab);
+
+  routes.forEach((rt, n) => {
+    const slot = document.createElement('span');
+    slot.className = 'slot' + (rt.blockedBy.includes(g.id) ? ' solid' : '');
+    slot.style.left = slotX(n) + 'px';
+    slot.style.top = slotY(n) + 'px';
+    pane.appendChild(slot);
+  });
+  stage.appendChild(pane);
+
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.dataset.gate = g.id;
+  b.setAttribute('aria-pressed', 'true');
+  b.textContent = g.label;
+  b.addEventListener('click', () => { on[g.id] = !on[g.id]; render(); });
+  togglesEl.appendChild(b);
+});
+
+/* production plane */
+const prod = document.createElement('div');
+prod.className = 'prod';
+prod.innerHTML = '<span class="pl">Production</span>';
+stage.appendChild(prod);
+
+/* travelling routes + key */
+routes.forEach((rt, n) => {
+  const d = document.createElement('span');
+  d.className = 'dot';
+  d.dataset.dot = n;
+  d.style.setProperty('--x', dotX(n));
+  d.style.setProperty('--y', dotY(n));
+  d.style.animationDelay = (n * 0.34) + 's';
+  stage.appendChild(d);
+
+  const row = document.createElement('div');
+  row.dataset.key = n;
+  row.innerHTML = '<em></em>' + rt.label;
+  routekey.appendChild(row);
+});
+
+function render(){
+  let breaches = 0;
+
+  gates.forEach(g => {
+    stage.querySelector('.plane[data-gate="' + g.id + '"]')
+         .classList.toggle('off', !on[g.id]);
+    togglesEl.querySelector('button[data-gate="' + g.id + '"]')
+             .setAttribute('aria-pressed', on[g.id] ? 'true' : 'false');
+  });
+
+  routes.forEach((rt, n) => {
+    const k = gates.findIndex(g => rt.blockedBy.includes(g.id) && on[g.id]);
+    const dot = stage.querySelector('.dot[data-dot="' + n + '"]');
+    const row = routekey.querySelector('[data-key="' + n + '"]');
+    const through = k === -1;
+    if (through) breaches++;
+    dot.style.setProperty('--z', (through ? 0 : DEPTH[k] + 10) + 'px');
+    dot.classList.toggle('hot', through);
+    row.classList.toggle('hot', through);
+    dot.style.animationName = 'none';
+    void dot.offsetWidth;
+    dot.style.animationName = 'travel';
+  });
+
+  prod.classList.toggle('hit', breaches > 0);
+
+  if (breaches === 0) {
+    readout.className = 'readout';
+    readout.textContent = 'All six routes contained.';
+  } else {
+    readout.className = 'readout bad';
+    readout.textContent = breaches + (breaches === 1 ? ' route' : ' routes') +
+      ' now reaching production. Every layer covers something no other layer does.';
+  }
+}
+render();
+</script>
+</body>
+</html>

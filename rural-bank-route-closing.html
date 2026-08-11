@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rural Bank Route Is Closing — Broadheader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#08182A;
+  --ink-2:#0E2338;
+  --ink-3:#15304A;
+  --amber:#F0A22E;
+  --teal:#35C3B4;
+  --alert:#E4574C;
+  --fog:#9DB4C8;
+  --chalk:#EAF2F8;
+  --line:rgba(157,180,200,.22);
+  --line-strong:rgba(157,180,200,.42);
+  --display:"Saira Condensed",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(1200px 700px at 78% -10%, rgba(53,195,180,.10), transparent 60%),
+    radial-gradient(900px 600px at 10% 110%, rgba(240,162,46,.09), transparent 60%),
+    var(--ink);
+  color:var(--chalk);
+  font-family:var(--body);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+/* ---------- deck shell ---------- */
+.deck{position:relative;height:100vh;width:100%;perspective:1700px;perspective-origin:50% 46%}
+.slide{
+  position:absolute;inset:0;
+  display:none;
+  padding:clamp(28px,4.5vh,60px) clamp(28px,6vw,110px) clamp(64px,8vh,90px);
+  flex-direction:column;justify-content:center;
+  transform-style:preserve-3d;
+  overflow-y:auto;overscroll-behavior:contain;
+  opacity:0;transform:translate3d(9%,0,-560px) rotateY(-17deg);
+  transition:opacity .52s cubic-bezier(.22,.7,.24,1),transform .62s cubic-bezier(.22,.7,.24,1);
+}
+.slide.on{display:flex}
+.slide.rev{transform:translate3d(-9%,0,-560px) rotateY(17deg)}
+.slide.in{opacity:1;transform:none}
+.slide.out{opacity:0;pointer-events:none;transform:translate3d(-7%,0,-460px) rotateY(12deg)}
+.slide.out.rev{transform:translate3d(7%,0,-460px) rotateY(-12deg)}
+.wrap{width:100%;max-width:1180px;margin:auto}
+
+/* ---------- type ---------- */
+.eyebrow{
+  font-family:var(--mono);font-size:clamp(10px,.78vw,12px);letter-spacing:.22em;
+  text-transform:uppercase;color:var(--teal);display:flex;gap:14px;align-items:center;margin-bottom:18px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+h1{
+  font-family:var(--display);font-weight:800;line-height:.92;letter-spacing:-.01em;
+  font-size:clamp(44px,7.2vw,104px);text-transform:uppercase;
+}
+h2{
+  font-family:var(--display);font-weight:700;line-height:.98;letter-spacing:.005em;
+  font-size:clamp(30px,4.1vw,58px);text-transform:uppercase;margin-bottom:8px;
+}
+.sub{color:var(--fog);font-size:clamp(14px,1.15vw,18px);line-height:1.55;max-width:74ch}
+p{font-size:clamp(13.5px,1.02vw,16.5px);line-height:1.6;color:var(--chalk)}
+.dim{color:var(--fog)}
+strong{font-weight:600;color:#fff}
+.amber{color:var(--amber)}
+.teal{color:var(--teal)}
+.mono{font-family:var(--mono)}
+
+/* ---------- cover ---------- */
+.cover-rule{height:2px;background:linear-gradient(90deg,var(--amber),rgba(240,162,46,0));margin:26px 0 22px;max-width:520px}
+.cover-meta{display:flex;gap:34px;flex-wrap:wrap;margin-top:34px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--fog)}
+.cover-meta span b{display:block;color:var(--chalk);font-weight:500;margin-top:6px;letter-spacing:.06em}
+
+/* ---------- grids ---------- */
+.grid{display:grid;gap:clamp(12px,1.5vw,22px)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,3vw,48px);align-items:center}
+
+.card{
+  background:linear-gradient(180deg,rgba(21,48,74,.72),rgba(14,35,56,.55));
+  border:1px solid var(--line);border-radius:3px;
+  padding:clamp(16px,1.5vw,24px);
+}
+.card h3{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:clamp(17px,1.5vw,23px);letter-spacing:.01em;margin-bottom:8px}
+.card p{font-size:clamp(12.5px,.92vw,15px);color:var(--fog);line-height:1.55}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:10px}
+.card.accent{border-left:2px solid var(--amber)}
+.card.teal-l{border-left:2px solid var(--teal)}
+.card.alert-l{border-left:2px solid var(--alert)}
+
+/* ---------- 3D: extruded plane stack ---------- */
+.stack3d{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2.4vw,40px);perspective:1500px;margin-top:40px}
+.plane{
+  position:relative;background:linear-gradient(150deg,rgba(24,55,84,.95),rgba(11,29,48,.9));
+  border:1px solid var(--line-strong);border-radius:2px;padding:clamp(15px,1.4vw,22px);
+  transform:rotateY(-21deg) rotateX(7deg);transform-origin:left center;
+  box-shadow:5px 5px 0 rgba(8,24,42,.85),10px 10px 0 rgba(240,162,46,.13),19px 19px 34px rgba(0,0,0,.42);
+  transition:transform .5s cubic-bezier(.22,.7,.24,1),box-shadow .5s ease;
+}
+.plane:hover,.plane:focus-within{transform:rotateY(-7deg) rotateX(2deg) translateZ(46px);box-shadow:4px 4px 0 rgba(8,24,42,.85),8px 8px 0 rgba(240,162,46,.24),26px 26px 46px rgba(0,0,0,.5)}
+.plane h3{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:clamp(17px,1.5vw,23px);margin-bottom:8px}
+.plane p{font-size:clamp(12px,.88vw,14.5px);color:var(--fog);line-height:1.5}
+.plane .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:10px}
+
+/* ---------- 3D: flip cards ---------- */
+.flip{perspective:1200px;min-height:clamp(230px,25vh,290px);position:relative}
+.flip-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .68s cubic-bezier(.3,.8,.3,1);cursor:pointer}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;overflow:hidden}
+.face.back{transform:rotateY(180deg);background:linear-gradient(180deg,rgba(11,29,48,.96),rgba(8,24,42,.92))}
+.face ul{list-style:none;margin-top:4px;display:grid;gap:7px}
+.face ul li{font-size:clamp(11.5px,.85vw,14px);color:var(--fog);line-height:1.4;display:flex;gap:9px}
+.face ul li::before{content:"—";color:var(--teal);flex:none}
+.flip-cue{margin-top:auto;padding-top:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--fog);opacity:.5}
+.flip-inner:focus-visible{outline:2px solid var(--teal);outline-offset:4px}
+.flip.compact{min-height:clamp(164px,19vh,190px)}
+.flip.compact .face{padding:14px 16px}
+.flip.compact .face h3{font-size:clamp(15px,1.22vw,19px);margin-bottom:6px}
+.flip.compact .face p{font-size:clamp(11.5px,.82vw,13.5px);line-height:1.45}
+.flip.compact .face .tag{margin-bottom:7px}
+.flip.compact .face ul{gap:5px}
+.flip.compact .face ul li{font-size:clamp(11px,.79vw,13px);line-height:1.35}
+.flip.compact .flip-cue{padding-top:9px}
+
+/* ---------- 3D: isometric capital tower ---------- */
+.tower-stage{height:clamp(190px,23vh,250px);display:flex;align-items:flex-end;justify-content:center;perspective:900px;margin-bottom:6px}
+.tower{position:relative;width:130px;height:130px;transform-style:preserve-3d;transform:rotateX(60deg) rotateZ(-42deg);transition:transform .6s ease}
+.slab{
+  position:absolute;inset:0;border:1px solid var(--line-strong);
+  background:linear-gradient(135deg,rgba(53,195,180,.26),rgba(53,195,180,.08));
+  box-shadow:0 0 22px rgba(0,0,0,.35);
+  transition:transform .45s cubic-bezier(.3,.9,.3,1),opacity .4s ease,background .4s ease,border-color .4s ease;
+}
+.slab.extra{opacity:0;background:linear-gradient(135deg,rgba(228,87,76,.34),rgba(228,87,76,.1));border-color:rgba(228,87,76,.55)}
+.breach .slab.extra{opacity:1}
+.tower-label{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fog);line-height:1.7}
+.tower-label b{display:block;font-family:var(--display);font-size:clamp(20px,2vw,28px);letter-spacing:.01em;color:var(--teal);transition:color .4s ease}
+.breach .tower-label b{color:var(--alert)}
+
+/* ---------- timeline ---------- */
+.rail{position:relative;margin-top:34px;padding-top:34px}
+.rail::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--line-strong)}
+.rail-row{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(8px,1vw,16px)}
+.stop{position:relative;padding-right:10px}
+.stop::before{
+  content:"";position:absolute;top:-34px;left:0;width:9px;height:9px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--fog);transform:translateY(-4px);
+}
+.stop.hot::before{border-color:var(--amber);background:var(--amber);box-shadow:0 0 0 5px rgba(240,162,46,.16)}
+.stop .when{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--amber);display:block;margin-bottom:7px}
+.stop .what{font-size:clamp(11.5px,.85vw,14px);line-height:1.45;color:var(--fog)}
+.stop.hot .what{color:var(--chalk)}
+
+/* ---------- threshold instrument (signature) ---------- */
+.instrument{background:linear-gradient(180deg,rgba(21,48,74,.8),rgba(8,24,42,.6));border:1px solid var(--line);border-radius:4px;padding:clamp(18px,2vw,30px)}
+.gauge{position:relative;height:46px;border:1px solid var(--line-strong);border-radius:2px;overflow:hidden;background:rgba(8,24,42,.7)}
+.gauge .fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,rgba(53,195,180,.55),rgba(53,195,180,.28));transition:width .18s linear,background .3s ease}
+.gauge.over .fill{background:linear-gradient(90deg,rgba(228,87,76,.6),rgba(228,87,76,.3))}
+.gauge .mark{position:absolute;top:0;bottom:0;left:30%;width:2px;background:var(--amber)}
+.gauge .mark span{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--amber);white-space:nowrap}
+.gauge .read{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding-right:14px;font-family:var(--mono);font-weight:700;font-size:20px}
+input[type=range]{width:100%;margin-top:20px;accent-color:var(--amber);height:22px;cursor:pointer}
+input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:4px}
+.verdict{margin-top:20px;border-top:1px solid var(--line);padding-top:18px}
+.verdict .state{font-family:var(--display);text-transform:uppercase;font-weight:800;font-size:clamp(20px,2.2vw,30px);letter-spacing:.01em;line-height:1.05}
+.verdict.safe .state{color:var(--teal)}
+.verdict.breach .state{color:var(--alert)}
+.verdict p{margin-top:8px;color:var(--fog);font-size:clamp(12.5px,.92vw,15px)}
+.consequences{list-style:none;margin-top:14px;display:grid;gap:8px}
+.consequences li{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--fog);display:flex;gap:10px;opacity:.35;transition:opacity .3s ease,color .3s ease}
+.verdict.breach .consequences li{opacity:1;color:var(--chalk)}
+.consequences li::before{content:"▸";color:var(--alert)}
+
+/* ---------- stat blocks ---------- */
+.stat{border-top:2px solid var(--line-strong);padding-top:14px}
+.stat b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(34px,4.4vw,64px);line-height:.9;color:var(--amber)}
+.stat span{display:block;margin-top:10px;font-size:clamp(12px,.9vw,14.5px);color:var(--fog);line-height:1.45}
+.stat.t b{color:var(--teal)}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);font-size:clamp(12px,.92vw,15px);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--fog);font-weight:500}
+td:first-child{font-weight:600;color:#fff;width:26%}
+td.no{color:var(--fog)}
+td.yes{color:var(--teal)}
+
+/* ---------- misc ---------- */
+.callout{border-left:2px solid var(--teal);padding:4px 0 4px 18px;margin-top:22px}
+.callout p{font-size:clamp(14px,1.1vw,18px);line-height:1.5}
+.pill{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--line-strong);border-radius:999px;padding:5px 12px;color:var(--fog);margin:0 8px 8px 0}
+.steps{counter-reset:s;display:grid;gap:14px;margin-top:8px}
+.step{display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;border-bottom:1px solid var(--line);padding-bottom:14px}
+.step:last-child{border-bottom:0}
+.step .n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--amber);padding-top:4px}
+.step h4{font-family:var(--display);text-transform:uppercase;font-size:clamp(16px,1.35vw,21px);font-weight:700;margin-bottom:4px}
+.step p{color:var(--fog);font-size:clamp(12.5px,.9vw,15px)}
+
+/* ---------- chrome ---------- */
+.hud{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4vw,44px);border-top:1px solid var(--line);background:rgba(8,24,42,.86);backdrop-filter:blur(6px);z-index:20}
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--fog)}
+.brand b{color:var(--chalk);font-weight:500}
+.ticks{display:flex;gap:6px;align-items:center}
+.tick{width:16px;height:2px;background:var(--line-strong);border:0;padding:0;cursor:pointer;transition:background .25s ease}
+.tick:hover{background:var(--fog)}
+.tick[aria-current="true"]{background:var(--amber)}
+.tick:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.count{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--fog)}
+.count b{color:var(--amber);font-weight:700}
+.hint{position:fixed;right:clamp(20px,4vw,44px);bottom:62px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fog);opacity:.55;z-index:20}
+
+.src{margin-top:auto;padding-top:22px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--fog);opacity:.62;line-height:1.6}
+
+@media (max-width:900px){
+  .g3,.g4{grid-template-columns:1fr 1fr}
+  .split,.g2{grid-template-columns:1fr}
+  .rail-row{grid-template-columns:1fr 1fr 1fr}
+  .rail-row .stop{margin-bottom:16px}
+  .slide{padding:24px 22px 70px}
+}
+@media (prefers-reduced-motion:reduce){
+  .slide,.plane,.flip-inner,.slab,.tower{transition:none}
+  .slide{opacity:0;transform:none}
+  .slide.in{opacity:1}
+  .slide.out{opacity:0}
+  .plane{transform:none;box-shadow:4px 4px 0 rgba(8,24,42,.85),8px 8px 0 rgba(240,162,46,.13)}
+  .plane:hover,.plane:focus-within{transform:none}
+  .gauge .fill{transition:none}
+}
+@media print{
+  body{overflow:visible;background:var(--ink)}
+  .slide{display:flex!important;opacity:1!important;transform:none!important;position:relative;height:100vh;page-break-after:always;break-after:page}
+  .plane{transform:none}
+  .flip-inner{position:relative;transform:none!important}
+  .face{position:relative;inset:auto}
+  .face.back{display:none}
+  .flip-cue{display:none}
+  .hud,.hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<main class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Regulatory briefing · Philippines · August 2026</div>
+    <h1>The rural bank<br>route is<br><span class="amber">closing.</span></h1>
+    <div class="cover-rule"></div>
+    <p class="sub">For four years, buying a small rural bank was the fast lane to a national digital wallet. The Bangko Sentral is now pricing that shortcut at its real cost. What separates the winners from here is not the licence — it is provable control.</p>
+    <div class="cover-meta">
+      <span>Prepared by<b>Broadheader ITS</b></span>
+      <span>Subject<b>Digital-centric bank rules</b></span>
+      <span>Companion to<b>Cybersecurity bundle</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">The playbook that worked</div>
+    <h2>Buy small. Scale national.<br>Pay rural-bank capital.</h2>
+    <p class="sub">A fintech acquires a licensed rural bank, inherits its EPFS and EMI authorities, and runs a nationwide app on a balance sheet sized for one province.</p>
+    <div class="stack3d">
+      <div class="plane"><span class="tag">Step 01</span><h3>Acquire</h3><p>Take a controlling stake in an existing rural bank instead of applying for a new licence.</p></div>
+      <div class="plane"><span class="tag">Step 02</span><h3>Inherit</h3><p>Existing EPFS and EMI authorities carry over. No moratorium queue, no new-entrant scrutiny.</p></div>
+      <div class="plane"><span class="tag">Step 03</span><h3>Distribute</h3><p>Onboard nationwide through the app. Deposits, lending and wallets, with no branch footprint to match.</p></div>
+      <div class="plane"><span class="tag">Step 04</span><h3>Arbitrage</h3><p>Digital-bank reach at rural-bank capital, governance and supervisory expectations.</p></div>
+    </div>
+    <div class="callout"><p>Real cases sit on both sides of this line today — neobanks operating on rural licences, banking-as-a-service platforms serving partners nationwide, and lenders that bought their way in and are still scaling.</p></div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">How the window closed</div>
+    <h2>Five years of tightening</h2>
+    <p class="sub">The doors did not slam. They were narrowed, one issuance at a time.</p>
+    <div class="rail">
+      <div class="rail-row">
+        <div class="stop"><span class="when">Dec 2021</span><span class="what">BSP freezes new EMI licences for non-banks. The acquisition route becomes the only fast way in.</span></div>
+        <div class="stop"><span class="when">Dec 2023</span><span class="what">Freeze extended a further year, with narrow exceptions via the regulatory sandbox.</span></div>
+        <div class="stop"><span class="when">Dec 2024</span><span class="what">EMI-NBFI moratorium lifted — but applications now need evidence-based market study and tighter fit-and-proper review.</span></div>
+        <div class="stop"><span class="when">2025</span><span class="what">Digital bank moratorium lifted with a hard cap of ten licences. The application window then closes again.</span></div>
+        <div class="stop hot"><span class="when">Jan–Feb 2026</span><span class="what">Draft circular on prudential requirements for digital-centric thrift, rural and cooperative banks goes out for comment.</span></div>
+        <div class="stop hot"><span class="when">Now</span><span class="what">Industry has pushed back on the thresholds. A one-year transition starts the day the final circular takes effect.</span></div>
+      </div>
+    </div>
+    <div class="src">Sources: BSP Memoranda M-2021-064, M-2023-035, M-2024-046; BSP Circular 1205 (2024); draft circular on prudential requirements for digital-centric TBs / RBs / Coop Banks, exposure period closed 25 February 2026; RBAP position paper, March 2026.</div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Say it precisely</div>
+    <h2>Nobody banned buying<br>a rural bank</h2>
+    <div class="split" style="margin-top:26px">
+      <div>
+        <div class="card alert-l" style="margin-bottom:16px">
+          <span class="tag" style="color:var(--alert)">The loose version</span>
+          <p style="color:var(--chalk);font-size:clamp(14px,1.05vw,17px)">“There is a new law — you can’t buy a rural bank in the Philippines to get an EMI licence anymore.”</p>
+        </div>
+        <div class="card teal-l">
+          <span class="tag" style="color:var(--teal)">What is actually happening</span>
+          <p style="color:var(--chalk);font-size:clamp(13.5px,1vw,16px)">Acquisitions are still legal and still happening. What changed is the economics: once a rural bank behaves like a national digital bank, the BSP can require it to <strong>be</strong> one — with digital-bank capital, governance and supervisory standards attached.</p>
+        </div>
+        <p class="dim" style="margin-top:16px;font-size:13px">Use the precise version in front of regulators and investors. The loose version is easy to disprove, and it costs you the room.</p>
+      </div>
+      <div class="grid" style="gap:14px">
+        <div class="card"><span class="tag">Cap</span><h3>30% out-of-area accounts</h3><p>Customers registered outside the bank’s physical areas of operation may not exceed 30% of total customer accounts.</p></div>
+        <div class="card"><span class="tag">Trigger</span><h3>Reclassification</h3><p>Breach the cap and the BSP can require conversion to a digital bank licence.</p></div>
+        <div class="card"><span class="tag">Price</span><h3>₱1 billion capital</h3><p>Minimum capital on conversion, to be met within one year, alongside a supervisory rating of 3 or better.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 — signature -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">The threshold, live</div>
+    <h2>Where your growth<br>changes your licence</h2>
+    <p class="sub">Drag the share of customers registered outside your physical areas of operation.</p>
+    <div class="instrument" id="instrument" style="margin-top:26px;display:grid;grid-template-columns:1.55fr .9fr;gap:clamp(20px,3vw,44px);align-items:center">
+     <div>
+      <div class="gauge" id="gauge">
+        <div class="fill" id="fill" style="width:18%"></div>
+        <div class="mark"><span>30% cap</span></div>
+        <div class="read"><span id="read">18%</span></div>
+      </div>
+      <label for="slider" style="position:absolute;left:-9999px">Share of customer accounts outside physical areas of operation</label>
+      <input type="range" id="slider" min="0" max="60" value="18" step="1">
+      <div class="verdict safe" id="verdict">
+        <div class="state" id="state">Within the rural bank perimeter</div>
+        <p id="note">Community mandate intact. Rural-bank capital and prudential requirements continue to apply.</p>
+        <ul class="consequences">
+          <li>Reclassification to digital bank licence</li>
+          <li>Minimum capital of ₱1 billion within 12 months</li>
+          <li>Supervisory assessment rating of 3 or higher</li>
+          <li>Full digital-bank governance, IT risk and reporting stack</li>
+        </ul>
+      </div>
+     </div>
+     <div>
+       <div class="tower-stage">
+         <div class="tower" id="tower">
+           <div class="slab" style="transform:translateZ(0px)"></div>
+           <div class="slab" style="transform:translateZ(16px)"></div>
+           <div class="slab" style="transform:translateZ(32px)"></div>
+           <div class="slab extra" style="transform:translateZ(48px)"></div>
+           <div class="slab extra" style="transform:translateZ(64px)"></div>
+           <div class="slab extra" style="transform:translateZ(80px)"></div>
+           <div class="slab extra" style="transform:translateZ(96px)"></div>
+           <div class="slab extra" style="transform:translateZ(112px)"></div>
+         </div>
+       </div>
+       <div class="tower-label" id="towerLabel">Capital floor<b>Rural bank</b>as currently required</div>
+     </div>
+    </div>
+    <div class="src">Thresholds per the BSP draft circular released for consultation in February 2026. Final figures may shift; the direction of travel has not.</div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Read the shift correctly</div>
+    <h2>The moat moved</h2>
+    <div class="grid g2" style="margin-top:30px">
+      <div class="card" style="border-left:2px solid var(--alert)">
+        <span class="tag" style="color:var(--alert)">Old moat — depleting</span>
+        <h3>Licence arbitrage</h3>
+        <p style="margin-bottom:12px">Getting in early, cheaply, through a route others could not access. Ten digital-bank slots, a closed window, and a cap that turns scale into a capital call. This advantage now has an expiry date.</p>
+        <span class="pill">Scarcity</span><span class="pill">Timing</span><span class="pill">Legal structuring</span>
+      </div>
+      <div class="card teal-l">
+        <span class="tag" style="color:var(--teal)">New moat — compounding</span>
+        <h3>Supervisory standing</h3>
+        <p style="margin-bottom:12px">A clean supervisory rating, an audit-ready control environment and evidence you can put on the table in a week. It decides how fast you convert, how fast you get approvals, and how much capital you must hold.</p>
+        <span class="pill">SAFr rating</span><span class="pill">IT risk governance</span><span class="pill">Evidence on demand</span>
+      </div>
+    </div>
+    <div class="callout"><p>Every bank in the country is about to spend the next twelve months proving the same thing. The ones with the evidence already assembled will finish first — and be approved first.</p></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Broadheader strength · 01</div>
+    <h2>Phishing simulation</h2>
+    <p class="sub">Controlled, realistic email campaigns run against your own staff — branch tellers, operations, finance, executives — measured, reported and repeated.</p>
+    <div class="grid g3" style="margin-top:30px">
+      <div class="flip"><div class="flip-inner" tabindex="0" role="button" aria-label="Flip card: people are the open port">
+        <div class="face card accent"><span class="tag">Why it matters here</span><h3>People are the open port</h3><p>Firewalls and core systems get audited. The staff inbox is where account takeover, fraudulent transfer instructions and credential theft actually start.</p><div class="flip-cue">Flip · what we run</div></div>
+        <div class="face back card accent"><span class="tag" style="color:var(--teal)">Scenarios we run</span><ul><li>Spoofed vendor and supplier invoice changes</li><li>Payroll and HR portal credential harvesting</li><li>Executive impersonation for urgent transfers</li><li>QR and mobile-first lures aimed at branch staff</li></ul><div class="flip-cue">Flip back</div></div>
+      </div></div>
+      <div class="flip"><div class="flip-inner" tabindex="0" role="button" aria-label="Flip card: a number that moves">
+        <div class="face card accent"><span class="tag">What you get</span><h3>A number that moves</h3><p>Baseline click and credential-submission rates by department, then a measured decline campaign over campaign. Not a training certificate — a trend line.</p><div class="flip-cue">Flip · what we measure</div></div>
+        <div class="face back card accent"><span class="tag" style="color:var(--teal)">Measured each round</span><ul><li>Open, click and credential-submission rate</li><li>Report rate and median time to report</li><li>Segmented by branch, role and seniority</li><li>Repeat-clicker tracking across campaigns</li></ul><div class="flip-cue">Flip back</div></div>
+      </div></div>
+      <div class="flip"><div class="flip-inner" tabindex="0" role="button" aria-label="Flip card: evidence not assertion">
+        <div class="face card accent"><span class="tag">Why examiners care</span><h3>Evidence, not assertion</h3><p>“We conduct security awareness training” is a claim. Dated campaign results, per-team rates and remediation records are proof.</p><div class="flip-cue">Flip · what you keep</div></div>
+        <div class="face back card accent"><span class="tag" style="color:var(--teal)">Artefacts on file</span><ul><li>Signed campaign brief and scope</li><li>Dated results with per-team breakdown</li><li>Remediation and retraining log</li><li>Retest outcomes and board summary</li></ul><div class="flip-cue">Flip back</div></div>
+      </div></div>
+    </div>
+    <div class="grid g4" style="margin-top:26px">
+      <div class="stat"><b>Quarterly</b><span>Campaign cadence, with scenarios rewritten each round so results stay honest</span></div>
+      <div class="stat"><b>Role-aware</b><span>Different lures for tellers, ops, finance and the board</span></div>
+      <div class="stat"><b>Reported</b><span>Board-ready summary plus per-team detail for the risk file</span></div>
+      <div class="stat"><b>Repeatable</b><span>The same instrument every quarter, so the trend is comparable</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Broadheader strength · 02</div>
+    <h2>ISO 27001 alignment</h2>
+    <p class="sub">We build the information security management system — scope, risk assessment, Statement of Applicability, controls, internal audit — and take you to the point where an external certification body can be engaged with confidence.</p>
+    <div class="split" style="margin-top:28px">
+      <div class="grid" style="gap:14px">
+        <div class="flip compact"><div class="flip-inner" tabindex="0" role="button" aria-label="Flip card: one control set, many audiences">
+          <div class="face card teal-l"><h3>One control set, many audiences</h3><p>The same ISMS evidence answers BSP IT risk expectations, Data Privacy Act obligations, partner due diligence and enterprise client security reviews.</p><div class="flip-cue">Flip</div></div>
+          <div class="face back card teal-l"><span class="tag" style="color:var(--teal)">Write once, satisfy four</span><ul><li>BSP IT risk and outsourcing rules</li><li>Data Privacy Act accountability</li><li>Partner and correspondent diligence</li><li>Client security questionnaires</li></ul><div class="flip-cue">Flip back</div></div>
+        </div></div>
+        <div class="flip compact"><div class="flip-inner" tabindex="0" role="button" aria-label="Flip card: built to survive an examiner">
+          <div class="face card teal-l"><h3>Built to survive an examiner</h3><p>Documented risk treatment, asset and access registers, incident and change records, management review minutes. Retrievable, dated, owned by a named person.</p><div class="flip-cue">Flip</div></div>
+          <div class="face back card teal-l"><span class="tag" style="color:var(--teal)">Pulled in minutes, not weeks</span><ul><li>Risk register and treatment decisions</li><li>Asset, access, third-party registers</li><li>Incident and change records</li><li>Audit and review minutes</li></ul><div class="flip-cue">Flip back</div></div>
+        </div></div>
+        <div class="flip compact"><div class="flip-inner" tabindex="0" role="button" aria-label="Flip card: certification as the signal">
+          <div class="face card teal-l"><h3>Certification as the signal</h3><p>For a bank arguing it deserves a wider licence, an internationally recognised standard says more than any internal assurance memo.</p><div class="flip-cue">Flip</div></div>
+          <div class="face back card teal-l"><span class="tag" style="color:var(--teal)">What the badge buys</span><ul><li>Shorter partner security reviews</li><li>A defensible control-maturity answer</li><li>Attestation, not self-assessment</li><li>Surveillance audits keep it honest</li></ul><div class="flip-cue">Flip back</div></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="grid g2" style="gap:14px">
+          <div class="stat t"><b>Scope</b><span>Define the boundary that matters — the digital channel, not the whole company</span></div>
+          <div class="stat t"><b>Risk</b><span>Assessment and treatment plan mapped to real banking threat scenarios</span></div>
+          <div class="stat t"><b>Controls</b><span>Annex A controls implemented, evidenced and assigned to owners</span></div>
+          <div class="stat t"><b>Audit</b><span>Internal audit and management review before the certification body arrives</span></div>
+        </div>
+        <p class="dim" style="margin-top:20px;font-size:12.5px">Delivered alongside the rest of the bundle: vCISO advisory, VAPT for apps, servers and APIs, and infrastructure hardening.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Why these two together</div>
+    <h2>The frame and the proof</h2>
+    <p class="sub">ISO 27001 tells the regulator what you built. Phishing simulation proves it survives contact with your own people.</p>
+    <table>
+      <thead><tr><th>Supervisory question</th><th>ISO 27001 answers</th><th>Phishing simulation answers</th></tr></thead>
+      <tbody>
+        <tr><td>Is there a system, or a scramble?</td><td class="yes">Documented ISMS with named owners and review cycles</td><td class="no">—</td></tr>
+        <tr><td>Do the controls work in practice?</td><td class="no">Design and implementation evidence</td><td class="yes">Live measurement against real staff behaviour</td></tr>
+        <tr><td>Is the workforce a liability?</td><td class="no">Awareness policy exists</td><td class="yes">Click and credential-submission rates, trending down</td></tr>
+        <tr><td>Can you show us, today?</td><td class="yes">Audit-ready register and records</td><td class="yes">Dated campaign reports per quarter</td></tr>
+        <tr><td>Would this hold at ten times the volume?</td><td class="yes">Scalable control framework, not a one-off fix</td><td class="yes">Cadence that scales with headcount</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">The position this buys you</div>
+    <h2>Ahead of the field</h2>
+    <div class="grid g3" style="margin-top:30px">
+      <div class="card"><span class="tag">Most banks, next 12 months</span><h3>Reacting</h3><p>Read the final circular, discover the gaps, assemble evidence under deadline, and negotiate a transition plan from a weak position.</p></div>
+      <div class="card"><span class="tag">Ahead of the circular</span><h3>Presenting</h3><p>Walk in with the ISMS built, the audit trail dated and the awareness metrics already improving. The conversation shifts from defending to planning.</p></div>
+      <div class="card accent"><span class="tag">Compounding</span><h3>Converting</h3><p>Faster approvals, cleaner supervisory ratings, credible partner due diligence, and a security story your competitors cannot assemble in a quarter.</p></div>
+    </div>
+    <div class="callout"><p>Capital requirements can be met with money. Supervisory standing can only be met with time — which is exactly why starting before the circular is final is the whole advantage.</p></div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">How we start</div>
+    <h2>Twelve months, four moves</h2>
+    <div class="steps" style="margin-top:24px">
+      <div class="step"><div class="n">M 01–02</div><div><h4>Position assessment</h4><p>Where you sit against the draft thresholds, what your out-of-area account share actually is, and which gaps would surface first under examination. Written, board-ready.</p></div></div>
+      <div class="step"><div class="n">M 02–04</div><div><h4>Baseline and harden</h4><p>First phishing campaign to establish the baseline. VAPT across the app, APIs and servers. Infrastructure hardening on the findings that matter.</p></div></div>
+      <div class="step"><div class="n">M 03–09</div><div><h4>Build the ISMS</h4><p>Scope, risk assessment, Statement of Applicability, control implementation, internal audit — run under vCISO direction so it fits your bank, not a template.</p></div></div>
+      <div class="step"><div class="n">M 09–12</div><div><h4>Prove and repeat</h4><p>Certification readiness review, quarterly campaign cadence established, evidence pack maintained. Ready before the transition clock runs out.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Broadheader Information Technology Solutions</div>
+    <h1 style="font-size:clamp(38px,5.6vw,80px)">The licence gets<br>you in. <span class="teal">Control<br>keeps you there.</span></h1>
+    <div class="cover-rule"></div>
+    <p class="sub">Start the assessment before the circular is final, and the twelve-month transition becomes a formality instead of a fire drill.</p>
+    <div class="cover-meta">
+      <span>Engagement<b>Cybersecurity bundle</b></span>
+      <span>Scope<b>vCISO · VAPT · Hardening · Phishing simulation · ISO 27001</b></span>
+    </div>
+    <div class="src">This briefing summarises publicly available BSP issuances and press reporting as of August 2026 and is not legal advice. Threshold figures are drawn from a draft circular; confirm against the final issuance before relying on them.</div>
+  </div>
+</section>
+
+</main>
+
+<div class="hint">← → to navigate</div>
+<div class="hud">
+  <div class="brand">Broadheader <b>· Regulatory briefing</b></div>
+  <div class="ticks" id="ticks" role="tablist" aria-label="Slides"></div>
+  <div class="count"><b id="cur">01</b> / <span id="tot">12</span></div>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var ticks=document.getElementById('ticks');
+  var cur=document.getElementById('cur');
+  document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+  var i=0;
+
+  slides.forEach(function(s,n){
+    var b=document.createElement('button');
+    b.className='tick';b.type='button';
+    b.setAttribute('aria-label','Slide '+(n+1));
+    b.addEventListener('click',function(){go(n)});
+    ticks.appendChild(b);
+  });
+  var tickEls=[].slice.call(ticks.children);
+
+  function go(n){
+    if(n<0||n>=slides.length||n===i)return;
+    var back=n<i,prev=slides[i];
+    prev.classList.remove('in');
+    prev.classList.add('out');
+    prev.classList.toggle('rev',back);
+    setTimeout(function(){
+      if(prev!==slides[i]){prev.classList.remove('on','out','rev')}
+    },560);
+    i=n;
+    slides[i].classList.remove('out');
+    slides[i].classList.toggle('rev',back);
+    slides[i].classList.add('on');
+    void slides[i].offsetWidth;
+    slides[i].classList.add('in');
+    tickEls.forEach(function(t,k){t.setAttribute('aria-current',k===i?'true':'false')});
+    cur.textContent=String(i+1).padStart(2,'0');
+  }
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
+    if(e.key==='Home')go(0);
+    if(e.key==='End')go(slides.length-1);
+  });
+
+  var tx=null;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(tx===null)return;
+    var d=e.changedTouches[0].clientX-tx;
+    if(Math.abs(d)>60)go(d<0?i+1:i-1);
+    tx=null;
+  },{passive:true});
+
+  slides[0].classList.add('on');
+  requestAnimationFrame(function(){slides[0].classList.add('in')});
+  tickEls[0].setAttribute('aria-current','true');
+
+  // flip cards
+  [].slice.call(document.querySelectorAll('.flip-inner')).forEach(function(el){
+    function toggle(){el.parentElement.classList.toggle('flipped')}
+    el.addEventListener('click',toggle);
+    el.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();toggle()}
+    });
+  });
+
+  // threshold instrument
+  var slider=document.getElementById('slider');
+  if(slider){
+    var fill=document.getElementById('fill'),gauge=document.getElementById('gauge'),
+        read=document.getElementById('read'),verdict=document.getElementById('verdict'),
+        state=document.getElementById('state'),note=document.getElementById('note'),
+        instrument=document.getElementById('instrument'),towerLabel=document.getElementById('towerLabel');
+    slider.addEventListener('input',function(){
+      var v=+slider.value;
+      fill.style.width=(v/60*100)+'%';
+      read.textContent=v+'%';
+      var over=v>30;
+      gauge.classList.toggle('over',over);
+      verdict.classList.toggle('safe',!over);
+      verdict.classList.toggle('breach',over);
+      instrument.classList.toggle('breach',over);
+      towerLabel.innerHTML=over
+        ? 'Capital floor<b>\u20B11 billion</b>within twelve months'
+        : 'Capital floor<b>Rural bank</b>as currently required';
+      state.textContent=over?'Digital bank rules can be imposed':'Within the rural bank perimeter';
+      note.textContent=over
+        ? 'Once out-of-area accounts pass the cap, the BSP can require conversion — and everything below comes with it.'
+        : 'Community mandate intact. Rural-bank capital and prudential requirements continue to apply.';
+    });
+  }
+})();
+</script>
+</body>
+</html>
