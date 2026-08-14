@@ -67,7 +67,7 @@ body::before{
   background:linear-gradient(to top,rgba(14,22,33,.96),rgba(14,22,33,0));
 }
 .mark{
-  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;
   color:var(--muted);text-transform:uppercase;white-space:nowrap;
 }
 .dots{display:flex;gap:6px;flex:1;flex-wrap:wrap}
@@ -84,12 +84,12 @@ body::before{
   width:38px;height:32px;cursor:pointer;transition:border-color .2s,background .2s;
 }
 .pager button:hover{border-color:var(--signal);background:var(--panel-2)}
-.count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.count{font-family:var(--mono);font-size:13.5px;color:var(--muted);white-space:nowrap}
 :focus-visible{outline:2px solid var(--signal);outline-offset:3px}
 
 /* ---------- type ---------- */
 .eyebrow{
-  font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;
   color:var(--signal);margin:0 0 18px;
 }
 h1{
@@ -99,18 +99,18 @@ h1{
 }
 h2{
   font-family:var(--display);font-weight:700;text-transform:uppercase;
-  font-size:clamp(28px,4.6vw,54px);line-height:1;letter-spacing:.005em;
+  font-size:clamp(32px,5vw,62px);line-height:1;letter-spacing:.005em;
   margin:0 0 10px;
 }
 h3{
   font-family:var(--display);font-weight:600;text-transform:uppercase;
-  font-size:19px;letter-spacing:.05em;margin:0 0 8px;
+  font-size:22px;letter-spacing:.05em;margin:0 0 8px;
 }
-.lede{font-size:clamp(15px,1.55vw,19px);line-height:1.55;color:#C6D2DE;max-width:70ch;margin:0 0 12px}
+.lede{font-size:clamp(17px,1.75vw,22px);line-height:1.55;color:#C6D2DE;max-width:70ch;margin:0 0 12px}
 p{line-height:1.6}
-.small{font-size:14px;line-height:1.6;color:var(--muted)}
+.small{font-size:16px;line-height:1.6;color:var(--muted)}
 .tag{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--muted);
 }
 .hr{height:1px;background:var(--line);margin:26px 0}
@@ -125,13 +125,13 @@ p{line-height:1.6}
   padding:20px 20px 22px;position:relative;
 }
 .card .tag{display:block;margin-bottom:12px}
-.card p{margin:0;font-size:14.5px;color:#BECBD8}
+.card p{margin:0;font-size:16.5px;line-height:1.55;color:#BECBD8}
 .card.accent{border-top:2px solid var(--signal)}
 .card.teal{border-top:2px solid var(--verify)}
 
 ul.ticks{list-style:none;margin:0;padding:0}
 ul.ticks li{
-  position:relative;padding-left:22px;margin-bottom:9px;font-size:14.5px;line-height:1.5;color:#C6D2DE;
+  position:relative;padding-left:24px;margin-bottom:11px;font-size:16.5px;line-height:1.5;color:#C6D2DE;
 }
 ul.ticks li::before{
   content:"";position:absolute;left:0;top:8px;width:9px;height:9px;
@@ -140,12 +140,12 @@ ul.ticks li::before{
 }
 ul.plain{list-style:none;margin:0;padding:0}
 ul.plain li{
-  font-family:var(--mono);font-size:12.5px;color:#BECBD8;
+  font-family:var(--mono);font-size:14.5px;color:#BECBD8;
   padding:9px 0;border-bottom:1px solid var(--line);
 }
 .kv{display:flex;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
-.kv b{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);min-width:112px;font-weight:500}
-.kv span{font-size:14.5px;color:#C6D2DE;line-height:1.5}
+.kv b{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);min-width:126px;font-weight:500}
+.kv span{font-size:16.5px;color:#C6D2DE;line-height:1.5}
 
 /* ---------- service header strip ---------- */
 .svc{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:6px}
@@ -154,7 +154,7 @@ ul.plain li{
   line-height:.8;color:transparent;-webkit-text-stroke:1.5px var(--line);
 }
 .svc .role{
-  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--ink);background:var(--signal);padding:5px 10px;margin-bottom:8px;
 }
 
@@ -178,15 +178,15 @@ ul.plain li{
 
 .toggles{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 10px}
 .toggles button{
-  font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--mono);font-size:13.5px;letter-spacing:.1em;text-transform:uppercase;
   background:rgba(79,182,165,.12);color:var(--paper);
-  border:1px solid var(--verify);padding:9px 14px;cursor:pointer;transition:all .2s;
+  border:1px solid var(--verify);padding:11px 16px;cursor:pointer;transition:all .2s;
 }
 .toggles button[aria-pressed="false"]{
   background:transparent;color:#697A8B;border-color:#37485A;border-style:dashed;
 }
 .readout{
-  font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--verify);
+  font-family:var(--mono);font-size:14.5px;letter-spacing:.06em;color:var(--verify);
   border-left:2px solid var(--verify);padding-left:12px;
 }
 .readout.bad{color:var(--breach);border-color:var(--breach)}
@@ -230,8 +230,16 @@ ul.plain li{
 .tier li.no i{color:#42525F}
 
 /* ---------- title slide ---------- */
-.title-meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:34px;padding-top:22px;border-top:1px solid var(--line)}
-.title-meta div{min-width:120px}
+.modules{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:38px}
+.mod{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--signal);padding:26px 26px 28px}
+.mod:nth-child(2){border-top-color:var(--verify)}
+.modno{
+  font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--signal);display:block;margin-bottom:12px;
+}
+.mod:nth-child(2) .modno{color:var(--verify)}
+.mod h2{font-size:clamp(28px,3.4vw,44px);margin-bottom:12px}
+.mod p{margin:0;font-size:clamp(15px,1.35vw,18px);line-height:1.55;color:#C6D2DE}
 .stack{width:190px;height:150px;margin-bottom:26px;perspective:900px}
 .stack span{
   position:relative;display:block;width:100%;height:100%;
@@ -258,31 +266,31 @@ ul.plain li{
   position:relative;width:380px;height:250px;transform-style:preserve-3d;
   transform:rotateX(6deg) rotateY(-31deg) translate3d(-40px,0,220px);
 }
-.plane,.prod{
+.plane,.prodplane{
   position:absolute;left:0;top:0;width:380px;height:250px;
   transform-style:preserve-3d;transition:border-color .3s,background .3s;
 }
 .plane{border:1.5px solid var(--verify);background:rgba(79,182,165,.06)}
 .plane.off{border:1.2px dashed #3C4C5D;background:transparent}
-.prod{border:1.5px solid var(--signal);background:rgba(242,160,61,.07);transform:translateZ(0)}
-.prod.hit{border-color:var(--breach);background:rgba(226,83,63,.15)}
+.prodplane{border:1.5px solid var(--signal);background:rgba(242,160,61,.07);transform:translateZ(0)}
+.prodplane.hit{border-color:var(--breach);background:rgba(226,83,63,.15)}
 .pl{
-  position:absolute;top:-23px;left:0;white-space:nowrap;
-  font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.1em;
+  position:absolute;top:-25px;left:0;white-space:nowrap;
+  font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--paper);
 }
 .plane.off .pl{color:#5A6B7C}
-.prod .pl{color:var(--signal)}
-.prod.hit .pl{color:var(--breach)}
+.prodplane .pl{color:var(--signal)}
+.prodplane.hit .pl{color:var(--breach)}
 .slot{position:absolute;width:100px;height:88px;border:1px dashed #354556}
 .slot.solid{border:1px solid var(--verify);background:rgba(79,182,165,.20)}
 .plane.off .slot,.plane.off .slot.solid{border:1px dashed #2F3E4E;background:transparent}
-.dot{
+.tdot{
   position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;
   background:var(--verify);box-shadow:0 0 14px var(--verify);
   animation:travel 2.8s cubic-bezier(.45,.05,.75,.6) infinite;
 }
-.dot.hot{background:var(--breach);box-shadow:0 0 16px var(--breach)}
+.tdot.hot{background:var(--breach);box-shadow:0 0 16px var(--breach)}
 @keyframes travel{
   0%{transform:translate3d(var(--x),var(--y),-860px);opacity:0}
   14%{opacity:1}
@@ -290,13 +298,113 @@ ul.plain li{
 }
 .routekey{align-self:center}
 .routekey div{
-  display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:#BECBD8;
+  display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:13px;letter-spacing:.05em;color:#BECBD8;
 }
 .routekey div:last-child{border-bottom:0}
 .routekey em{width:8px;height:8px;border-radius:50%;background:var(--verify);flex:none}
 .routekey div.hot{color:var(--breach)}
 .routekey div.hot em{background:var(--breach)}
+
+
+/* ---------- payments section ---------- */
+.railmap{background:var(--panel);border:1px solid var(--line);padding:18px 18px 10px}
+.railmap svg{width:100%;height:auto;display:block}
+.node{fill:var(--panel-2);stroke:var(--line);stroke-width:1.5}
+.node.emi{fill:rgba(79,182,165,.10);stroke:var(--verify)}
+.node.mer{fill:rgba(242,160,61,.10);stroke:var(--signal)}
+.nlabel{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:.07em;fill:var(--paper);text-anchor:middle;text-transform:uppercase}
+.nsub{font-family:var(--mono);font-size:12.5px;fill:var(--muted);text-anchor:middle}
+.arrowIn{stroke:var(--verify);stroke-width:2.5;fill:none;stroke-dasharray:8 6;animation:march 1.1s linear infinite}
+.arrowOut{stroke:var(--signal);stroke-width:2.5;fill:none;stroke-dasharray:8 6;animation:marchback 1.1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-28}}
+@keyframes marchback{to{stroke-dashoffset:28}}
+.flowtag{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase}
+.flowtag.in{fill:var(--verify)}
+.flowtag.out{fill:var(--signal)}
+
+.env{background:var(--panel);border:1px solid var(--line);padding:20px;display:flex;flex-direction:column}
+.env-prod{border-top:2px solid var(--signal)}
+.env-sand{border-top:2px solid var(--verify)}
+.env ul{list-style:none;margin:0;padding:0}
+.env li{font-size:16px;color:#C6D2DE;padding:9px 0;border-bottom:1px solid var(--line)}
+.env li:last-child{border-bottom:0}
+
+.calc{background:var(--panel);border:1px solid var(--line);padding:22px}
+.calc label{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.calc input[type=range]{width:100%;accent-color:var(--signal);margin-bottom:16px}
+.calc input[type=number]{
+  width:100%;background:var(--ink);border:1px solid var(--line);color:var(--paper);
+  font-family:var(--mono);font-size:19px;padding:12px 13px;margin-bottom:16px;
+}
+.bar3{display:flex;height:34px;border:1px solid var(--line);margin:6px 0 14px;overflow:hidden}
+.bar3 i{display:block;height:100%;transition:width .25s ease}
+.bar3 .net{background:rgba(79,182,165,.35)}
+.bar3 .bh{background:var(--signal)}
+.headline{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.headline strong{
+  display:block;font-family:var(--display);font-weight:700;
+  font-size:clamp(56px,7vw,92px);line-height:.9;color:var(--signal);margin:6px 0 4px;
+}
+.headline em{font-family:var(--mono);font-style:normal;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:7px}
+.legend em{width:10px;height:10px;flex:none}
+.out{display:grid;gap:0;margin-top:6px}
+.out div{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.out div:last-child{border-bottom:0}
+.out b{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.out span{font-family:var(--mono);font-size:20px;color:var(--paper)}
+.out div.hi span{color:var(--signal)}
+
+.flag{border-left:2px solid var(--breach);padding:2px 0 2px 16px;margin-bottom:18px}
+.flag h3{color:var(--breach);margin-bottom:6px}
+.flag p{margin:0;font-size:16.5px;color:#C6D2DE}
+
+
+/* ---------- gateway entrance ---------- */
+.gatewrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.portalbox{perspective:1000px;perspective-origin:50% 50%;height:400px;display:flex;align-items:center;justify-content:center}
+.portal{position:relative;width:300px;height:300px;transform-style:preserve-3d;transform:rotateX(4deg) rotateY(-16deg)}
+.ring{
+  position:absolute;left:50%;top:50%;border:1.5px solid var(--verify);
+  transform-style:preserve-3d;opacity:0;
+}
+.is-active .ring{animation:ringIn .8s cubic-bezier(.2,.75,.25,1) both}
+@keyframes ringIn{from{opacity:0;transform:translate(-50%,-50%) translateZ(var(--z)) scale(1.5)}
+                  to{opacity:var(--o);transform:translate(-50%,-50%) translateZ(var(--z)) scale(1)}}
+.core{
+  position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;
+  border:2px solid var(--signal);background:rgba(242,160,61,.13);
+  transform:translateZ(30px);box-shadow:0 0 60px rgba(242,160,61,.28);
+}
+.is-active .core{animation:coreIn .7s .55s cubic-bezier(.2,.75,.25,1) both,breathe 4s 1.3s ease-in-out infinite}
+@keyframes coreIn{from{opacity:0;transform:translateZ(30px) scale(.4) rotate(-25deg)}
+                  to{opacity:1;transform:translateZ(30px) scale(1) rotate(0)}}
+@keyframes breathe{0%,100%{box-shadow:0 0 60px rgba(242,160,61,.28)}50%{box-shadow:0 0 92px rgba(242,160,61,.5)}}
+.coremark{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-weight:700;font-size:44px;letter-spacing:.02em;color:var(--signal);
+}
+.spark{
+  position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;
+  background:var(--verify);box-shadow:0 0 14px var(--verify);
+}
+.is-active .spark{animation:shoot 3s linear infinite}
+@keyframes shoot{
+  0%{transform:translate3d(var(--sx),var(--sy),-620px) scale(.4);opacity:0}
+  20%{opacity:1}
+  78%,100%{transform:translate3d(0,0,40px) scale(1);opacity:0}
+}
+.entrance-word{
+  font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(44px,8.4vw,104px);line-height:.9;margin:0 0 20px;
+}
+.is-active .entrance-word span{display:inline-block;animation:wordIn .7s cubic-bezier(.2,.75,.25,1) both}
+.is-active .entrance-word span:nth-child(2){animation-delay:.1s}
+@keyframes wordIn{from{opacity:0;transform:translate3d(0,26px,-160px) rotateX(-40deg)}to{opacity:1;transform:none}}
+.modrule{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.modrule i{flex:1;height:1px;background:var(--line)}
 
 /* ---------- motion ---------- */
 .is-active .rise{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
@@ -314,6 +422,11 @@ ul.plain li{
   .g3,.g4,.cycle{grid-template-columns:repeat(2,1fr)}
   .g2{grid-template-columns:1fr}
   .dots{display:none}
+  .modules{grid-template-columns:1fr;gap:14px;margin-top:26px}
+  .mod{padding:20px}
+  .gatewrap{grid-template-columns:1fr;gap:18px}
+  .portalbox{height:280px;perspective:800px}
+  .portal{transform:rotateX(4deg) rotateY(-12deg) scale(.72)}
   .scene{grid-template-columns:1fr;gap:16px;padding:16px}
   .stagewrap{height:300px;perspective:1000px}
   .stage{transform:rotateX(8deg) rotateY(-28deg) translate3d(-20px,0,190px) scale(.78)}
@@ -325,7 +438,7 @@ ul.plain li{
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
-  .dot{transform:translate3d(var(--x),var(--y),var(--z))!important;opacity:1!important}
+  .tdot{transform:translate3d(var(--x),var(--y),var(--z))!important;opacity:1!important}
 }
 </style>
 </head>
@@ -339,13 +452,19 @@ ul.plain li{
   <div class="inner">
     <div class="stack rise"><span><i></i><i></i><i></i><i></i></span></div>
     <p class="eyebrow rise">Broadheader Information Technology Solutions</p>
-    <h1 class="rise">Security,<br>built into<br>the build.</h1>
-    <p class="lede rise">A four-part security program that runs alongside the project instead of after it: someone to set the direction, testing that proves what is exposed, hardening that closes it, and drills that reach the people behind the keyboards.</p>
-    <div class="title-meta rise">
-      <div><span class="tag">Direct</span><h3>vCISO</h3></div>
-      <div><span class="tag">Find</span><h3>VAPT</h3></div>
-      <div><span class="tag">Fix</span><h3>Hardening</h3></div>
-      <div><span class="tag">Drill</span><h3>Phishing Sim</h3></div>
+    <h1 class="rise">Built into<br>the build.</h1>
+    <p class="lede rise">Two modules we attach to a project from day one, rather than bolting on after launch.</p>
+    <div class="modules rise">
+      <div class="mod">
+        <span class="modno">Module 01</span>
+        <h2>The Security</h2>
+        <p>vCISO direction, VAPT testing, system hardening, and phishing drills — four services that run as one loop.</p>
+      </div>
+      <div class="mod">
+        <span class="modno">Module 02</span>
+        <h2>The Payment Gateway</h2>
+        <p>A licensed rail for merchant cash-in and cash-out, with the dashboard, reconciliation, and fee logic built on top.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -587,12 +706,176 @@ ul.plain li{
   </div>
 </section>
 
+
+<!-- 9 — gateway entrance ............................................. -->
+<section class="slide">
+  <div class="inner">
+    <div class="gatewrap">
+      <div>
+        <div class="modrule rise"><span class="eyebrow" style="margin:0">Module Two</span><i></i></div>
+        <h1 class="entrance-word rise"><span>The&nbsp;</span><span>Gateway</span></h1>
+        <p class="lede rise" style="font-size:clamp(16px,1.8vw,21px)">The payment rail.</p>
+        <p class="lede rise">Every peso the project handles — in and out — passes through one licensed rail. Not a wallet we built. A regulated payment gateway we integrate against, with the merchant experience built on top.</p>
+      </div>
+      <div class="portalbox rise">
+        <div class="portal" id="portal" role="img" aria-label="A gateway of receding frames with transactions travelling through toward a central peso core"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 ................................................................. -->
+<section class="slide">
+  <div class="inner">
+    <p class="eyebrow rise">Payments module</p>
+    <h2 class="rise">A licensed gateway does the money.</h2>
+    <p class="lede rise">Where a project needs to move real funds, we do not build a wallet. We integrate one that is already licensed to hold and move e-money, and we build the merchant experience on top of it.</p>
+    <div class="grid g4 rise" style="margin-top:26px">
+      <div class="card teal">
+        <span class="tag">Who they are</span>
+        <h3>Licensed EMI</h3>
+        <p>The gateway must hold a Bangko Sentral ng Pilipinas licence — as an Electronic Money Issuer, an Operator of Payment Systems, or both. Unlicensed processors are not considered.</p>
+      </div>
+      <div class="card teal">
+        <span class="tag">What it connects to</span>
+        <h3>National rails</h3>
+        <p>Reach into the national rails: InstaPay for real-time transfers, PESONet for batched settlement, and QR Ph, the national QR standard, for merchant acceptance.</p>
+      </div>
+      <div class="card accent">
+        <span class="tag">What it moves</span>
+        <h3>Cash in, cash out</h3>
+        <p>Merchant funding and merchant payouts, settled to bank accounts and wallets. Philippine peso throughout.</p>
+      </div>
+      <div class="card accent">
+        <span class="tag">What we build</span>
+        <h3>The layer above</h3>
+        <p>Merchant onboarding, the transaction dashboard, reconciliation, payout requests, fee logic, and the audit trail your finance team actually works from.</p>
+      </div>
+    </div>
+    <div class="hr rise"></div>
+    <p class="small rise">Division of responsibility: the gateway holds the funds, performs KYC on its account holders, and carries the regulatory obligation for custody and settlement. The platform layer above it — merchant onboarding, dashboard, reconciliation, payout logic — is built and operated on the project side, and earns its margin there. The provider is selected per project and named in the proposal.</p>
+  </div>
+</section>
+
+<!-- 10 ................................................................ -->
+<section class="slide">
+  <div class="inner">
+    <p class="eyebrow rise">Fund flow</p>
+    <h2 class="rise">Money in. Money out.</h2>
+    <p class="lede rise">Two directions, one ledger. Every movement is recorded against the merchant account and reconciled daily.</p>
+    <div class="railmap rise" style="margin-top:20px">
+      <svg viewBox="0 0 1000 320" role="img" aria-label="Fund flow diagram: customers cash in through the gateway to the merchant wallet; the merchant withdraws out to bank or wallet, with fees deducted at withdrawal">
+        <text class="flowtag in" x="24" y="30">Cash in →</text>
+        <rect class="node" x="24" y="46" width="180" height="86"></rect>
+        <text class="nlabel" x="114" y="82">Customer</text>
+        <text class="nsub" x="114" y="104">QR Ph · InstaPay · PESONet</text>
+
+        <path class="arrowIn" d="M 212 89 H 392"></path>
+
+        <rect class="node emi" x="400" y="30" width="200" height="118"></rect>
+        <text class="nlabel" x="500" y="74">Gateway</text>
+        <text class="nsub" x="500" y="96">licensed EMI · holds the funds</text>
+        <text class="nsub" x="500" y="114">KYC · AML monitoring</text>
+
+        <path class="arrowIn" d="M 608 89 H 788"></path>
+
+        <rect class="node mer" x="796" y="46" width="180" height="86"></rect>
+        <text class="nlabel" x="886" y="82">Merchant</text>
+        <text class="nsub" x="886" y="104">wallet balance</text>
+
+        <text class="flowtag out" x="796" y="196">← Cash out</text>
+        <path class="arrowOut" d="M 886 210 V 250 H 500 V 164"></path>
+        <path class="arrowOut" d="M 400 240 H 114 V 148"></path>
+
+        <rect class="node" x="330" y="244" width="140" height="52"></rect>
+        <text class="nsub" x="400" y="266">withdrawal fee</text>
+        <text class="nsub" x="400" y="284">deducted here</text>
+
+        <text class="nsub" x="114" y="286">bank account or wallet</text>
+      </svg>
+    </div>
+    <div class="grid g3 rise" style="margin-top:18px">
+      <div class="kv"><b>Cash in</b><span>Free or minimal to the payer; funds land in the merchant wallet</span></div>
+      <div class="kv"><b>Cash out</b><span>Merchant-initiated withdrawal; this is where fees are taken</span></div>
+      <div class="kv"><b>Settlement</b><span>Per the gateway's cut-off schedule; InstaPay real time, PESONet batched</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 ................................................................ -->
+<section class="slide">
+  <div class="inner">
+    <p class="eyebrow rise">Visibility</p>
+    <h2 class="rise">The dashboard.</h2>
+    <p class="lede rise">Every peso that moves is visible, attributable, and exportable — a live ledger the merchant can work from without asking anyone for a report.</p>
+    <div class="grid g2 rise" style="margin-top:24px">
+      <div class="card teal">
+        <span class="tag">The ledger</span>
+        <ul class="ticks">
+          <li>Running balance, pending and cleared, at a glance</li>
+          <li>Transaction register: reference, channel, amount, status, timestamp</li>
+          <li>Withdrawal history with the fee shown per payout</li>
+          <li>Daily reconciliation against the gateway settlement files</li>
+          <li>Exceptions surfaced: unmatched, failed, and reversed transactions</li>
+        </ul>
+      </div>
+      <div class="card accent">
+        <span class="tag">Working with it</span>
+        <ul class="ticks">
+          <li>Filter by status, channel, and date range</li>
+          <li>Search by reference against the gateway's own records</li>
+          <li>Exports to CSV and XLSX for accounting</li>
+          <li>Role-based access: viewer, finance, admin</li>
+          <li>Full action log — who did what, and when</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small rise" style="margin-top:18px">Every figure on the dashboard traces back to a gateway transaction reference, so any line can be reconciled against the provider's own records without a manual export.</p>
+  </div>
+</section>
+
+<!-- 12 ................................................................ -->
+<section class="slide">
+  <div class="inner">
+    <p class="eyebrow rise">Commercial model</p>
+    <h2 class="rise">Revenue sits on the withdrawal.</h2>
+    <p class="lede rise">Cash-in is the acquisition cost. Withdrawal is the revenue line. One agreed rate: <b>6% of every withdrawal</b>, deducted at payout and shown to the merchant before they confirm.</p>
+
+    <div class="grid g2 rise" style="margin-top:22px">
+      <div class="calc">
+        <div class="headline"><span class="tag">Transaction fee</span><strong>6%</strong><em>of the withdrawal amount</em></div>
+        <label for="amt">Withdrawal amount (PHP)</label>
+        <input type="number" id="amt" value="50000" min="100" step="100">
+        <div class="bar3"><i class="net" id="bnet"></i><i class="bh" id="bbh"></i></div>
+        <div class="legend">
+          <span><em style="background:rgba(79,182,165,.35)"></em>Merchant receives</span>
+          <span><em style="background:var(--signal)"></em>Transaction fee</span>
+        </div>
+      </div>
+      <div>
+        <div class="out">
+          <div><b>Withdrawal</b><span id="oGross">—</span></div>
+          <div class="hi"><b>Transaction fee — 6%</b><span id="oFee">—</span></div>
+          <div><b>Merchant receives</b><span id="oNet">—</span></div>
+        </div>
+        <p class="small" style="margin-top:16px">6% is the agreed launch rate, applied on withdrawal only — cash-in carries no fee. The rate covers the gateway's own cost and the platform margin as a single figure, fixed for the initial term and reviewed against actual volume before renewal.</p>
+      </div>
+    </div>
+
+    <div class="grid g3 rise" style="margin-top:18px">
+      <div class="kv"><b>Applies to</b><span>Withdrawals only; cash-in is not charged</span></div>
+      <div class="kv"><b>Disclosure</b><span>Fee and net proceeds shown before the merchant confirms</span></div>
+      <div class="kv"><b>Review</b><span>Rate revisited at renewal once real volume is known</span></div>
+    </div>
+  </div>
+</section>
+
 </div>
 
 <div class="chrome">
-  <span class="mark">Broadheader — Cybersecurity Bundle</span>
+  <span class="mark">Broadheader — Security &amp; Payments</span>
   <div class="dots" id="dots"></div>
-  <span class="count" id="count">01 / 08</span>
+  <span class="count" id="count">01 / 13</span>
   <div class="pager">
     <button id="prev" aria-label="Previous slide">‹</button>
     <button id="next" aria-label="Next slide">›</button>
@@ -700,14 +983,14 @@ gates.forEach((g, k) => {
 
 /* production plane */
 const prod = document.createElement('div');
-prod.className = 'prod';
+prod.className = 'prodplane';
 prod.innerHTML = '<span class="pl">Production</span>';
 stage.appendChild(prod);
 
 /* travelling routes + key */
 routes.forEach((rt, n) => {
   const d = document.createElement('span');
-  d.className = 'dot';
+  d.className = 'tdot';
   d.dataset.dot = n;
   d.style.setProperty('--x', dotX(n));
   d.style.setProperty('--y', dotY(n));
@@ -732,7 +1015,7 @@ function render(){
 
   routes.forEach((rt, n) => {
     const k = gates.findIndex(g => rt.blockedBy.includes(g.id) && on[g.id]);
-    const dot = stage.querySelector('.dot[data-dot="' + n + '"]');
+    const dot = stage.querySelector('.tdot[data-dot="' + n + '"]');
     const row = routekey.querySelector('[data-key="' + n + '"]');
     const through = k === -1;
     if (through) breaches++;
@@ -756,6 +1039,54 @@ function render(){
   }
 }
 render();
+
+
+/* ---------------- gateway portal ---------------- */
+(function(){
+  const portal=document.getElementById('portal');
+  if(!portal) return;
+  const rings=[{s:300,z:-520},{s:262,z:-400},{s:224,z:-290},{s:190,z:-190},{s:158,z:-100},{s:130,z:-30}];
+  rings.forEach((r,k)=>{
+    const el=document.createElement('span');
+    el.className='ring';
+    el.style.width=r.s+'px'; el.style.height=r.s+'px';
+    el.style.setProperty('--z', r.z+'px');
+    el.style.setProperty('--o', (0.22+k*0.13).toFixed(2));
+    el.style.animationDelay=(k*0.075)+'s';
+    portal.appendChild(el);
+  });
+  const core=document.createElement('span');
+  core.className='core';
+  core.innerHTML='<span class="coremark">\u20B1</span>';
+  portal.appendChild(core);
+  [[-96,-70],[92,-52],[-72,84],[104,74],[0,-108],[-112,10]].forEach((c,k)=>{
+    const sp=document.createElement('span');
+    sp.className='spark';
+    sp.style.setProperty('--sx',c[0]+'px');
+    sp.style.setProperty('--sy',c[1]+'px');
+    sp.style.animationDelay=(1.2+k*0.42)+'s';
+    portal.appendChild(sp);
+  });
+})();
+
+/* ---------------- withdrawal fee model ---------------- */
+(function(){
+  const amt=document.getElementById('amt');
+  if(!amt) return;
+  const RATE = 6;
+  const peso = n => '\u20B1' + n.toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+  function calc(){
+    const a = Math.max(0, parseFloat(amt.value)||0);
+    const f = a*RATE/100, net = a-f;
+    document.getElementById('oGross').textContent = peso(a);
+    document.getElementById('oFee').textContent   = peso(f);
+    document.getElementById('oNet').textContent   = peso(net);
+    document.getElementById('bnet').style.width = (100-RATE) + '%';
+    document.getElementById('bbh').style.width  = RATE + '%';
+  }
+  amt.addEventListener('input', calc);
+  calc();
+})();
 </script>
 </body>
 </html>
