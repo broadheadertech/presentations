@@ -241,6 +241,11 @@ const CATS = [
 ];
 const INK = 0x130A0E, RED = 0xDB1436;
 const REDUCED = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+/* ?still=1 — the presentation hub frames this page as a card preview. Running a
+   140s timeline and a live WebGL loop for a thumbnail is what makes the hub
+   crawl, so in still mode we render one settled frame and stop the loop. */
+const STILL = typeof location !== 'undefined' && /[?&]still=1/.test(location.search || '');
+let stillUntil = 0;
 
 /* ============================================================
    RENDERER
@@ -1853,6 +1858,7 @@ function onTick(){
 onTick.last = -1;
 
 function animate(){
+  if (STILL && stillUntil && performance.now() > stillUntil) return;   /* frozen */
   requestAnimationFrame(animate);
   const t2 = clock.getElapsedTime(), dt = Math.min(clock.getDelta(), 0.05);
 
@@ -2052,8 +2058,15 @@ addEventListener('touchend', e => {
   animate();
   requestAnimationFrame(() => {
     document.getElementById('load').classList.add('out');
-    master.play();
-    if (REDUCED) master.timeScale(1.35);
+    if (STILL){
+      master.seek(5.4); master.pause();          /* the opening ring reads well small */
+      document.getElementById('ctl').style.display = 'none';
+      document.getElementById('tl').style.display = 'none';
+      stillUntil = performance.now() + 1600;     /* let textures decode, then freeze */
+    } else {
+      master.play();
+      if (REDUCED) master.timeScale(1.35);
+    }
     syncPlayBtn();
   });
 });

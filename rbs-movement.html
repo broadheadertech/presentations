@@ -789,6 +789,7 @@ h1,h2,h3,h4,p,ul,ol,figure,dl{margin:0}
       filmLoaded = true;
       film3d.addEventListener('load', () => {
         setTimeout(() => filmLoad.classList.add('out'), 450);
+        if (cur !== FILM) msg({ cmd:'pause' });   /* skipped past while loading */
       });
       film3d.src = FILM_SRC;
     } else {
@@ -879,6 +880,9 @@ h1,h2,h3,h4,p,ul,ol,figure,dl{margin:0}
   window.addEventListener('message', function(e){
     const d = e.data;
     if (!d || d.ch !== 'rbs3d') return;
+    /* a sequence still playing in the background can finish after the viewer has
+       moved on and drag the deck back — only listen while it is on screen */
+    if (cur !== FILM) return;
     if (d.event === 'next' || d.event === 'end') go(FILM + 1, 1);
     else if (d.event === 'prev') go(FILM - 1, -1);
   });

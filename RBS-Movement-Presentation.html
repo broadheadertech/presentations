@@ -532,7 +532,12 @@ h1,h2,h3,p,ul,ol,figure,dl{margin:0}
   function enterFilm(){
     film.classList.add('on'); hud.classList.add('hide');
     if(!filmLoaded){ filmLoaded=true;
-      film3d.addEventListener('load',function(){ setTimeout(function(){filmLoad.classList.add('out')},450) });
+      film3d.addEventListener('load',function(){
+        setTimeout(function(){filmLoad.classList.add('out')},450);
+        /* if the viewer skipped past while it was still loading, it never heard
+           the pause — stop it now rather than leave a timeline running unseen */
+        if(cur!==FILM) msg({cmd:'pause'});
+      });
       film3d.src=FILM_SRC;
     } else { filmLoad.classList.add('out'); msg({cmd:'reset'}); }
   }
@@ -567,6 +572,10 @@ h1,h2,h3,p,ul,ol,figure,dl{margin:0}
   /* the framed sequence hands navigation back at its own ends */
   window.addEventListener('message',function(e){
     var d=e.data; if(!d||d.ch!=='rbs3d')return;
+    /* A framed sequence that is still playing in the background can finish long
+       after the viewer has moved on and yank the deck back to the slide after
+       it. Only act on the sequence while we are actually on its slide. */
+    if(cur!==FILM)return;
     if(d.event==='next'||d.event==='end') go(FILM+1);
     else if(d.event==='prev') go(FILM-1);
   });

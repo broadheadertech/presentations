@@ -292,6 +292,9 @@
     position: relative;
     background: var(--paper-soft);
     cursor: pointer;
+    /* offscreen cards skip layout and paint entirely */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 460px;
     display: grid;
     /* head / cover / palette stay at their natural size; the foot takes the
        slack so every card's title row lands on the same baseline */
@@ -983,7 +986,7 @@
       palette: ['#130A0E', '#1D1116', '#DB1436', '#F2415F', '#F2F1EF'],
     },
     {
-      file: 'rbs-ecosystem-3d.html', title: 'RBS Ecosystem',
+      file: 'rbs-ecosystem-3d.html', title: 'RBS Ecosystem', still: true,
       tagline: 'Seven Categories — Cinematic 3D Sequence',
       cover: 'cover-rbs3d',
       series: 'Broadheader Projects',
@@ -1225,7 +1228,7 @@
           <span class="tag">Deck / ${pad(li + 1)} of ${pad(items.length)}</span>
         </div>
         <div class="card-cover ${d.cover}">
-          <iframe class="card-cover-frame" src="${d.file}" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true" onload="this.classList.add('loaded')"></iframe>
+          <iframe class="card-cover-frame" data-src="${d.file}${d.still ? '?still=1' : ''}" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true" onload="this.classList.add('loaded')"></iframe>
         </div>
         <div class="card-palette">
           <span class="palette-label">Palette /</span>
@@ -1333,6 +1336,66 @@
       frame.style.transform = 'scale(' + scale + ')';
     });
   }
+  /* ---- preview lifecycle ----
+     Every card preview is a whole deck in an iframe: 22 of them is 10 MB, and
+     the 3D decks each spin up a WebGL context and render loop just to be a
+     thumbnail. Left alone they all load and keep running, which is what makes
+     the hub lag. Keep only the previews near the viewport alive.
+
+     This walks rects on scroll rather than using IntersectionObserver: IO needs
+     a compositing lifecycle that isn't always there, and a missed first callback
+     leaves the grid permanently blank. A rect pass always tells the truth. */
+  const LIVE_MAX = 5;          // how many decks may be running at once
+  const MOUNT_M  = 300;        // px beyond the viewport where a preview loads
+  const KEEP_M   = 900;        // px beyond which it is torn down again
+  const liveFrames = new Set();
+
+  const offscreenBy = el => {
+    const r = el.getBoundingClientRect();
+    if (r.bottom < 0) return -r.bottom;
+    if (r.top > innerHeight) return r.top - innerHeight;
+    return 0;
+  };
+  function mountPreview(fr){
+    if (fr.getAttribute('src') || !fr.dataset.src) return;
+    fr.setAttribute('src', fr.dataset.src);
+    liveFrames.add(fr);
+  }
+  function unmountPreview(fr){
+    if (!fr.getAttribute('src')) return;
+    fr.removeAttribute('src');     /* tears down the document and any render loop */
+    fr.classList.remove('loaded');
+    liveFrames.delete(fr);
+  }
+  function syncPreviews(){
+    const cards = document.querySelectorAll('.card');
+    const near = [];
+    cards.forEach(card => {
+      const fr = card.querySelector('.card-cover-frame');
+      if (!fr) return;
+      const d = offscreenBy(card);
+      if (d > KEEP_M) unmountPreview(fr);
+      else if (d <= MOUNT_M) near.push({ fr, d });
+    });
+    near.sort((a, b) => a.d - b.d);               /* closest to the viewport first */
+    near.slice(0, LIVE_MAX).forEach(x => mountPreview(x.fr));
+    /* anything still live but no longer among the closest gets released */
+    if (liveFrames.size > LIVE_MAX){
+      const keep = new Set(near.slice(0, LIVE_MAX).map(x => x.fr));
+      [...liveFrames].forEach(fr => { if (!keep.has(fr)) unmountPreview(fr); });
+    }
+  }
+  let syncQueued = false;
+  const queueSync = () => {
+    if (syncQueued) return;
+    syncQueued = true;
+    requestAnimationFrame(() => { syncQueued = false; syncPreviews(); });
+  };
+  addEventListener('scroll', queueSync, { passive: true });
+  addEventListener('resize', queueSync);
+  syncPreviews();
+  setTimeout(syncPreviews, 60);   /* again once fonts/layout have settled */
+
   // Use ResizeObserver so each card recalculates if the grid reflows (e.g. window resize)
   if (typeof ResizeObserver !== 'undefined') {
     const ro = new ResizeObserver(scaleCovers);
