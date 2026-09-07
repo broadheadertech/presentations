@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The RBS Movement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#130A0E; --ink-2:#1D1116; --ink-3:#271820;
+  --red:#DB1436; --red-deep:#8E0A22; --red-lift:#F2415F;
+  --paper:#F2F1EF; --paper-2:#E3E1DD; --paper-3:#CFCCC7;
+  --dim:rgba(255,255,255,.60); --dim-ink:#6A6068;
+  --sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.28,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:var(--sans);overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.stage{
+  position:absolute;top:50%;left:50%;width:1280px;height:720px;
+  transform-origin:center center;overflow:hidden;background:var(--ink);
+}
+.slide{
+  position:absolute;inset:0;padding:74px 82px;
+  opacity:0;visibility:hidden;pointer-events:none;
+}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto}
+.slide.light{background:var(--paper);color:var(--ink)}
+
+/* build-in */
+.b{opacity:0;transform:translateY(18px)}
+.on .b{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .62s var(--ease);transition-delay:calc(var(--i,0)*70ms + 60ms)}
+
+/* type */
+h1,h2,h3,p,ul,ol,figure,dl{margin:0}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.16em;color:var(--red);text-transform:uppercase}
+.light .kicker{color:var(--red-deep)}
+.h-xl{font-size:82px;line-height:.94;font-weight:900;letter-spacing:-.035em}
+.h-lg{font-size:54px;line-height:1.02;font-weight:800;letter-spacing:-.03em}
+.h-md{font-size:34px;line-height:1.1;font-weight:800;letter-spacing:-.02em}
+.h-sm{font-size:21px;line-height:1.2;font-weight:700;letter-spacing:-.01em}
+.lede{font-size:19px;line-height:1.62;color:var(--dim);max-width:31ch}
+.light .lede{color:#4A4046}
+.body{font-size:15px;line-height:1.6;color:var(--dim)}
+.light .body{color:var(--dim-ink)}
+.rule{width:56px;height:3px;background:var(--red);border:0;margin:0}
+.mark{width:228px;height:auto;display:block}
+.mark img,img.mark{max-width:100%}
+.close-grid .mark{width:198px}
+
+/* cover */
+.cover{display:grid;grid-template-rows:auto 1fr auto;height:100%}
+
+.cover-mid{align-self:center;padding-bottom:26px}
+.cover-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.chip-row{display:flex;flex-wrap:wrap;gap:7px;max-width:740px}
+.chip{
+  font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:6px 12px;
+  border:1px solid rgba(255,255,255,.16);border-radius:999px;color:var(--dim)
+}
+.blot{position:absolute;border-radius:50%;pointer-events:none}
+
+/* two column */
+.two{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;height:100%;align-items:center}
+.stack{display:grid;gap:22px}
+
+/* stat */
+.stat{font-size:250px;font-weight:900;line-height:.8;letter-spacing:-.05em;color:var(--red);font-variant-numeric:tabular-nums}
+.facts{display:grid;gap:0}
+.fact{padding:22px 0;border-top:1px solid rgba(255,255,255,.12)}
+.fact:last-child{border-bottom:1px solid rgba(255,255,255,.12)}
+.light .fact{border-top-color:rgba(19,10,14,.14)}
+.light .fact:last-child{border-bottom-color:rgba(19,10,14,.14)}
+.fact b{display:block;font-size:19px;font-weight:700;margin-bottom:5px}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tile{background:#fff;border-radius:14px;padding:22px 20px 20px;min-height:168px;display:grid;align-content:start;gap:12px;box-shadow:0 1px 2px rgba(19,10,14,.06)}
+.tile.ghost{background:transparent;border:1px dashed var(--paper-3);box-shadow:none}
+.ico{width:44px;height:44px;border-radius:12px;background:var(--red);color:#fff;display:grid;place-items:center}
+.ico svg{width:23px;height:23px}
+.tile.ghost .ico{background:var(--paper-2);color:var(--dim-ink)}
+.tile h3{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.tile p{font-size:13px;line-height:1.45;color:var(--dim-ink)}
+
+/* retail */
+.brands{display:flex;flex-wrap:wrap;gap:10px}
+.brand{font-size:15px;font-weight:800;letter-spacing:.06em;padding:12px 20px;border-radius:999px;background:var(--ink);color:#fff}
+.brand.more{background:transparent;color:var(--dim-ink);border:1px solid var(--paper-3);font-weight:600;letter-spacing:.03em}
+.slab{position:absolute;top:0;right:0;width:392px;height:100%;background:var(--ink);display:grid;place-items:center;overflow:hidden}
+.slab .disc{width:300px;height:300px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.slab .disc svg{width:126px;height:126px;color:#fff}
+
+/* ---- 3D prism ---- */
+.cats{display:grid;grid-template-columns:600px 1fr;gap:38px;height:100%;align-items:center}
+.scene{
+  position:relative;height:470px;display:grid;place-items:center;
+  perspective:1250px;perspective-origin:50% 42%;
+}
+.prism{
+  position:relative;width:288px;height:288px;transform-style:preserve-3d;
+  transform:rotateX(-9deg) rotateY(0deg);
+  transition:transform 1.25s cubic-bezier(.62,.02,.2,1);
+}
+/* the card is white stock: brand marks sit on it as they would on print, and
+   the active face is picked out by a red edge rather than a red fill */
+.face{
+  position:absolute;inset:0;transform-style:preserve-3d;backface-visibility:hidden;
+  background:#FFFFFF;color:var(--ink);
+  border:1px solid rgba(19,10,14,.10);border-radius:8px;
+  padding:26px 26px;display:grid;align-content:space-between;
+  box-shadow:0 10px 30px -14px rgba(0,0,0,.7);
+  filter:brightness(.62);transition:filter .8s var(--ease);
+}
+.face.live{background:#FFFFFF;border:2px solid var(--red);filter:none;
+  box-shadow:0 18px 40px -16px rgba(0,0,0,.75)}
+.face .fico{width:60px;height:60px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
+.face .fico svg{width:31px;height:31px}
+/* brand plate: the six marks differ in polarity (Redbox red, Ground Up cream,
+   TipunoX/Broadheader white, RTap with a baked-in dark glow), so a common dark
+   plate is what lets each one read. Tall enough for Ground Up stacked lockup. */
+/* no plate now — the mark sits directly on the white card */
+.face .fplate{height:auto;min-height:96px;display:grid;place-items:center;align-content:center;gap:2px;padding:0;background:none;border:0;box-shadow:none}
+.face .fplate img{max-width:94%;max-height:96px;object-fit:contain;display:block}
+.face .fplate .evark{width:84px;height:84px;color:#1E2026;display:block}
+.face .fplate.duo .fmarks{gap:16px}
+.face .fplate.duo img{max-height:82px}
+
+/* on the active (red) face a translucent plate turns the red Redbox mark muddy,
+   so the plate goes near-opaque there to keep every mark crisp */
+
+
+/* the company the mark belongs to, captioned under it */
+.fmarks{display:grid;grid-auto-flow:column;gap:16px;place-items:center}
+.fname{font-size:13px;font-weight:800;letter-spacing:.02em;color:rgba(19,10,14,.72);
+  text-align:center;margin-top:9px;line-height:1.2}
+.face h3{font-size:27px;font-weight:900;letter-spacing:-.025em;line-height:1.04;color:var(--ink)}
+.face .who{font-size:13px;font-weight:600;color:rgba(19,10,14,.58);margin-top:8px;line-height:1.4}
+.face .num{position:absolute;top:22px;right:24px;font-size:13px;font-weight:800;color:rgba(19,10,14,.32);font-variant-numeric:tabular-nums}
+.glow{display:none}
+.cat-nav{list-style:none;padding:0;margin:0 0 26px;display:grid;gap:2px}
+.cat-nav button{
+  width:100%;text-align:left;background:none;border:0;cursor:pointer;
+  font-family:inherit;color:var(--dim);font-size:16px;font-weight:600;
+  padding:11px 0 11px 20px;border-left:2px solid rgba(255,255,255,.12);
+  display:flex;gap:14px;align-items:baseline;transition:color .25s,border-color .25s,padding-left .25s
+}
+.cat-nav button .n{font-size:12px;font-weight:800;color:rgba(255,255,255,.34);font-variant-numeric:tabular-nums}
+.cat-nav button:hover{color:#fff;padding-left:26px}
+.cat-nav li.sel button{color:#fff;border-left-color:var(--red);font-weight:800}
+.cat-nav li.sel .n{color:var(--red)}
+.cat-detail{min-height:132px}
+.cat-detail h4{font-size:15px;font-weight:800;letter-spacing:.03em;color:var(--red-lift);margin:0 0 10px}
+.cat-detail p{font-size:17px;line-height:1.6;color:rgba(255,255,255,.80);max-width:34ch}
+
+/* quote */
+.quote{max-width:930px;display:grid;gap:26px;align-content:center;height:100%}
+.quote p{font-size:29px;line-height:1.52;font-weight:500;letter-spacing:-.015em}
+.quote p.dim{color:var(--dim);font-size:24px}
+.quote .kicker{font-size:13px;font-weight:700;line-height:1.2}
+
+/* impact */
+.cols{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.col{background:var(--ink-2);border-radius:14px;padding:24px 20px;display:grid;gap:14px;align-content:start;min-height:196px}
+.col .ico{background:rgba(219,20,54,.16);color:var(--red-lift)}
+.col h3{font-size:18px;font-weight:800}
+.col p{font-size:13.5px;line-height:1.5;color:var(--dim)}
+
+/* closing */
+.close-grid{display:grid;grid-template-rows:auto 1fr auto;height:100%}
+
+/* HUD */
+.hud{position:fixed;left:0;right:0;bottom:0;height:52px;display:flex;align-items:center;gap:20px;padding:0 22px;z-index:20}
+.bar{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:21;transition:width .45s var(--ease)}
+.dots{display:flex;gap:7px;margin-left:auto}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22);cursor:pointer;transition:background .25s,transform .25s}
+.dots i.on{background:var(--red);transform:scale(1.35)}
+
+.count{font-size:12px;font-weight:700;color:rgba(255,255,255,.42);font-variant-numeric:tabular-nums}
+
+.hint{font-size:12px;color:rgba(255,255,255,.30)}
+.arrow{background:none;border:0;color:inherit;cursor:pointer;padding:6px;opacity:.5;transition:opacity .2s}
+.arrow:hover{opacity:1}
+.arrow svg{width:17px;height:17px;display:block}
+:focus-visible{outline:2px solid var(--red-lift);outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){
+  .b,.on .b{transition:none;opacity:1;transform:none}
+  .prism{transition:none}
+}
+
+/* ==================== MOBILE ====================
+   A 1280x720 stage scaled onto a 390px phone lands at 0.30, rendering 19px
+   body copy at 6px. Below 900px the stage is dropped for a full-viewport
+   panel and each slide reflows to one scrollable column. */
+@media (max-width:900px){
+  .stage{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;transform:none!important;margin:0!important}
+  .slide{padding:calc(54px + env(safe-area-inset-top,0px)) 20px calc(94px + env(safe-area-inset-bottom,0px));
+    overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  .h-xl{font-size:clamp(36px,10.6vw,54px);line-height:.97}
+  .h-lg{font-size:clamp(29px,8.2vw,42px)}
+  .h-md{font-size:clamp(22px,6.2vw,31px)}
+  .h-sm{font-size:18px}
+  .lede{font-size:clamp(15px,4.1vw,17.5px);max-width:none}
+
+  /* Several slides carry inline font-size / max-width that beat a media query
+     on specificity, so the mobile type scale has to be declared !important or
+     headings render at their 70px desktop size and run off the screen. */
+  .h-xl{font-size:clamp(33px,9.2vw,50px)!important}
+  .h-lg{font-size:clamp(28px,7.8vw,40px)!important}
+  .h-md{font-size:clamp(22px,6.2vw,31px)!important}
+  .h-sm{font-size:18px!important}
+  .h-xl,.h-lg,.h-md,.h-sm,.lede,.body,p{max-width:none!important}
+  .body{font-size:clamp(14px,3.9vw,16px);line-height:1.55}
+  /* long single words must never force the grid wider than the phone */
+  h1,h2,h3,p,li{overflow-wrap:break-word;word-break:normal}
+  .close-grid,.close-grid>div,.cover,.cover>div,.two>div,.cats>div{min-width:0}
+  .kicker{font-size:10px;letter-spacing:.16em}
+  .two{grid-template-columns:1fr;gap:24px;height:auto;align-items:start;padding-top:6px}
+  /* the prism is a 3D object: give its row a real floor and clip any spill */
+  .cats{grid-template-columns:1fr;gap:30px;height:auto;align-items:start;padding-top:6px}
+  .scene{height:300px;overflow:hidden;margin-bottom:4px}
+  /* min-height lets the auto/1fr/auto rows distribute, so the footer sits at the
+     bottom of the panel instead of everything bunching at the top */
+  .cover,.quote,.close-grid{height:auto;min-height:100%}
+  .cover-mid{padding-bottom:0}
+  .mark{width:186px;margin-bottom:6px}
+  .close-grid .mark{width:150px}
+  .cover-foot{flex-direction:column;align-items:flex-start;gap:13px}
+  .cover-foot p{text-align:left!important}
+  .chip{font-size:10px;padding:5px 9px}
+  .stat{font-size:clamp(92px,29vw,148px)}
+  .fact{padding:14px 0}
+  .fact b{font-size:16px}
+  .slab{position:relative;width:100%;height:132px;border-radius:14px;order:-1}
+  .slab .disc{width:104px;height:104px}
+  .slab .disc svg{width:46px;height:46px}
+  .brand{font-size:11.5px;padding:8px 13px}
+  .prism{width:190px;height:190px}
+  .face{padding:15px 14px}
+  .face h3{font-size:17px}
+  .face .who{font-size:10.5px}
+  .face .num{top:14px;right:15px;font-size:10px}
+  .face .fplate{min-height:66px;padding:0}
+  .face .fplate img{max-height:66px}
+  .face .fplate.duo .fmarks{gap:10px}
+  .face .fplate.duo img{max-height:56px}
+  .face .fplate .evark{width:58px;height:58px}
+
+  .cat-nav button{font-size:14px;padding:9px 0 9px 14px}
+  .cat-detail{min-height:0}
+  .cat-detail p{font-size:15px;max-width:none}
+  .tiles,.cols{grid-template-columns:repeat(2,1fr);gap:9px}
+  .tile,.col{padding:13px 12px;min-height:0;gap:8px}
+  .tile h3,.col h3{font-size:13px}
+  .tile p,.col p{font-size:11px;line-height:1.36}
+  .ico{width:33px;height:33px;border-radius:9px}
+  .ico svg{width:17px;height:17px}
+  .quote p{font-size:clamp(17px,4.8vw,21px);line-height:1.48}
+  .quote p.dim{font-size:clamp(14.5px,4.1vw,18px)}
+  .close-grid .mark{width:140px}
+  .hud{height:calc(54px + env(safe-area-inset-bottom,0px));padding:0 10px env(safe-area-inset-bottom,0px);gap:2px}
+  .hint{display:none}
+  .dots{gap:6px;padding:10px 4px}
+  .dots i{width:7px;height:7px}
+  .count{font-size:11px;margin-left:6px}
+  .arrow{padding:12px}
+  .arrow svg{width:20px;height:20px}
+  .fbtn{padding:10px 12px}
+}
+@media (max-width:430px){
+  .tiles,.cols{grid-template-columns:1fr}
+}
+
+
+/* ---------------- the 3D chapter, full bleed ---------------- */
+.filmcard{display:grid;place-items:center;height:100%;text-align:center;gap:18px}
+.filmcard .ring{width:92px;height:92px;border-radius:50%;border:2px solid rgba(242,65,95,.35);
+  display:grid;place-items:center;color:var(--red-lift)}
+.filmcard .ring svg{width:30px;height:30px}
+.filmcard .lede{max-width:52ch}
+.film{position:fixed;inset:0;z-index:30;background:#0B0508;display:none}
+.film.on{display:block}
+.film iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.film-top{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;align-items:center;gap:14px;
+  padding:16px 22px;pointer-events:none;background:linear-gradient(to bottom,rgba(11,5,8,.72),transparent)}
+.film-top .lbl{font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.34)}
+.film-top .lbl b{color:var(--red-lift)}
+.film-top .sp{flex:1}
+.fbtn{pointer-events:auto;font-family:inherit;cursor:pointer;border:1px solid rgba(255,255,255,.2);
+  background:rgba(11,5,8,.55);color:var(--paper);border-radius:6px;padding:8px 13px;font-size:11px;
+  font-weight:800;letter-spacing:.14em;text-transform:uppercase;transition:.2s}
+.fbtn:hover{border-color:var(--red-lift);background:rgba(219,20,54,.28)}
+.film-load{position:absolute;inset:0;display:grid;place-items:center;background:#0B0508;z-index:3;transition:opacity .6s ease}
+.film-load.out{opacity:0;pointer-events:none}
+.film-load h3{margin:0;font-size:22px;font-weight:900;letter-spacing:-.02em}
+.film-load p{margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.34)}
+.hud.hide{opacity:0;pointer-events:none}
+@media (max-width:900px){
+  .filmcard{gap:13px}
+  .filmcard .ring{width:64px;height:64px}
+  .filmcard .ring svg{width:24px;height:24px}
+  .film-top{padding:11px 13px;gap:8px}
+  .film-top .lbl{font-size:9px;letter-spacing:.14em}
+  .fbtn{padding:7px 9px;font-size:9.5px;letter-spacing:.1em}
+  .film-load h3{font-size:18px}
+}
+
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-serv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18M4.6 17a7.4 7.4 0 0 1 14.8 0M12 5.4V4.2M10.4 4.2h3.2"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6.2a2.4 2.4 0 0 0 2.4 2.4h.2V21M6 3v5.4M9 3v5.4M17.2 21V3.6c1.9.7 2.7 3.1 2.7 5.8s-.8 4.2-2.7 4.2"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.6h11.6v5.8A5.2 5.2 0 0 1 10.4 20H9.2A5.2 5.2 0 0 1 4 14.4V8.6ZM15.6 9.8h1.9a2.6 2.6 0 0 1 0 5.2h-1.9M8 5.6c.6-.9.6-1.7 0-2.6M11.6 5.6c.6-.9.6-1.7 0-2.6"/></symbol>
+  <symbol id="i-ev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5.2A2.2 2.2 0 0 1 6.2 3h5.6A2.2 2.2 0 0 1 14 5.2V21M2.6 21H15.4M9.6 8.4 7.3 12.4h3.2L8.2 16.4M17 8.6h2.2A1.8 1.8 0 0 1 21 10.4v6.2a1.7 1.7 0 0 1-3.4 0v-3.2H14"/></symbol>
+  <symbol id="i-pay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 6.4h11.8a1.6 1.6 0 0 1 1.6 1.6v8a1.6 1.6 0 0 1-1.6 1.6H2.6A1.6 1.6 0 0 1 1 16V8a1.6 1.6 0 0 1 1.6-1.6ZM1 10.2h15M18.6 9a4.6 4.6 0 0 1 0 6.4M21.3 6.6a8.2 8.2 0 0 1 0 11.2"/></symbol>
+  <symbol id="i-retail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.4V6.2c1-.4 1.7-.8 1.7-1.9A1.8 1.8 0 1 0 10.2 4M12 7.6 3.5 14.2A1.4 1.4 0 0 0 4.4 17h15.2a1.4 1.4 0 0 0 .9-2.8L12 7.6Z"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.7 4.4 10.3 19.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></symbol>
+  <!-- E-Vark mark, lifted verbatim from broadheader-parking-ev.html (pin + bolt) -->
+  <symbol id="i-evark" viewBox="0 0 100 100" fill="currentColor"><path fill-rule="evenodd" d="M50 12 a30 30 0 0 1 30 30 c0 22 -30 46 -30 46 s-30 -24 -30 -46 a30 30 0 0 1 30 -30 z M54 26 L38 48 h9 l-4 18 20 -26 h-10 z"/></symbol>
+</svg>
+
+<div class="bar" id="bar" style="width:0"></div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 · cover -->
+  <section class="slide on">
+    <div class="blot" style="width:660px;height:660px;right:-190px;top:-230px;background:radial-gradient(circle at 38% 38%,rgba(219,20,54,.30),rgba(219,20,54,0) 66%)"></div>
+    <div class="cover">
+      <div class="b" style="--i:0"><img class="mark" src="logos/redbox.png" alt="Redbox Studio"></div>
+      <div class="cover-mid">
+        <p class="kicker b" style="--i:1">A Philippine group of companies</p>
+        <h1 class="h-xl b" style="--i:2;margin:16px 0 22px">The RBS<br>Movement</h1>
+        <p class="lede b" style="--i:3;max-width:44ch">One movement, many brands — building 400 branches nationwide so the provinces get the same choices the metro already has.</p>
+      </div>
+      <div class="cover-foot">
+        <div class="chip-row b" style="--i:4">
+          <span class="chip">Retail</span><span class="chip">Services</span><span class="chip">Food</span>
+          <span class="chip">Coffee</span><span class="chip">Software</span><span class="chip">EV + Parking</span><span class="chip">Cash-in + Payments</span>
+        </div>
+        <p class="body b" style="--i:5;font-size:12.5px;text-align:right">Presented by<br><b style="color:var(--paper)">Broadheader IT Solutions</b></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light">
+    <div class="two">
+      <div class="stack">
+        <p class="kicker b" style="--i:0">Who we are</p>
+        <h2 class="h-lg b" style="--i:1">A group of companies<br>moving as one.</h2>
+        <p class="lede b" style="--i:2;max-width:38ch">RBS is a retail group first — and around that floor sits a set of partner companies covering food, coffee, services, technology, mobility and payments.</p>
+        <p class="body b" style="--i:3;max-width:44ch">Each brand runs its own category. All of them are committed to the same target and the same standard of experience for the Filipino customer.</p>
+      </div>
+      <div class="facts">
+        <div class="fact b" style="--i:2"><b>400 branches</b><p class="body">The shared target, across Luzon, Visayas and Mindanao.</p></div>
+        <div class="fact b" style="--i:3"><b>Seven categories</b><p class="body">Retail, services, food, coffee, software, mobility, payments.</p></div>
+        <div class="fact b" style="--i:4"><b>One commitment</b><p class="body">Every partner company is committed to the movement.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-count>
+    <div class="blot" style="width:560px;height:560px;left:-200px;bottom:-240px;background:radial-gradient(circle at 50% 50%,rgba(219,20,54,.22),rgba(219,20,54,0) 66%)"></div>
+    <div class="two">
+      <div class="stack">
+        <p class="kicker b" style="--i:0">The target</p>
+        <div class="stat b" style="--i:1" id="stat">400</div>
+        <h2 class="h-md b" style="--i:2">branches across<br>the Philippines</h2>
+        <p class="body b" style="--i:3;max-width:36ch">Not concentrated in one city. Spread nationwide, so the movement is felt where choice has always been thinnest.</p>
+      </div>
+      <div class="facts">
+        <div class="fact b" style="--i:3"><b>Province-first</b><p class="body">Expansion aimed at the towns and cities outside Metro Manila.</p></div>
+        <div class="fact b" style="--i:4"><b>Multi-format</b><p class="body">Retail floors, food counters, cafés, kiosks and charging bays.</p></div>
+        <div class="fact b" style="--i:5"><b>Shared traffic</b><p class="body">Every brand in a branch feeds the next one's foot traffic.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s-cats">
+    <div class="cats">
+      <div class="scene">
+        <div class="prism" id="prism">
+          <figure class="face" data-f="0">
+            <span class="num">01</span>
+            <div class="fplate"><span class="fmarks"><img src="logos/redbox.png" alt="Redbox Studio"></span><span class="fname">RBS Retail</span></div>
+            <div><h3>Retail</h3><p class="who">Illest · Aeropostale · Hurley</p></div>
+          </figure>
+          <figure class="face" data-f="1">
+            <span class="num">02</span>
+            <div class="fplate"><span class="fmarks"><img src="logos/tipunox-light.png" alt="TipunoX"></span><span class="fname">TipunoX Barbershop</span></div>
+            <div><h3>Services</h3></div>
+          </figure>
+          <figure class="face" data-f="2">
+            <span class="num">03</span>
+            <div class="fplate duo"><span class="fmarks"><img src="logos/mang-guabao.png" alt="Mang Guabao"><img src="logos/boleros.png" alt="Boleros Meatballs"></span><span class="fname">Mang Guabao · Boleros</span></div>
+            <div><h3>Food</h3><p class="who">Mang Guabao · Boleros · Italyum</p></div>
+          </figure>
+          <figure class="face" data-f="3">
+            <span class="num">04</span>
+            <div class="fplate"><span class="fmarks"><img src="logos/ground-up-light.png" alt="Ground Up Coffee Co."></span><span class="fname">Ground Up Coffee</span></div>
+            <div><h3>Coffee</h3></div>
+          </figure>
+          <figure class="face" data-f="4">
+            <span class="num">05</span>
+            <div class="fplate"><span class="fmarks"><svg class="evark" viewBox="0 0 100 100"><use href="#i-evark"/></svg></span><span class="fname">EVark</span></div>
+            <div><h3>EV + Parking</h3></div>
+          </figure>
+          <figure class="face" data-f="5">
+            <span class="num">06</span>
+            <div class="fplate"><span class="fmarks"><img src="logos/rtap-light.png" alt="RTap"></span><span class="fname">RTap</span></div>
+            <div><h3>Cash-in + Payments</h3></div>
+          </figure>
+        </div>
+        <div class="glow"></div>
+      </div>
+      <div style="align-self:center">
+        <p class="kicker b" style="--i:0">Inside every branch</p>
+        <h2 class="h-md b" style="--i:1;margin:14px 0 26px">Six categories<br>every branch carries.</h2>
+        <ol class="cat-nav b" style="--i:2" id="catNav"></ol>
+        <div class="cat-detail b" style="--i:3" id="catDetail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the 3D sequence renders full-bleed outside the stage -->
+  <section class="slide">
+    <div class="filmcard">
+      <div class="ring b" style="--i:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.4 19 12 8 18.6V5.4Z"/></svg></div>
+      <p class="kicker b" style="--i:1">The ecosystem, in motion</p>
+      <h2 class="h-lg b" style="--i:2">One connected<br>ecosystem.</h2>
+      <p class="lede b" style="--i:3">A two-minute cinematic walk through all seven categories &mdash; retail, services, food, coffee, EV + parking, payments and IT &mdash; as one continuous world.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="blot" style="width:720px;height:720px;left:-280px;top:-120px;background:radial-gradient(circle at 50% 50%,rgba(219,20,54,.20),rgba(219,20,54,0) 64%)"></div>
+    <div class="quote">
+      <p class="kicker b" style="--i:0">Why we move</p>
+      <p class="b" style="--i:1">For too long, the best of retail, food and technology has stopped at the edge of the metro. The RBS Movement exists to change that.</p>
+      <p class="b dim" style="--i:2">Every branch we open in a province is a promise kept — that a family in Nueva Ecija, in Iloilo, in Davao deserves the same choices, the same quality and the same experience as anyone in Manila.</p>
+      <hr class="rule b" style="--i:3">
+      <p class="b" style="--i:4;font-size:22px;color:var(--paper)">We are not simply opening stores. We are widening what is available to the Filipino people.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="blot" style="width:700px;height:700px;right:-230px;bottom:-260px;background:radial-gradient(circle at 40% 40%,rgba(219,20,54,.26),rgba(219,20,54,0) 66%)"></div>
+    <div class="close-grid">
+      <div class="b" style="--i:0"><img class="mark" src="logos/redbox.png" alt="Redbox Studio"></div>
+      <div style="align-self:center">
+        <h2 class="h-xl b" style="--i:1;font-size:70px">One movement.<br>400 branches.<br>Countless Filipinos.</h2>
+      </div>
+      <div>
+        <hr class="rule b" style="--i:2">
+        <p class="body b" style="--i:3;margin-top:16px;max-width:60ch">Retail · Services · Food · Coffee · Software · EV Charging + Parking · Cash-in + Payments — all committed to the RBS Movement.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<div class="film" id="film">
+  <iframe id="film3d" title="RBS ecosystem — 3D sequence" allow="fullscreen"></iframe>
+  <div class="film-top">
+    <span class="lbl"><b>05</b> &nbsp;THE ECOSYSTEM &nbsp;·&nbsp; 3D SEQUENCE</span>
+    <span class="sp"></span>
+    <button class="fbtn" id="filmBack">‹ Deck</button>
+    <button class="fbtn" id="filmSkip">Skip ›</button>
+  </div>
+  <div class="film-load" id="filmLoad"><div><h3>One Connected Ecosystem</h3><p>Loading the sequence</p></div></div>
+</div>
+
+<div class="hud">
+  <button class="arrow" id="prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="arrow" id="next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+  <span class="count" id="count">1 / 9</span>
+  <span class="hint">← → to navigate · F for fullscreen</span>
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var isMobile=function(){return window.matchMedia('(max-width:900px)').matches};
+  function fit(){
+    if(isMobile()){stage.style.transform='';stage.style.marginTop='';return}
+    var s=Math.min(window.innerWidth/1280,(window.innerHeight-52)/720);
+    stage.style.transform='translate(-50%,-50%) scale('+s+')';
+    stage.style.marginTop='-26px';
+  }
+  window.addEventListener('resize',fit);
+  window.addEventListener('orientationchange',function(){setTimeout(fit,120)});
+  fit();
+
+  /* swipe to change slides; only when the gesture is clearly horizontal, so
+     scrolling a tall slide still works */
+  var tsx=0,tsy=0,tst=0;
+  document.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1)return;
+    tsx=e.touches[0].clientX;tsy=e.touches[0].clientY;tst=Date.now();
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(!tst||e.changedTouches.length!==1)return;
+    var dx=e.changedTouches[0].clientX-tsx,dy=e.changedTouches[0].clientY-tsy;tst=0;
+    if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.6)return;
+    var dir=dx<0?1:-1;
+    if(cur===FILM)msg({cmd:'step',dir:dir});else go(cur+dir);
+  },{passive:true});
+
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  /* ---- the 3D sequence is slide 5, rendered full-bleed outside the stage ----
+     It is framed rather than duplicated, so rbs-ecosystem-3d.html stays the one
+     source of truth, and it is loaded lazily so the deck opens instantly. */
+  var FILM=4, FILM_SRC='rbs-ecosystem-3d.html', filmLoaded=false;
+  var film=document.getElementById('film'), film3d=document.getElementById('film3d'),
+      filmLoad=document.getElementById('filmLoad'), hud=document.querySelector('.hud');
+  function msg(m){ if(!film3d.contentWindow)return;
+    try{ m.ch='rbs-deck'; film3d.contentWindow.postMessage(m,'*'); }catch(e){} }
+  function enterFilm(){
+    film.classList.add('on'); hud.classList.add('hide');
+    if(!filmLoaded){ filmLoaded=true;
+      film3d.addEventListener('load',function(){ setTimeout(function(){filmLoad.classList.add('out')},450) });
+      film3d.src=FILM_SRC;
+    } else { filmLoad.classList.add('out'); msg({cmd:'reset'}); }
+  }
+  function leaveFilm(){ film.classList.remove('on'); hud.classList.remove('hide'); msg({cmd:'pause'}); }
+  var dots=document.getElementById('dots'),count=document.getElementById('count'),bar=document.getElementById('bar');
+  slides.forEach(function(_,i){
+    var d=document.createElement('i');
+    d.addEventListener('click',function(){go(i)});
+    dots.appendChild(d);
+  });
+  var cur=0;
+  function go(i){
+    if(i<0||i>=slides.length)return;
+    var wasFilm=cur===FILM;
+    slides[cur].classList.remove('on');
+    cur=i;
+    if(cur===FILM){ enterFilm(); }
+    else {
+      if(wasFilm) leaveFilm();
+      // restart the build
+      var s=slides[cur];s.classList.remove('on');void s.offsetWidth;s.classList.add('on');
+      document.body.classList.toggle('on-light',s.classList.contains('light'));
+      s.hasAttribute('data-count')&&countUp();
+    }
+    [].forEach.call(dots.children,function(d,n){d.classList.toggle('on',n===cur)});
+    count.textContent=(cur+1)+' / '+slides.length;
+    bar.style.width=((cur+1)/slides.length*100)+'%';
+    cats.setActive(slides[cur].id==='s-cats');
+  }
+  document.getElementById('filmSkip').addEventListener('click',function(){go(FILM+1)});
+  document.getElementById('filmBack').addEventListener('click',function(){go(FILM-1)});
+  /* the framed sequence hands navigation back at its own ends */
+  window.addEventListener('message',function(e){
+    var d=e.data; if(!d||d.ch!=='rbs3d')return;
+    if(d.event==='next'||d.event==='end') go(FILM+1);
+    else if(d.event==='prev') go(FILM-1);
+  });
+  document.getElementById('next').addEventListener('click',function(){go(cur+1)});
+  document.getElementById('prev').addEventListener('click',function(){go(cur-1)});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();      if(cur===FILM)msg({cmd:'step',dir:1});else go(cur+1)}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();      if(cur===FILM)msg({cmd:'step',dir:-1});else go(cur-1)}
+    else if(e.key==='Escape'&&cur===FILM){go(FILM+1)}
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(slides.length-1);
+    else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+  });
+
+  /* count-up on the 400 slide */
+  var statEl=document.getElementById('stat'),ticking;
+  function countUp(){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){statEl.textContent='400';return}
+    clearInterval(ticking);var v=0;
+    ticking=setInterval(function(){
+      v+=Math.max(4,Math.round((400-v)/7));
+      if(v>=400){v=400;clearInterval(ticking)}
+      statEl.textContent=v;
+    },26);
+  }
+
+  /* ---- 3D category prism ---- */
+  var cats=(function(){
+    var DATA=[
+      ['Retail','Illest · Aeropostale · Hurley','The flagship floor. Established international and lifestyle labels, brought onto Philippine floors — including provinces where these brands have never had a home.'],
+      ['Services','TipunoX','The service arm of the movement — the people and standards that run the customer experience on the floor, every day a branch is open.'],
+      ['Food','Mang Guabao · Boleros · Italyum','Three concessionaire brands that keep a branch busy from opening to close, priced for the everyday Filipino.'],
+      ['Coffee','Ground Up Coffee','A homegrown café that gives a branch a place to sit, meet and stay longer than a shopping trip.'],
+      ['EV + Parking','EVark','EV charging and managed parking — turning a branch into a stop on the route, not just a destination.'],
+      ['Cash-in + Payments','RTap','Kiosks that put cash-in and digital payments within walking distance, in towns where a bank branch is a jeepney ride away.']
+    ];
+    var prism=document.getElementById('prism'),nav=document.getElementById('catNav'),det=document.getElementById('catDetail');
+    var faces=[].slice.call(prism.querySelectorAll('.face'));
+    /* The hexagon's face offset has to come from the prism's real width. It was
+       hardcoded to 288, so the mobile CSS shrinking the prism to 190px left the
+       faces pushed 249px out instead of 164px — the prism rendered oversized and
+       spilled out of its box onto the copy below. offsetWidth, not
+       getBoundingClientRect, because the prism carries a rotate transform. */
+    var STEP=60;
+    function layoutFaces(){
+      var W=prism.offsetWidth||288;
+      var R=Math.round((W/2)/Math.tan(Math.PI/6));
+      faces.forEach(function(f,i){
+        f.style.transform='rotateY('+(i*STEP)+'deg) translateZ('+R+'px)';
+      });
+    }
+    layoutFaces();
+    window.addEventListener('resize',layoutFaces);
+    window.addEventListener('orientationchange',function(){setTimeout(layoutFaces,150)});
+    DATA.forEach(function(d,i){
+      var li=document.createElement('li');
+      var b=document.createElement('button');
+      b.innerHTML='<span class="n">0'+(i+1)+'</span><span>'+d[0]+'</span>';
+      b.addEventListener('click',function(){show(i);hold()});
+      li.appendChild(b);nav.appendChild(li);
+    });
+    var idx=-1,timer=null,live=false;
+    function show(i){
+      idx=i;
+      prism.style.transform='rotateX(-9deg) rotateY('+(-i*STEP)+'deg)';
+      faces.forEach(function(f,n){f.classList.toggle('live',n===i)});
+      [].forEach.call(nav.children,function(li,n){li.classList.toggle('sel',n===i)});
+      det.innerHTML='<h4>'+DATA[i][1]+'</h4><p>'+DATA[i][2]+'</p>';
+      det.style.opacity=0;requestAnimationFrame(function(){
+        det.style.transition='opacity .5s ease';det.style.opacity=1;
+      });
+    }
+    function play(){clearInterval(timer);timer=setInterval(function(){show((idx+1)%DATA.length)},4600)}
+    function hold(){clearInterval(timer);timer=setInterval(function(){show((idx+1)%DATA.length)},11000)}
+    return {setActive:function(on){
+      if(on&&!live){live=true;layoutFaces();show(0);
+        if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)play();}
+      else if(!on&&live){live=false;clearInterval(timer)}
+    }};
+  })();
+
+  go(0);
+})();
+</script>
+</body>
+</html>

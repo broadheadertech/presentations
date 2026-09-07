@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The RBS Movement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#130A0E; --ink-2:#1D1116; --ink-3:#271820; --ink-4:#33202A;
+  --red:#DB1436; --red-deep:#8E0A22; --red-lift:#F2415F;
+  --paper:#F2F1EF; --paper-2:#E3E1DD; --paper-3:#CFCCC7;
+  --dim:rgba(255,255,255,.60); --dim-2:rgba(255,255,255,.34); --dim-ink:#6A6068;
+  --hair:rgba(255,255,255,.12); --hair-ink:rgba(19,10,14,.13);
+  --sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.28,1);
+  --ease-out:cubic-bezier(.16,.84,.28,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:#0B0508;color:var(--paper);
+  font-family:var(--sans);overflow:hidden;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+/* the room the slide sits in */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 620px at 50% 34%, rgba(219,20,54,.07), transparent 68%),
+    radial-gradient(1200px 700px at 50% 120%, rgba(0,0,0,.6), transparent 70%);
+}
+
+/* ---------------- stage ---------------- */
+.stage{
+  position:absolute;top:50%;left:50%;width:1280px;height:720px;
+  transform-origin:center center;overflow:hidden;background:var(--ink);
+  z-index:1;box-shadow:0 40px 120px -30px rgba(0,0,0,.85);
+}
+.slide{
+  position:absolute;inset:0;padding:66px 78px 74px;
+  opacity:0;visibility:hidden;pointer-events:none;
+}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto}
+.slide.light{background:var(--paper);color:var(--ink)}
+
+/* directional build-in */
+.b{opacity:0;transform:translateY(20px)}
+.on .b{
+  opacity:1;transform:none;
+  transition:opacity .52s var(--ease-out),transform .66s var(--ease-out);
+  transition-delay:calc(var(--i,0)*68ms + 70ms);
+}
+.back .b{transform:translateY(-16px)}
+
+/* ---------------- type ---------------- */
+h1,h2,h3,h4,p,ul,ol,figure,dl{margin:0}
+.kicker{
+  display:inline-flex;align-items:center;gap:11px;
+  font-size:12px;font-weight:800;letter-spacing:.2em;color:var(--red-lift);
+  text-transform:uppercase;
+}
+.kicker::before{content:"";width:26px;height:2px;background:var(--red);flex:none}
+.light .kicker{color:var(--red-deep)}
+.light .kicker::before{background:var(--red)}
+
+.h-xl{font-size:86px;line-height:.92;font-weight:900;letter-spacing:-.042em}
+.h-lg{font-size:56px;line-height:1.0;font-weight:900;letter-spacing:-.034em}
+.h-md{font-size:35px;line-height:1.08;font-weight:800;letter-spacing:-.022em}
+.h-sm{font-size:21px;line-height:1.2;font-weight:800;letter-spacing:-.012em}
+.lede{font-size:19px;line-height:1.62;color:var(--dim);max-width:33ch}
+.light .lede{color:#4A4046}
+.tiny{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim-2)}
+.light .tiny{color:#8A8087}
+
+/* chapter tag, top-left of every slide */
+.chap{position:absolute;top:30px;left:78px;display:flex;align-items:center;gap:10px;
+  font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--dim-2)}
+.chap b{color:var(--red-lift);font-weight:900}
+.light .chap{color:#9A9098}
+.light .chap b{color:var(--red)}
+.pageno{position:absolute;right:78px;bottom:34px;font-size:11px;font-weight:800;
+  letter-spacing:.18em;color:var(--dim-2);font-variant-numeric:tabular-nums}
+.light .pageno{color:#A79DA4}
+
+/* ---------------- cover ---------------- */
+.cover{display:grid;grid-template-rows:auto 1fr auto;height:100%}
+.cover-mid{align-self:center;padding-bottom:14px}
+.cover-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;
+  border-top:1px solid var(--hair);padding-top:22px}
+.chip-row{display:flex;flex-wrap:wrap;gap:7px;max-width:760px}
+.chip{
+  font-size:11.5px;font-weight:700;letter-spacing:.05em;padding:7px 13px;
+  border:1px solid var(--hair);border-radius:999px;color:var(--dim);
+}
+.chip.hot{border-color:rgba(242,65,95,.5);color:#fff;background:rgba(219,20,54,.14)}
+.blot{position:absolute;border-radius:50%;pointer-events:none}
+.wordmark{display:flex;align-items:baseline;gap:16px}
+.wordmark .dot{width:15px;height:15px;background:var(--red);border-radius:3px;
+  transform:rotate(45deg);flex:none;align-self:center}
+
+/* ---------------- layout helpers ---------------- */
+.two{display:grid;grid-template-columns:1.05fr .95fr;gap:62px;height:100%;align-items:center}
+.stack{display:grid;gap:22px}
+.rule{height:1px;background:var(--hair)}
+.light .rule{background:var(--hair-ink)}
+
+/* stat */
+.stat{font-size:246px;font-weight:900;line-height:.78;letter-spacing:-.055em;
+  color:var(--red);font-variant-numeric:tabular-nums}
+.facts{display:grid;gap:0}
+.fact{padding:21px 0;border-top:1px solid var(--hair)}
+.fact:last-child{border-bottom:1px solid var(--hair)}
+.light .fact{border-top-color:var(--hair-ink)}
+.light .fact:last-child{border-bottom-color:var(--hair-ink)}
+.fact b{display:block;font-size:19px;font-weight:800;margin-bottom:5px;letter-spacing:-.01em}
+.fact span{font-size:14.5px;line-height:1.5;color:var(--dim)}
+.light .fact span{color:var(--dim-ink)}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tile{background:#fff;border-radius:15px;padding:22px 20px 20px;min-height:170px;
+  display:grid;align-content:start;gap:12px;box-shadow:0 1px 2px rgba(19,10,14,.07),0 12px 28px -18px rgba(19,10,14,.3)}
+.tile.ghost{background:transparent;border:1px dashed var(--paper-3);box-shadow:none}
+.ico{width:44px;height:44px;border-radius:12px;background:var(--red);color:#fff;display:grid;place-items:center}
+.ico svg{width:23px;height:23px}
+.tile.ghost .ico{background:var(--paper-2);color:var(--dim-ink)}
+.tile h3{font-size:17px;font-weight:800;letter-spacing:-.012em}
+.tile p{font-size:13px;line-height:1.46;color:var(--dim-ink)}
+
+/* retail brands */
+.brands{display:flex;flex-wrap:wrap;gap:10px}
+.brand{font-size:15px;font-weight:900;letter-spacing:.07em;padding:12px 20px;
+  border-radius:999px;background:var(--ink);color:#fff}
+.brand.more{background:transparent;color:var(--dim-ink);border:1px solid var(--paper-3);
+  font-weight:600;letter-spacing:.03em}
+.slab{position:absolute;top:0;right:0;width:394px;height:100%;background:var(--ink);
+  display:grid;place-items:center;overflow:hidden}
+.slab .disc{width:298px;height:298px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.slab .disc svg{width:126px;height:126px;color:#fff}
+
+/* ---------------- category prism ---------------- */
+.cats{display:grid;grid-template-columns:592px 1fr;gap:38px;height:100%;align-items:center}
+.scene{position:relative;height:466px;display:grid;place-items:center;
+  perspective:1250px;perspective-origin:50% 42%}
+.prism{position:relative;width:288px;height:288px;transform-style:preserve-3d;
+  transform:rotateX(-9deg) rotateY(0deg);
+  transition:transform 1.25s cubic-bezier(.62,.02,.2,1)}
+/* white card stock; the active face is picked out by a red edge, not a red fill */
+.face{
+  position:absolute;inset:0;transform-style:preserve-3d;backface-visibility:hidden;
+  background:#FFFFFF;color:var(--ink);
+  border:1px solid rgba(19,10,14,.10);border-radius:8px;
+  padding:26px 26px;display:grid;align-content:space-between;
+  box-shadow:0 10px 30px -14px rgba(0,0,0,.7);
+  filter:brightness(.62);transition:filter .8s var(--ease)
+}
+.face.live{background:#FFFFFF;border:2px solid var(--red);filter:none;
+  box-shadow:0 18px 40px -16px rgba(0,0,0,.75)}
+.face .fico{width:60px;height:60px;border-radius:16px;display:grid;place-items:center;
+  background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
+.face .fico svg{width:31px;height:31px}
+/* the company the mark belongs to, captioned under it */
+.fmarks{display:grid;grid-auto-flow:column;gap:16px;place-items:center}
+.fname{font-size:13px;font-weight:800;letter-spacing:.02em;color:rgba(19,10,14,.72);
+  text-align:center;margin-top:9px;line-height:1.2}
+.face h3{font-size:27px;font-weight:900;letter-spacing:-.028em;line-height:1.04;color:var(--ink)}
+.face .who{font-size:13px;font-weight:600;color:rgba(19,10,14,.58);margin-top:8px;line-height:1.4}
+.face .num{position:absolute;top:22px;right:24px;font-size:13px;font-weight:900;
+  color:rgba(19,10,14,.32);font-variant-numeric:tabular-nums}
+/* removed: the red floor glow shared the prism's 3D space and washed pink
+   across the bottom of the white cards */
+.glow{display:none}
+.cat-nav{list-style:none;padding:0;margin:0 0 24px;display:grid;gap:2px}
+.cat-nav button{
+  width:100%;text-align:left;background:none;border:0;cursor:pointer;font-family:inherit;
+  color:var(--dim);font-size:16px;font-weight:600;padding:11px 0 11px 20px;
+  border-left:2px solid var(--hair);display:flex;gap:14px;align-items:baseline;
+  transition:color .25s,border-color .25s,padding-left .25s}
+.cat-nav button .n{font-size:12px;font-weight:900;color:var(--dim-2);font-variant-numeric:tabular-nums}
+.cat-nav button:hover{color:#fff;padding-left:26px}
+.cat-nav li.sel button{color:#fff;border-left-color:var(--red);font-weight:800}
+.cat-nav li.sel .n{color:var(--red)}
+.cat-detail{min-height:130px}
+.cat-detail h4{font-size:15px;font-weight:900;letter-spacing:.03em;color:var(--red-lift);margin:0 0 10px}
+.cat-detail p{font-size:17px;line-height:1.6;color:rgba(255,255,255,.80);max-width:34ch}
+
+/* ---------------- brand plates ----------------
+   The six brand marks come in mixed polarity — Redbox is red, Ground Up has a
+   cream wordmark, TipunoX and Broadheader are white, RTap ships with a dark
+   glow baked in. Sitting them all on one dark plate is what lets every mark
+   read on both the light and dark slides, and makes the set look like a set.
+
+   The plate is deliberately tall: Ground Up is a stacked lockup (cup over
+   wordmark, 1.34:1) and dies at banner height, so the box is sized for that
+   worst case and the wide marks simply cap on width instead. */
+.plate{
+  background:#fff;border:1px solid rgba(19,10,14,.10);border-radius:11px;
+  display:grid;place-items:center;padding:8px 14px;height:84px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(19,10,14,.05);
+}
+.plate img{max-width:100%;max-height:68px;object-fit:contain;display:block}
+/* Food carries three concessionaire brands and two have marks, so its plate
+   holds both side by side rather than falling back to a generic icon */
+.plate.duo{grid-auto-flow:column;gap:14px;padding:8px 11px}
+.plate.duo img{max-height:58px}
+.plate.ghostplate{background:var(--paper-2);border-color:transparent;color:var(--dim-ink)}
+.plate svg{width:30px;height:30px}
+.plate .evark{width:58px;height:58px;color:#1E2026;display:block}
+.light .plate{box-shadow:0 1px 2px rgba(19,10,14,.14)}
+
+/* the same plate, sized for a prism face */
+/* no plate — the mark sits directly on the white card */
+.fplate{
+  background:none;border:0;box-shadow:none;padding:0;
+  height:auto;min-height:96px;display:grid;place-items:center;align-content:center;gap:2px;
+}
+.fplate img{max-width:94%;max-height:96px;object-fit:contain;display:block}
+.fplate .evark{width:84px;height:84px;color:#1E2026;display:block}
+.fplate.duo .fmarks{gap:16px}
+.fplate.duo img{max-height:82px}
+
+/* on the active (red) face a translucent plate turns the red Redbox mark muddy,
+   so the plate goes near-opaque there to keep every mark crisp */
+
+
+
+/* ---------------- ecosystem list ---------------- */
+.eco{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.eco .row{
+  background:#fff;border-radius:14px;padding:20px 18px;display:grid;gap:11px;align-content:start;
+  min-height:150px;box-shadow:0 1px 2px rgba(19,10,14,.06)
+}
+.eco .row.ghost{background:transparent;border:1px dashed var(--paper-3);box-shadow:none}
+.eco .row .ico{width:38px;height:38px;border-radius:10px}
+.eco .row .ico svg{width:20px;height:20px}
+.eco .row.ghost .ico{background:var(--paper-2);color:var(--dim-ink)}
+.eco h3{font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+.eco p{font-size:12.8px;line-height:1.45;color:var(--dim-ink)}
+
+/* ---------------- quote ---------------- */
+.quote{max-width:940px;display:grid;gap:24px;align-content:center;height:100%}
+.quote p{font-size:29px;line-height:1.5;font-weight:500;letter-spacing:-.018em}
+.quote p.dim{color:var(--dim);font-size:23px}
+
+/* impact */
+.cols{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.col{background:var(--ink-2);border-radius:15px;padding:24px 20px;display:grid;gap:14px;
+  align-content:start;min-height:198px;border:1px solid rgba(255,255,255,.05)}
+.col .ico{background:rgba(219,20,54,.16);color:var(--red-lift)}
+.col h3{font-size:18px;font-weight:800}
+.col p{font-size:13.5px;line-height:1.5;color:var(--dim)}
+
+/* closing */
+.close-grid{display:grid;grid-template-rows:auto 1fr auto;height:100%}
+.close-grid .mark{width:198px}
+
+/* the film slide placeholder inside the stage */
+.filmcard{display:grid;place-items:center;height:100%;text-align:center;gap:20px}
+.filmcard .ring{width:96px;height:96px;border-radius:50%;border:2px solid rgba(242,65,95,.35);
+  display:grid;place-items:center;color:var(--red-lift)}
+
+/* ---------------- the 3D chapter, full bleed ---------------- */
+.film{position:fixed;inset:0;z-index:30;background:#0B0508;display:none}
+.film.on{display:block}
+.film iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.film-top{
+  position:absolute;top:0;left:0;right:0;z-index:2;display:flex;align-items:center;gap:14px;
+  padding:16px 22px;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(11,5,8,.72),transparent);
+}
+.film-top .lbl{font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--dim-2)}
+.film-top .lbl b{color:var(--red-lift)}
+.film-top .sp{flex:1}
+.fbtn{
+  pointer-events:auto;font-family:var(--sans);cursor:pointer;
+  border:1px solid rgba(255,255,255,.2);background:rgba(11,5,8,.55);color:var(--paper);
+  border-radius:6px;padding:8px 13px;font-size:11px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;transition:.2s;backdrop-filter:blur(8px)
+}
+.fbtn:hover{border-color:var(--red-lift);background:rgba(219,20,54,.28)}
+.film-load{position:absolute;inset:0;display:grid;place-items:center;background:#0B0508;z-index:3;
+  transition:opacity .6s ease}
+.film-load.out{opacity:0;pointer-events:none}
+.film-load .in{text-align:center}
+.film-load h3{margin:0;font-size:22px;font-weight:900;letter-spacing:-.02em}
+.film-load p{margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--dim-2)}
+
+/* ---------------- HUD ---------------- */
+.hud{position:fixed;left:0;right:0;bottom:0;height:54px;display:flex;align-items:center;
+  gap:18px;padding:0 24px;z-index:20}
+.hud.hide{opacity:0;pointer-events:none}
+.bar{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:21;
+  transition:width .45s var(--ease)}
+.arrow{background:none;border:0;color:inherit;cursor:pointer;padding:6px;opacity:.5;transition:opacity .2s}
+.arrow:hover{opacity:1}
+.arrow svg{width:17px;height:17px;display:block}
+.count{font-size:12px;font-weight:800;color:var(--dim-2);font-variant-numeric:tabular-nums}
+.sect{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.hint{font-size:11.5px;color:rgba(255,255,255,.26);margin-left:auto}
+.dots{display:flex;gap:5px;align-items:center}
+.dots .grp{display:flex;gap:5px;padding-right:11px;margin-right:6px;border-right:1px solid rgba(255,255,255,.14)}
+.dots .grp:last-child{border-right:0;padding-right:0;margin-right:0}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22);cursor:pointer;
+  transition:background .25s,transform .25s}
+.dots i:hover{background:rgba(255,255,255,.5)}
+.dots i.on{background:var(--red);transform:scale(1.4)}
+.dots i.film{border-radius:2px;width:13px;background:rgba(242,65,95,.4)}
+.dots i.film.on{background:var(--red)}
+:focus-visible{outline:2px solid var(--red-lift);outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){
+  .b,.on .b{transition:none;opacity:1;transform:none}
+  .prism{transition:none}
+}
+
+/* ==================== MOBILE ====================
+   The 1280x720 stage is a presenter's format. Scaled to a 390px phone it lands
+   at 0.30, which renders 19px body copy at 6px — legible to nobody. So below
+   900px the stage is abandoned entirely: it becomes a full-viewport panel and
+   every slide reflows to one scrollable column at real reading sizes.
+   Heights use dvh so the mobile browser chrome doesn't crop the last line. */
+@media (max-width:900px){
+  .stage{
+    position:fixed;inset:0;width:100%;
+    height:100vh;height:100dvh;        /* dvh is dropped wholesale by older iOS/Android,
+                                          so the vh fallback has to come first */
+    transform:none!important;margin:0!important;box-shadow:none;
+  }
+  /* notched phones: keep copy clear of the status bar and home indicator */
+  .slide{
+    padding:calc(56px + env(safe-area-inset-top,0px)) 20px calc(96px + env(safe-area-inset-bottom,0px));
+    overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+  }
+  .chap{top:calc(18px + env(safe-area-inset-top,0px));left:20px;font-size:9.5px;letter-spacing:.16em}
+  .pageno{right:20px;bottom:calc(72px + env(safe-area-inset-bottom,0px));font-size:10px}
+
+  .h-xl{font-size:clamp(36px,10.6vw,54px);line-height:.97;letter-spacing:-.035em}
+  .h-lg{font-size:clamp(29px,8.2vw,42px);letter-spacing:-.028em}
+  .h-md{font-size:clamp(22px,6.2vw,31px)}
+  .h-sm{font-size:18px}
+  .lede{font-size:clamp(15px,4.1vw,17.5px);line-height:1.58;max-width:none!important}
+  .h-xl,.h-lg,.h-md,.h-sm{max-width:none!important}
+  .chip-row{max-width:100%}
+
+  /* Several slides carry inline font-size / max-width that beat a media query
+     on specificity, so the mobile type scale has to be declared !important or
+     headings render at their 70px desktop size and run off the screen. */
+  .h-xl{font-size:clamp(33px,9.2vw,50px)!important}
+  .h-lg{font-size:clamp(28px,7.8vw,40px)!important}
+  .h-md{font-size:clamp(22px,6.2vw,31px)!important}
+  .h-sm{font-size:18px!important}
+  .h-xl,.h-lg,.h-md,.h-sm,.lede,.body,p{max-width:none!important}
+  .body{font-size:clamp(14px,3.9vw,16px);line-height:1.55}
+  /* long single words must never force the grid wider than the phone */
+  h1,h2,h3,p,li{overflow-wrap:break-word;word-break:normal}
+  .close-grid,.close-grid>div,.cover,.cover>div,.two>div,.cats>div{min-width:0}
+  .kicker{font-size:10px;letter-spacing:.16em;gap:8px}
+  .kicker::before{width:17px}
+  .tiny{font-size:10px}
+
+  /* every two-up becomes a stack */
+  .two{grid-template-columns:1fr;gap:24px;height:auto;align-content:start;padding-top:6px}
+  .cats{grid-template-columns:1fr;gap:30px;height:auto;align-content:start;padding-top:6px}
+  .scene{height:300px;overflow:hidden;margin-bottom:4px}
+  .wrapfit,.flagship{height:auto!important;width:100%!important;gap:18px!important;align-content:start!important}
+  .quote,.close-grid,.cover{height:auto;min-height:100%}
+  .quote{gap:15px}
+
+  .cover{gap:20px}
+  .cover-mid{padding-bottom:0}
+  .cover-foot,.closefoot{flex-direction:column;align-items:flex-start!important;gap:13px!important;padding-top:15px!important}
+  .chip{font-size:10px;padding:5px 9px}
+  .chip-row{gap:5px}
+  .wordmark{gap:11px}
+  .wordmark .dot{width:11px;height:11px}
+
+  .stat{font-size:clamp(92px,29vw,148px)}
+  .fact{padding:14px 0}
+  .fact b{font-size:16px}
+  .fact span{font-size:13.5px}
+
+  /* the flagship slab is an absolutely-placed desktop device — restack it */
+  .slab{position:relative;width:100%;height:132px;border-radius:14px;order:-1}
+  .slab .disc{width:104px;height:104px}
+  .slab .disc svg{width:46px;height:46px}
+  .brands{gap:6px}
+  .brand{font-size:11.5px;padding:8px 13px;letter-spacing:.05em}
+
+  /* prism */
+  .prism{width:190px;height:190px}
+  .face{padding:15px 14px;border-radius:7px}
+  .face h3{font-size:17px}
+  .face .who{font-size:10.5px;margin-top:5px}
+  .face .num{top:14px;right:15px;font-size:10px}
+
+  .cat-nav{margin-bottom:15px}
+  .cat-nav button{font-size:14px;padding:9px 0 9px 14px}
+  .cat-detail{min-height:0}
+  .cat-detail h4{font-size:13px}
+  .cat-detail p{font-size:15px;max-width:none}
+  .fplate{min-height:66px;padding:0}
+  .fplate img{max-height:66px}
+  .fplate.duo .fmarks{gap:10px}
+  .fplate.duo img{max-height:56px}
+  .fplate .evark{width:58px;height:58px}
+
+  /* card grids go two-up; five columns never works on a phone */
+  .eco,.cols,.tiles{grid-template-columns:repeat(2,1fr);gap:9px}
+  .eco .row,.col,.tile{padding:13px 12px;min-height:0;gap:8px;border-radius:11px}
+  .eco h3,.col h3,.tile h3{font-size:13px}
+  .eco p,.col p,.tile p{font-size:11px;line-height:1.36}
+  .ico{width:33px;height:33px;border-radius:9px}
+  .ico svg{width:17px;height:17px}
+  .plate{height:62px;padding:6px 10px;border-radius:9px}
+  .plate img{max-height:48px}
+  .plate.duo{gap:9px;padding:6px 8px}
+  .plate.duo img{max-height:40px}
+  .plate .evark{width:42px;height:42px}
+  .plate svg{width:20px;height:20px}
+
+  .quote p{font-size:clamp(17px,4.8vw,21px);line-height:1.48}
+  .quote p.dim{font-size:clamp(14.5px,4.1vw,18px)}
+
+  .filmcard{gap:13px}
+  .filmcard .ring{width:64px;height:64px}
+
+  /* HUD */
+  /* touch targets: 25px arrows are unusable with a thumb, so they get the
+     44px minimum, absorbed with negative margin so the bar doesn't grow */
+  .hud{height:calc(54px + env(safe-area-inset-bottom,0px));padding:0 10px env(safe-area-inset-bottom,0px);gap:2px}
+  .hint,.sect{display:none}
+  .count{font-size:11px;margin-left:6px}
+  .dots{margin-left:auto;gap:6px;padding:10px 4px}
+  .dots .grp{padding-right:8px;margin-right:5px}
+  .dots i{width:7px;height:7px}
+  .dots i.film{width:13px}
+  .arrow{padding:12px;margin:0}
+  .arrow svg{width:20px;height:20px}
+  .fbtn{padding:10px 12px}
+
+  .film-top{padding:11px 13px;gap:8px}
+  .film-top .lbl{font-size:9px;letter-spacing:.14em}
+  .fbtn{padding:7px 9px;font-size:9.5px;letter-spacing:.1em}
+  .film-load h3{font-size:18px}
+  .film-load p{font-size:9.5px}
+}
+/* very narrow phones: one card per row rather than two cramped ones */
+@media (max-width:430px){
+  .eco,.cols,.tiles{grid-template-columns:1fr}
+  .eco .row,.col,.tile{grid-template-columns:auto 1fr;align-items:center;
+    display:grid;grid-template-areas:"p h" "p t";column-gap:12px}
+  .eco .row>.plate,.col>.ico,.tile>.ico{grid-area:p;width:88px;height:46px}
+  .col>.ico,.tile>.ico{width:36px}
+  .eco .row>h3,.col>h3,.tile>h3{grid-area:h;align-self:end}
+  .eco .row>p,.col>p,.tile>p{grid-area:t;align-self:start}
+}
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-serv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18M4.6 17a7.4 7.4 0 0 1 14.8 0M12 5.4V4.2M10.4 4.2h3.2"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6.2a2.4 2.4 0 0 0 2.4 2.4h.2V21M6 3v5.4M9 3v5.4M17.2 21V3.6c1.9.7 2.7 3.1 2.7 5.8s-.8 4.2-2.7 4.2"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.6h11.6v5.8A5.2 5.2 0 0 1 10.4 20H9.2A5.2 5.2 0 0 1 4 14.4V8.6ZM15.6 9.8h1.9a2.6 2.6 0 0 1 0 5.2h-1.9M8 5.6c.6-.9.6-1.7 0-2.6M11.6 5.6c.6-.9.6-1.7 0-2.6"/></symbol>
+  <symbol id="i-ev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5.2A2.2 2.2 0 0 1 6.2 3h5.6A2.2 2.2 0 0 1 14 5.2V21M2.6 21H15.4M9.6 8.4 7.3 12.4h3.2L8.2 16.4M17 8.6h2.2A1.8 1.8 0 0 1 21 10.4v6.2a1.7 1.7 0 0 1-3.4 0v-3.2H14"/></symbol>
+  <symbol id="i-pay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 6.4h11.8a1.6 1.6 0 0 1 1.6 1.6v8a1.6 1.6 0 0 1-1.6 1.6H2.6A1.6 1.6 0 0 1 1 16V8a1.6 1.6 0 0 1 1.6-1.6ZM1 10.2h15M18.6 9a4.6 4.6 0 0 1 0 6.4M21.3 6.6a8.2 8.2 0 0 1 0 11.2"/></symbol>
+  <symbol id="i-retail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.4V6.2c1-.4 1.7-.8 1.7-1.9A1.8 1.8 0 1 0 10.2 4M12 7.6 3.5 14.2A1.4 1.4 0 0 0 4.4 17h15.2a1.4 1.4 0 0 0 .9-2.8L12 7.6Z"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.7 4.4 10.3 19.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.4 19 12 8 18.6V5.4Z"/></symbol>
+  <!-- E-Vark mark, lifted verbatim from broadheader-parking-ev.html (pin + bolt) -->
+  <symbol id="i-evark" viewBox="0 0 100 100" fill="currentColor"><path fill-rule="evenodd" d="M50 12 a30 30 0 0 1 30 30 c0 22 -30 46 -30 46 s-30 -24 -30 -46 a30 30 0 0 1 30 -30 z M54 26 L38 48 h9 l-4 18 20 -26 h-10 z"/></symbol>
+</svg>
+
+<div class="bar" id="bar" style="width:0"></div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 · cover -->
+  <section class="slide on">
+    <div class="blot" style="width:560px;height:560px;right:-150px;top:-190px;background:radial-gradient(circle,rgba(219,20,54,.42),transparent 62%)"></div>
+    <div class="blot" style="width:420px;height:420px;left:-140px;bottom:-170px;background:radial-gradient(circle,rgba(242,65,95,.14),transparent 64%)"></div>
+    <div class="cover">
+      <div class="b" style="--i:0"><span class="kicker">A Philippine group of companies</span></div>
+      <div class="cover-mid">
+        <div class="wordmark b" style="--i:1">
+          <span class="dot"></span>
+          <h1 class="h-xl">The RBS<br>Movement</h1>
+        </div>
+        <p class="lede b" style="--i:3;max-width:52ch;margin-top:26px">
+          One movement, many brands — building 400 branches nationwide so the provinces
+          get the same choices the metro already has.
+        </p>
+      </div>
+      <div class="cover-foot">
+        <div class="chip-row b" style="--i:4">
+          <span class="chip hot">Retail</span><span class="chip">Services</span>
+          <span class="chip">Food &amp; Concessionaire</span><span class="chip">Coffee</span>
+          <span class="chip">Software</span><span class="chip">EV + Parking</span>
+          <span class="chip">Cash-in + Payments</span>
+        </div>
+        <span class="tiny b" style="--i:5">Presented by Broadheader IT Solutions</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · who we are -->
+  <section class="slide light">
+    <div class="two">
+      <div class="stack">
+        <span class="kicker b" style="--i:0">Who we are</span>
+        <h2 class="h-lg b" style="--i:1">A group of companies<br>moving as one.</h2>
+        <p class="lede b" style="--i:2;max-width:44ch">
+          RBS is a retail group first — and around that floor sits a set of partner companies
+          covering food, coffee, services, technology, mobility and payments.
+        </p>
+        <p class="lede b" style="--i:3;max-width:44ch">
+          Each brand runs its own category. All of them are committed to the same target and
+          the same standard of experience for the Filipino customer.
+        </p>
+      </div>
+      <div class="facts">
+        <div class="fact b" style="--i:3"><b>400 branches</b><span>The shared target, across Luzon, Visayas and Mindanao.</span></div>
+        <div class="fact b" style="--i:4"><b>Seven categories</b><span>Retail, services, food, coffee, software, mobility, payments.</span></div>
+        <div class="fact b" style="--i:5"><b>One commitment</b><span>Every partner company is committed to the movement.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · the target -->
+  <section class="slide" data-count>
+    <div class="blot" style="width:640px;height:640px;left:-190px;top:-160px;background:radial-gradient(circle,rgba(219,20,54,.20),transparent 64%)"></div>
+    <div class="two">
+      <div class="stack">
+        <span class="kicker b" style="--i:0">The target</span>
+        <div class="stat b" style="--i:1" id="stat">0</div>
+        <h2 class="h-md b" style="--i:2">branches across<br>the Philippines</h2>
+        <p class="lede b" style="--i:3">
+          Not concentrated in one city. Spread nationwide, so the movement is felt where
+          choice has always been thinnest.
+        </p>
+      </div>
+      <div class="facts">
+        <div class="fact b" style="--i:4"><b>Province-first</b><span>Expansion aimed at the towns and cities outside Metro Manila.</span></div>
+        <div class="fact b" style="--i:5"><b>Multi-format</b><span>Retail floors, food counters, cafés, kiosks and charging bays.</span></div>
+        <div class="fact b" style="--i:6"><b>Shared traffic</b><span>Every brand in a branch feeds the next one's foot traffic.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · the flagship -->
+  <section class="slide light">
+    <div class="slab b" style="--i:4">
+      <div class="disc"><svg><use href="#i-retail"/></svg></div>
+    </div>
+    <div class="flagship" style="width:770px;height:100%;display:grid;align-content:center;gap:24px">
+      <span class="kicker b" style="--i:0">The flagship</span>
+      <h2 class="h-lg b" style="--i:1">We retail the big<br>names in fashion.</h2>
+      <p class="lede b" style="--i:2;max-width:46ch">
+        RBS brings established international and lifestyle labels onto Philippine floors —
+        including provinces where these brands have never had a home.
+      </p>
+      <div class="brands b" style="--i:3">
+        <span class="brand">ILLEST</span><span class="brand">AEROPOSTALE</span>
+        <span class="brand">HURLEY</span><span class="brand more">and many more</span>
+      </div>
+      <div class="rule b" style="--i:4"></div>
+      <p class="tiny b" style="--i:5">One branch, many labels — the same range a metro shopper takes for granted.</p>
+    </div>
+  </section>
+
+  <!-- 5 · categories prism -->
+  <section class="slide" id="s-cats">
+    <div class="cats">
+      <div class="scene">
+        <div class="glow"></div>
+        <div class="prism" id="prism">
+          <div class="face"><span class="num">01</span><div class="fplate"><span class="fmarks"><img src="logos/redbox.png" alt="Redbox Studio"></span><span class="fname">RBS Retail</span></div><div><h3>Retail</h3><p class="who">Illest · Aeropostale · Hurley</p></div></div>
+          <div class="face"><span class="num">02</span><div class="fplate"><span class="fmarks"><img src="logos/tipunox-light.png" alt="TipunoX"></span><span class="fname">TipunoX Barbershop</span></div><div><h3>Services</h3></div></div>
+          <div class="face"><span class="num">03</span><div class="fplate duo"><span class="fmarks"><img src="logos/mang-guabao.png" alt="Mang Guabao"><img src="logos/boleros.png" alt="Boleros Meatballs"></span><span class="fname">Mang Guabao · Boleros</span></div><div><h3>Food</h3><p class="who">Mang Guabao · Boleros · Italyum</p></div></div>
+          <div class="face"><span class="num">04</span><div class="fplate"><span class="fmarks"><img src="logos/ground-up-light.png" alt="Ground Up Coffee Co."></span><span class="fname">Ground Up Coffee</span></div><div><h3>Coffee</h3></div></div>
+          <div class="face"><span class="num">05</span><div class="fplate"><span class="fmarks"><svg class="evark" viewBox="0 0 100 100"><use href="#i-evark"/></svg></span><span class="fname">EVark</span></div><div><h3>EV + Parking</h3></div></div>
+          <div class="face"><span class="num">06</span><div class="fplate"><span class="fmarks"><img src="logos/rtap-light.png" alt="RTap"></span><span class="fname">RTap</span></div><div><h3>Cash-in + Payments</h3></div></div>
+        </div>
+      </div>
+      <div>
+        <span class="kicker b" style="--i:0">The categories</span>
+        <h2 class="h-md b" style="--i:1">Six categories<br>every branch carries.</h2>
+        <ul class="cat-nav b" style="--i:2" id="catNav"></ul>
+        <div class="cat-detail b" style="--i:3" id="catDetail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · the 3D sequence (rendered full-bleed outside the stage) -->
+  <section class="slide">
+    <div class="filmcard">
+      <div class="ring b" style="--i:0"><svg width="30" height="30"><use href="#i-play"/></svg></div>
+      <span class="kicker b" style="--i:1">The ecosystem, in motion</span>
+      <h2 class="h-lg b" style="--i:2;max-width:20ch">One connected<br>ecosystem.</h2>
+      <p class="lede b" style="--i:3;max-width:52ch">
+        A two-minute cinematic walk through all seven categories — retail, services, food,
+        coffee, EV + parking, payments and IT — as one continuous world.
+      </p>
+    </div>
+  </section>
+
+  <!-- 7 · the ecosystem -->
+  <section class="slide light">
+    <div class="wrapfit" style="display:grid;gap:28px;height:100%;align-content:center">
+      <div>
+        <span class="kicker b" style="--i:0">The line-up</span>
+        <h2 class="h-md b" style="--i:1" id="ecoH">Every company committed to the movement</h2>
+      </div>
+      <div class="eco">
+        <div class="row b" style="--i:2"><div class="plate"><img src="logos/redbox.png" alt="Redbox Studio"></div><h3>Retail</h3><p>Illest, Aeropostale, Hurley and more</p></div>
+        <div class="row b" style="--i:3"><div class="plate"><img src="logos/tipunox-light.png" alt="TipunoX"></div><h3>Services</h3><p>TipunoX</p></div>
+        <div class="row b" style="--i:4"><div class="plate duo"><img src="logos/mang-guabao.png" alt="Mang Guabao"><img src="logos/boleros.png" alt="Boleros Meatballs"></div><h3>Food</h3><p>Mang Guabao, Boleros, Italyum</p></div>
+        <div class="row b" style="--i:5"><div class="plate"><img src="logos/ground-up-light.png" alt="Ground Up Coffee Co."></div><h3>Coffee</h3><p>Ground Up Coffee</p></div>
+        <div class="row b" style="--i:6"><div class="plate"><img src="logos/broadheader-light.png" alt="Broadheader IT Solutions"></div><h3>Software</h3><p>Broadheader IT Solutions</p></div>
+        <div class="row b" style="--i:7"><div class="plate"><svg class="evark" viewBox="0 0 100 100"><use href="#i-evark"/></svg></div><h3>EV + Parking</h3><p>EVark</p></div>
+        <div class="row b" style="--i:8"><div class="plate"><img src="logos/rtap-light.png" alt="RTap"></div><h3>Cash-in + Payments</h3><p>RTap</p></div>
+        <div class="row ghost b" style="--i:9"><div class="plate ghostplate"><svg><use href="#i-plus"/></svg></div><h3>And growing</h3><p>More categories joining the movement</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · why we move -->
+  <section class="slide">
+    <div class="blot" style="width:600px;height:600px;right:-180px;bottom:-220px;background:radial-gradient(circle,rgba(219,20,54,.20),transparent 64%)"></div>
+    <div class="quote">
+      <span class="kicker b" style="--i:0">Why we move</span>
+      <p class="b" style="--i:1">
+        For too long, the best of retail, food and technology has stopped at the edge of the metro.
+        The RBS Movement exists to change that.
+      </p>
+      <p class="dim b" style="--i:2">
+        Every branch we open in a province is a promise kept — that a family in Nueva Ecija,
+        in Iloilo, in Davao deserves the same choices, the same quality and the same experience
+        as anyone in Manila.
+      </p>
+      <div class="rule b" style="--i:3"></div>
+      <p class="b" style="--i:4"><b>We are not simply opening stores. We are widening what is available to the Filipino people.</b></p>
+    </div>
+  </section>
+
+  <!-- 9 · the impact -->
+  <section class="slide">
+    <div class="wrapfit" style="display:grid;gap:30px;height:100%;align-content:center">
+      <div>
+        <span class="kicker b" style="--i:0">The impact</span>
+        <h2 class="h-md b" style="--i:1">A wider choice for every Filipino</h2>
+      </div>
+      <div class="cols">
+        <div class="col b" style="--i:2"><div class="ico"><svg><use href="#i-retail"/></svg></div><h3>Fashion</h3><p>Global labels on a local main street.</p></div>
+        <div class="col b" style="--i:3"><div class="ico"><svg><use href="#i-serv"/></svg></div><h3>Services</h3><p>Metro-standard service, delivered locally.</p></div>
+        <div class="col b" style="--i:4"><div class="ico"><svg><use href="#i-food"/></svg></div><h3>Food</h3><p>More to choose from, at everyday prices.</p></div>
+        <div class="col b" style="--i:5"><div class="ico"><svg><use href="#i-code"/></svg></div><h3>Tech</h3><p>Kiosks, platforms and tools built in-house.</p></div>
+        <div class="col b" style="--i:6"><div class="ico"><svg><use href="#i-plus"/></svg></div><h3>And more</h3><p>New categories as the movement grows.</p></div>
+      </div>
+      <p class="lede b" style="--i:7;max-width:none">
+        Fashion. Services. Food. Technology. And everything the movement takes on next —
+        carried to 400 branches nationwide.
+      </p>
+    </div>
+  </section>
+
+  <!-- 10 · closing -->
+  <section class="slide">
+    <div class="blot" style="width:720px;height:720px;left:50%;top:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(219,20,54,.24),transparent 62%)"></div>
+    <div class="close-grid">
+      <div class="b" style="--i:0"><span class="kicker">The RBS Movement</span></div>
+      <div style="align-self:center">
+        <h2 class="h-xl b" style="--i:1">One movement.<br>400 branches.<br>Countless Filipinos.</h2>
+      </div>
+      <div class="closefoot" style="display:flex;justify-content:space-between;align-items:flex-end;gap:40px;border-top:1px solid var(--hair);padding-top:22px">
+        <p class="lede b" style="--i:3;max-width:62ch">
+          Retail · Services · Food · Coffee · Software · EV Charging + Parking · Cash-in + Payments
+          — all committed to the RBS Movement.
+        </p>
+        <span class="tiny b" style="--i:4">Broadheader IT Solutions</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- the 3D chapter, outside the stage so it plays true full-bleed -->
+<div class="film" id="film">
+  <iframe id="film3d" title="RBS ecosystem — 3D sequence" allow="fullscreen"></iframe>
+  <div class="film-top">
+    <span class="lbl"><b>II</b> &nbsp;THE ECOSYSTEM &nbsp;·&nbsp; 3D SEQUENCE</span>
+    <span class="sp"></span>
+    <button class="fbtn" id="filmBack">‹ Deck</button>
+    <button class="fbtn" id="filmSkip">Skip ›</button>
+  </div>
+  <div class="film-load" id="filmLoad"><div class="in">
+    <h3>One Connected Ecosystem</h3>
+    <p>Loading the sequence</p>
+  </div></div>
+</div>
+
+<div class="hud" id="hud">
+  <button class="arrow" id="prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="arrow" id="next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+  <span class="count" id="count">1 / 10</span>
+  <span class="sect" id="sect">I — The Movement</span>
+  <span class="hint">← → navigate · F fullscreen</span>
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+(function(){
+  /* ---- chapters: which slides belong to which act ---- */
+  const CHAPTERS = [
+    { no:'I',   name:'The Movement',  from:0, to:3 },
+    { no:'II',  name:'The Ecosystem', from:4, to:6 },
+    { no:'III', name:'The Purpose',   from:7, to:9 }
+  ];
+  const FILM = 5;                       // index of the 3D chapter
+  const FILM_SRC = 'rbs-ecosystem-3d.html';
+
+  const stage = document.getElementById('stage');
+  /* Below 900px the CSS drops the fixed stage for a fluid full-viewport panel,
+     so the scale transform must be removed rather than merely recomputed —
+     otherwise it would fight the reflowed layout. */
+  const isMobile = () => window.matchMedia('(max-width:900px)').matches;
+  function fit(){
+    if (isMobile()){ stage.style.transform = ''; stage.style.marginTop = ''; return; }
+    const s = Math.min(window.innerWidth / 1280, (window.innerHeight - 54) / 720);
+    stage.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+    stage.style.marginTop = '-27px';
+  }
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', () => setTimeout(fit, 120));
+  fit();
+
+  const slides = [].slice.call(document.querySelectorAll('.slide'));
+  const dots = document.getElementById('dots');
+  const count = document.getElementById('count');
+  const sect = document.getElementById('sect');
+  const bar = document.getElementById('bar');
+  const hud = document.getElementById('hud');
+  const film = document.getElementById('film');
+  const film3d = document.getElementById('film3d');
+  const filmLoad = document.getElementById('filmLoad');
+
+  /* chapter tag + page number injected into every stage slide */
+  slides.forEach((s, i) => {
+    const ch = CHAPTERS.find(c => i >= c.from && i <= c.to) || CHAPTERS[0];
+    if (i > 0){
+      const tag = document.createElement('div');
+      tag.className = 'chap';
+      tag.innerHTML = '<b>' + ch.no + '</b> ' + ch.name;
+      s.appendChild(tag);
+    }
+    const pg = document.createElement('div');
+    pg.className = 'pageno';
+    pg.textContent = String(i + 1).padStart(2, '0');
+    s.appendChild(pg);
+  });
+
+  /* dots, grouped by chapter, with the film marked out */
+  CHAPTERS.forEach(ch => {
+    const g = document.createElement('span');
+    g.className = 'grp';
+    for (let i = ch.from; i <= ch.to; i++){
+      const d = document.createElement('i');
+      if (i === FILM) d.className = 'film';
+      d.title = (i === FILM ? '3D sequence' : 'Slide ' + (i + 1));
+      d.addEventListener('click', () => go(i));
+      g.appendChild(d);
+    }
+    dots.appendChild(g);
+  });
+  const allDots = [].slice.call(dots.querySelectorAll('i'));
+
+  let cur = 0, filmLoaded = false;
+
+  function enterFilm(){
+    film.classList.add('on');
+    hud.classList.add('hide');
+    if (!filmLoaded){
+      filmLoaded = true;
+      film3d.addEventListener('load', () => {
+        setTimeout(() => filmLoad.classList.add('out'), 450);
+      });
+      film3d.src = FILM_SRC;
+    } else {
+      filmLoad.classList.add('out');
+      msg({ cmd:'reset' });
+    }
+  }
+  function leaveFilm(){
+    film.classList.remove('on');
+    hud.classList.remove('hide');
+    msg({ cmd:'pause' });
+  }
+  function msg(m){
+    if (!film3d.contentWindow) return;
+    try { film3d.contentWindow.postMessage({ ch:'rbs-deck', ...m }, '*'); } catch (e){}
+  }
+
+  function go(i, dir){
+    if (i < 0 || i >= slides.length) return;
+    const wasFilm = cur === FILM;
+    if (dir === undefined) dir = i >= cur ? 1 : -1;
+
+    slides[cur].classList.remove('on', 'back');
+    cur = i;
+
+    if (cur === FILM){ enterFilm(); }
+    else {
+      if (wasFilm) leaveFilm();
+      const s = slides[cur];
+      s.classList.remove('on', 'back');
+      if (dir < 0) s.classList.add('back');
+      void s.offsetWidth;
+      s.classList.add('on');
+      document.body.classList.toggle('on-light', s.classList.contains('light'));
+      if (s.hasAttribute('data-count')) countUp();
+    }
+
+    allDots.forEach((d, n) => d.classList.toggle('on', n === cur));
+    count.textContent = (cur + 1) + ' / ' + slides.length;
+    const ch = CHAPTERS.find(c => cur >= c.from && cur <= c.to) || CHAPTERS[0];
+    sect.textContent = ch.no + ' — ' + ch.name;
+    bar.style.width = ((cur + 1) / slides.length * 100) + '%';
+    cats.setActive(cur === 4);
+  }
+
+  document.getElementById('next').addEventListener('click', () => go(cur + 1, 1));
+  document.getElementById('prev').addEventListener('click', () => go(cur - 1, -1));
+  document.getElementById('filmSkip').addEventListener('click', () => go(FILM + 1, 1));
+  document.getElementById('filmBack').addEventListener('click', () => go(FILM - 1, -1));
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){
+      e.preventDefault();
+      if (cur === FILM) msg({ cmd:'step', dir:1 }); else go(cur + 1, 1);
+    }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){
+      e.preventDefault();
+      if (cur === FILM) msg({ cmd:'step', dir:-1 }); else go(cur - 1, -1);
+    }
+    else if (e.key === 'Escape' && cur === FILM){ go(FILM + 1, 1); }
+    else if (e.key === 'Home') go(0, -1);
+    else if (e.key === 'End') go(slides.length - 1, 1);
+    else if (e.key === 'f' || e.key === 'F'){
+      document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    }
+  });
+
+  /* ---- touch: swipe left/right to move through the deck ----
+     A slide can be taller than the phone, so a swipe only counts when it is
+     clearly horizontal; otherwise it is the reader scrolling the slide. */
+  let tsx = 0, tsy = 0, tst = 0;
+  document.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; tst = Date.now();
+  }, { passive:true });
+  document.addEventListener('touchend', e => {
+    if (!tst || e.changedTouches.length !== 1) return;
+    const dx = e.changedTouches[0].clientX - tsx;
+    const dy = e.changedTouches[0].clientY - tsy;
+    tst = 0;
+    if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+    const dir = dx < 0 ? 1 : -1;
+    if (cur === FILM) msg({ cmd:'step', dir:dir });
+    else go(cur + dir, dir);
+  }, { passive:true });
+
+  /* the framed sequence hands navigation back at its own ends */
+  window.addEventListener('message', function(e){
+    const d = e.data;
+    if (!d || d.ch !== 'rbs3d') return;
+    if (d.event === 'next' || d.event === 'end') go(FILM + 1, 1);
+    else if (d.event === 'prev') go(FILM - 1, -1);
+  });
+
+  /* ---- count-up on the 400 slide ---- */
+  const statEl = document.getElementById('stat');
+  let ticking;
+  function countUp(){
+    if (window.matchMedia('(prefers-reduced-motion:reduce)').matches){ statEl.textContent = '400'; return; }
+    clearInterval(ticking); let v = 0;
+    ticking = setInterval(function(){
+      v += Math.max(4, Math.round((400 - v) / 7));
+      if (v >= 400){ v = 400; clearInterval(ticking); }
+      statEl.textContent = v;
+    }, 26);
+  }
+
+  /* ---- 3D category prism ---- */
+  const cats = (function(){
+    const DATA = [
+      ['Retail','Illest · Aeropostale · Hurley','The flagship floor. Established international and lifestyle labels, brought onto Philippine floors — including provinces where these brands have never had a home.'],
+      ['Services','TipunoX','The service arm of the movement — the people and standards that run the customer experience on the floor, every day a branch is open.'],
+      ['Food','Mang Guabao · Boleros · Italyum','Three concessionaire brands that keep a branch busy from opening to close, priced for the everyday Filipino.'],
+      ['Coffee','Ground Up Coffee','A homegrown café that gives a branch a place to sit, meet and stay longer than a shopping trip.'],
+      ['EV + Parking','EVark','EV charging and managed parking — turning a branch into a stop on the route, not just a destination.'],
+      ['Cash-in + Payments','RTap','Kiosks that put cash-in and digital payments within walking distance, in towns where a bank branch is a jeepney ride away.']
+    ];
+    const prism = document.getElementById('prism');
+    const nav = document.getElementById('catNav');
+    const det = document.getElementById('catDetail');
+    const faces = [].slice.call(prism.querySelectorAll('.face'));
+    /* face offset must track the prism's real width — it was pinned to 288, so
+       the mobile CSS shrinking the prism to 190px made it render oversized and
+       overlap the copy below. offsetWidth because the prism is transformed. */
+    const STEP = 60;
+    function layoutFaces(){
+      const W = prism.offsetWidth || 288;
+      const R = Math.round((W / 2) / Math.tan(Math.PI / 6));
+      faces.forEach((f, i) => { f.style.transform = 'rotateY(' + (i * STEP) + 'deg) translateZ(' + R + 'px)'; });
+    }
+    layoutFaces();
+    window.addEventListener('resize', layoutFaces);
+    window.addEventListener('orientationchange', () => setTimeout(layoutFaces, 150));
+    DATA.forEach(function(d, i){
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.innerHTML = '<span class="n">0' + (i + 1) + '</span><span>' + d[0] + '</span>';
+      b.addEventListener('click', function(){ show(i); hold(); });
+      li.appendChild(b); nav.appendChild(li);
+    });
+    let idx = -1, timer = null, live = false;
+    function show(i){
+      idx = i;
+      prism.style.transform = 'rotateX(-9deg) rotateY(' + (-i * STEP) + 'deg)';
+      faces.forEach(function(f, n){ f.classList.toggle('live', n === i); });
+      [].forEach.call(nav.children, function(li, n){ li.classList.toggle('sel', n === i); });
+      det.innerHTML = '<h4>' + DATA[i][1] + '</h4><p>' + DATA[i][2] + '</p>';
+      det.style.opacity = 0;
+      requestAnimationFrame(function(){ det.style.transition = 'opacity .5s ease'; det.style.opacity = 1; });
+    }
+    function play(){ clearInterval(timer); timer = setInterval(function(){ show((idx + 1) % DATA.length); }, 4600); }
+    function hold(){ clearInterval(timer); timer = setInterval(function(){ show((idx + 1) % DATA.length); }, 11000); }
+    return { setActive: function(on){
+      if (on && !live){ live = true; layoutFaces(); show(0);
+        if (!window.matchMedia('(prefers-reduced-motion:reduce)').matches) play(); }
+      else if (!on && live){ live = false; clearInterval(timer); }
+    }};
+  })();
+
+  go(0, 1);
+})();
+</script>
+</body>
+</html>

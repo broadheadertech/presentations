@@ -603,6 +603,21 @@
       linear-gradient(140deg, #0B0B0C 0%, #161618 100%);
     color: #F6F6F7;
   }
+  .cover-rbs {
+    background:
+      radial-gradient(ellipse at 76% 24%, rgba(219,20,54,0.52) 0%, transparent 58%),
+      radial-gradient(ellipse at 16% 86%, rgba(242,65,95,0.20) 0%, transparent 55%),
+      linear-gradient(140deg, #130A0E 0%, #271820 100%);
+    color: #F2F1EF;
+  }
+  .cover-rbs3d {
+    background:
+      radial-gradient(ellipse at 50% 62%, rgba(219,20,54,0.42) 0%, transparent 52%),
+      radial-gradient(ellipse at 82% 18%, rgba(70,184,124,0.20) 0%, transparent 52%),
+      radial-gradient(ellipse at 14% 24%, rgba(142,124,216,0.18) 0%, transparent 52%),
+      linear-gradient(160deg, #130A0E 0%, #1D1116 100%);
+    color: #F2F1EF;
+  }
   .cover-redbox {
     background:
       radial-gradient(ellipse at 75% 25%, rgba(214,40,40,0.50) 0%, transparent 58%),
@@ -960,6 +975,27 @@
 
 <script>
   const allDecks = [
+    {
+      file: 'RBS-Movement-Presentation.html', title: 'RBS Movement',
+      tagline: 'A Group of Companies Moving as One — with the 3D Ecosystem',
+      cover: 'cover-rbs',
+      series: 'Broadheader Projects',
+      palette: ['#130A0E', '#1D1116', '#DB1436', '#F2415F', '#F2F1EF'],
+    },
+    {
+      file: 'rbs-ecosystem-3d.html', title: 'RBS Ecosystem',
+      tagline: 'Seven Categories — Cinematic 3D Sequence',
+      cover: 'cover-rbs3d',
+      series: 'Broadheader Projects',
+      palette: ['#130A0E', '#271820', '#DB1436', '#46B87C', '#F2F1EF'],
+    },
+    {
+      file: 'rbs-movement.html', title: 'RBS Movement — Long Cut',
+      tagline: 'Ten-Slide Version with Chapter Structure',
+      cover: 'cover-rbs',
+      series: 'Broadheader Projects',
+      palette: ['#130A0E', '#1D1116', '#DB1436', '#F2415F', '#F2F1EF'],
+    },
     {
       file: 'broadheader-parking-ev.html', title: 'E-Vark',
       tagline: 'Parking + EV Charging · Hardware & Kits',
